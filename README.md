@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ExpenseMate
 
-## Getting Started
+A modern and intuitive expense tracking web application built with **Next.js**, **Tailwind CSS**, and **ShadCN UI** to help users manage personal finances with ease.
 
-First, run the development server:
+---
+
+## ✨ Features
+
+* Track daily expenses with categories
+* Create monthly budgets & monitor spending
+* Beautiful analytics dashboard with charts
+* User authentication with NextAuth
+* Fully responsive UI (mobile + desktop)
+* Dark / Light mode support
+* Edit & delete expenses
+* Smooth animations using Framer Motion
+
+---
+
+## 📸 Screenshots
+
+> Adding soon
+
+---
+
+## 🚀 Live Demo
+
+🔗 Coming Soon
+
+---
+
+## 🛠 Tech Stack
+
+| Technology                    | Usage                       |
+| ----------------------------- | --------------------------- |
+| Next.js 14 (App Router)       | Frontend & Backend APIs     |
+| Tailwind CSS                  | Styling & Layout            |
+| ShadCN UI                     | Components System           |
+| NextAuth                      | Authentication              |
+| MongoDB / Prisma *(Upcoming)* | Database & ORM              |
+| Recharts / Chart.js           | Graphs & Data Visualization |
+| Framer Motion                 | Animations                  |
+
+---
+
+## 📦 Installation
+
+To run this project locally, use the steps below:
 
 ```bash
+git clone https://github.com/sohail78692/ExpenseMate
+cd ExpenseMate
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will run at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+ExpenseMate/
+├── app/
+│   ├── dashboard/
+│   ├── expenses/
+│   ├── api/
+│   └── layout.tsx
+├── components/
+├── lib/
+├── public/
+├── styles/
+└── package.json
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧠 Future Enhancements
 
-## Deploy on Vercel
+* AI insights based on spending trends
+* OCR bill scanner (upload bill → convert to expense)
+* Export to Excel, PDF
+* Expense sharing like Splitwise
+* Notification alerts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🤝 Contributing
+
+Contributions are always welcome!
+
+```bash
+1. Fork the project
+2. Create your feature branch (git checkout -b feature/my-update)
+3. Commit your changes (git commit -m 'Add update')
+4. Push to branch (git push origin feature/my-update)
+5. Open a Pull Request
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+### ⭐ Support
+
+If you like this project, please consider giving it a star ⭐ on GitHub!

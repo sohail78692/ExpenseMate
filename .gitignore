@@ -83,7 +83,7 @@ lint_output.txt
 *.temp
 .cache
 
-# Lock files (optional - uncomment if you want to ignore)
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
+
+package-lock.json
+yarn.lock
+pnpm-lock.yaml

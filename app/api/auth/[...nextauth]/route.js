@@ -35,15 +35,21 @@ export const authOptions = {
         }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.id = user._id;
+                token.isVerified = user.isVerified || false;
+            }
+            // Handle session updates
+            if (trigger === "update" && session?.user?.isVerified !== undefined) {
+                token.isVerified = session.user.isVerified;
             }
             return token;
         },
         async session({ session, token }) {
             if (token) {
                 session.user.id = token.id;
+                session.user.isVerified = token.isVerified || false;
             }
             return session;
         },

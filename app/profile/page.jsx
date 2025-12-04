@@ -251,13 +251,49 @@ export default function ProfilePage() {
                         <div className="flex-1 text-center md:text-left">
                             <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
                                 <h2 className="text-2xl font-bold">{name || session?.user?.name}</h2>
+                                {session?.user?.isVerified && (
+                                    <Badge variant="default" className="bg-blue-500">
+                                        <CheckCircle2 className="h-3 w-3 mr-1" />
+                                        Verified
+                                    </Badge>
+                                )}
                             </div>
                             <p className="text-muted-foreground mb-4">{email || session?.user?.email}</p>
-                            <div className="flex gap-2 justify-center md:justify-start">
+                            <div className="flex gap-2 justify-center md:justify-start flex-wrap">
                                 <Button size="sm" onClick={() => setIsEditing(!isEditing)}>
                                     <User className="h-4 w-4 mr-2" />
                                     {isEditing ? "Cancel" : "Edit Profile"}
                                 </Button>
+                                {!session?.user?.isVerified && (
+                                    <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="border-blue-500 text-blue-500 hover:bg-blue-50"
+                                        onClick={async () => {
+                                            setIsSaving(true);
+                                            try {
+                                                const res = await fetch("/api/profile/verify", {
+                                                    method: "POST",
+                                                    headers: { "Content-Type": "application/json" }
+                                                });
+                                                const data = await res.json();
+                                                if (res.ok) {
+                                                    setMessage(data.message);
+                                                } else {
+                                                    setMessage(data.message || "Error sending verification request");
+                                                }
+                                            } catch (error) {
+                                                setMessage("Error sending verification request");
+                                            } finally {
+                                                setIsSaving(false);
+                                            }
+                                        }}
+                                        disabled={isSaving}
+                                    >
+                                        <CheckCircle2 className="h-4 w-4 mr-2" />
+                                        {isSaving ? "Sending..." : "Request Verification"}
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -25,8 +25,11 @@ export async function GET(request) {
 
         const total = await Expense.countDocuments({ user: session.user.id });
 
-        return NextResponse.json({ expenses, total, totalPages: Math.ceil(total / limit) });
+        return NextResponse.json({ expenses, total, totalPages: Math.ceil(total / limit) }, {
+            headers: { "Content-Type": "application/json; charset=utf-8" }
+        });
     } catch (error) {
+        console.error("Error fetching expenses:", error);
         return NextResponse.json({ message: "Error fetching expenses" }, { status: 500 });
     }
 }
@@ -51,8 +54,9 @@ export async function POST(request) {
             note,
         });
 
-        return NextResponse.json(expense, { status: 201 });
+        return NextResponse.json(expense, { status: 201, headers: { "Content-Type": "application/json; charset=utf-8" } });
     } catch (error) {
+        console.error("Error creating expense:", error);
         return NextResponse.json({ message: "Error creating expense" }, { status: 500 });
     }
 }

@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Receipt, PieChart, User, LogOut } from "lucide-react";
+import { LayoutDashboard, Receipt, PieChart, User, LogOut, Wallet, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
@@ -12,6 +12,8 @@ import { signOut } from "next-auth/react";
 const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/expenses", label: "Expenses", icon: Receipt },
+    { href: "/budgets", label: "Budgets", icon: Wallet },
+    { href: "/savings", label: "Savings", icon: Target },
     { href: "/analytics", label: "Analytics", icon: PieChart },
     { href: "/profile", label: "Profile", icon: User },
 ];

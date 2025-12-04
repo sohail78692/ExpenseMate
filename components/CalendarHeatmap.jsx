@@ -1,14 +1,15 @@
 "use client";
 
+import { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { format, eachDayOfInterval, startOfMonth, endOfMonth, getDay } from "date-fns";
 
 export default function CalendarHeatmap({ data, currentMonth = new Date() }) {
-    const days = eachDayOfInterval({
+    const days = useMemo(() => eachDayOfInterval({
         start: startOfMonth(currentMonth),
         end: endOfMonth(currentMonth),
-    });
+    }), [currentMonth]);
 
     const getColor = (amount) => {
         if (amount === 0) return "bg-gray-100 dark:bg-gray-800";
@@ -19,10 +20,13 @@ export default function CalendarHeatmap({ data, currentMonth = new Date() }) {
     };
 
     // Create a map for easy lookup
-    const dataMap = {};
-    data.forEach((item) => {
-        dataMap[format(new Date(item.date), "yyyy-MM-dd")] = item.amount;
-    });
+    const dataMap = useMemo(() => {
+        const map = {};
+        data.forEach((item) => {
+            map[format(new Date(item.date), "yyyy-MM-dd")] = item.amount;
+        });
+        return map;
+    }, [data]);
 
     // Calculate empty cells for start of month
     const startDay = getDay(startOfMonth(currentMonth));

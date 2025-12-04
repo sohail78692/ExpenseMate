@@ -3,10 +3,10 @@ import dbConnect from "@/lib/mongodb";
 import User from "@/models/User";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import bcrypt from "bcryptjs";
+
 
 // GET - Get user profile
-export async function GET(request) {
+export async function GET() {
     try {
         const session = await getServerSession(authOptions);
         if (!session) {
@@ -21,7 +21,7 @@ export async function GET(request) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
 
-        return NextResponse.json(user);
+        return NextResponse.json(user, { headers: { "Content-Type": "application/json; charset=utf-8" } });
     } catch (error) {
         console.error("Error fetching profile:", error);
         return NextResponse.json({ message: "Error fetching profile" }, { status: 500 });
@@ -56,7 +56,7 @@ export async function PUT(request) {
             return NextResponse.json({ message: "User not found" }, { status: 404 });
         }
 
-        return NextResponse.json(user);
+        return NextResponse.json(user, { headers: { "Content-Type": "application/json; charset=utf-8" } });
     } catch (error) {
         console.error("Error updating profile:", error);
         return NextResponse.json({ message: "Error updating profile" }, { status: 500 });

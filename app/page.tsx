@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DollarSign, TrendingUp, PieChart, Calendar, Sparkles, Zap, Shield, BarChart3 } from "lucide-react";
 
 export default function HomePage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
@@ -47,6 +47,7 @@ export default function HomePage() {
             <Image
               src="/logo.jpg"
               alt="ExpenseMate Logo"
+              title="ExpenseMate Logo"
               width={120}
               height={120}
               className="rounded-2xl shadow-2xl shadow-purple-500/20"

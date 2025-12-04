@@ -14,7 +14,7 @@ export async function POST(request) {
         if (existingUser) {
             return NextResponse.json(
                 { message: "User already exists" },
-                { status: 400 }
+                { status: 400, headers: { "Content-Type": "application/json; charset=utf-8" } }
             );
         }
 
@@ -26,8 +26,9 @@ export async function POST(request) {
             password: hashedPassword,
         });
 
-        return NextResponse.json({ message: "User registered successfully" }, { status: 201 });
+        return NextResponse.json({ message: "User registered successfully" }, { status: 201, headers: { "Content-Type": "application/json; charset=utf-8" } });
     } catch (error) {
+        console.error("Error registering user:", error);
         return NextResponse.json(
             { message: "An error occurred while registering the user" },
             { status: 500 }

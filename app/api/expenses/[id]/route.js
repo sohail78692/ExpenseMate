@@ -30,8 +30,9 @@ export async function PUT(request, { params }) {
 
         await expense.save();
 
-        return NextResponse.json(expense);
+        return NextResponse.json(expense, { headers: { "Content-Type": "application/json; charset=utf-8" } });
     } catch (error) {
+        console.error("Error updating expense:", error);
         return NextResponse.json({ message: "Error updating expense" }, { status: 500 });
     }
 }
@@ -53,8 +54,9 @@ export async function DELETE(request, { params }) {
             return NextResponse.json({ message: "Expense not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Expense deleted" });
+        return NextResponse.json({ message: "Expense deleted" }, { headers: { "Content-Type": "application/json; charset=utf-8" } });
     } catch (error) {
+        console.error("Error deleting expense:", error);
         return NextResponse.json({ message: "Error deleting expense" }, { status: 500 });
     }
 }

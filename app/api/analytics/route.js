@@ -3,7 +3,7 @@ import dbConnect from "@/lib/mongodb";
 import Expense from "@/models/Expense";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { startOfMonth, endOfMonth, startOfDay, endOfDay, subMonths } from "date-fns";
+import { startOfMonth, endOfMonth, startOfDay, endOfDay } from "date-fns";
 import mongoose from 'mongoose';
 
 export async function GET(request) {
@@ -111,6 +111,8 @@ export async function GET(request) {
             dailyTrend: formattedDailyTrend,
             categoryBreakdown,
             heatmapData: formattedDailyTrend, // Using same data for now
+        }, {
+            headers: { "Content-Type": "application/json; charset=utf-8" }
         });
     } catch (error) {
         console.error("Analytics Error:", error);

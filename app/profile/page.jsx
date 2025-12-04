@@ -9,10 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Camera, User, Lock, CheckCircle2 } from "lucide-react";
+import { Camera, User, Lock, CheckCircle2, AlertTriangle } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 export default function ProfilePage() {
     const { data: session, update } = useSession();
@@ -164,6 +165,51 @@ export default function ProfilePage() {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        // First confirmation
+        const firstConfirm = window.confirm(
+            "⚠️ WARNING: This action is IRREVERSIBLE!\n\n" +
+            "Deleting your account will permanently remove:\n" +
+            "• All your expenses\n" +
+            "• All your budgets\n" +
+            "• All your savings goals\n" +
+            "• Your profile and personal information\n\n" +
+            "Are you absolutely sure you want to continue?"
+        );
+
+        if (!firstConfirm) return;
+
+        // Second confirmation with typed confirmation
+        const secondConfirm = window.prompt(
+            "To confirm deletion, please type 'DELETE MY ACCOUNT' (all caps):"
+        );
+
+        if (secondConfirm !== "DELETE MY ACCOUNT") {
+            alert("Account deletion cancelled. The text did not match.");
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            const res = await fetch("/api/profile/delete", {
+                method: "DELETE",
+            });
+
+            if (res.ok) {
+                alert("Your account has been permanently deleted. You will now be logged out.");
+                await signOut({ callbackUrl: "/login" });
+            } else {
+                const data = await res.json();
+                setMessage(data.message || "Failed to delete account");
+            }
+        } catch (error) {
+            console.error("Error deleting account:", error);
+            setMessage("Error deleting account");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
     return (
         <div className="space-y-6 max-w-4xl">
             <div>
@@ -189,7 +235,7 @@ export default function ProfilePage() {
                                     {name?.charAt(0) || session?.user?.name?.charAt(0) || "U"}
                                 </AvatarFallback>
                             </Avatar>
-                            <label htmlFor="profile-upload" className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-2 cursor-pointer hover:bg-primary/90 transition-colors">
+                            <label htmlFor="profile-upload" className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-2 cursor-pointer hover:bg-primary/90 transition-colors" title="Upload profile picture">
                                 <Camera className="h-4 w-4" />
                                 <input
                                     id="profile-upload"
@@ -197,6 +243,7 @@ export default function ProfilePage() {
                                     accept="image/*"
                                     className="hidden"
                                     onChange={handleImageUpload}
+                                    aria-label="Upload profile picture"
                                 />
                             </label>
                         </div>
@@ -352,6 +399,43 @@ export default function ProfilePage() {
                             <p>• Include uppercase, lowercase, numbers, and symbols</p>
                             <p>• Don&apos;t reuse passwords from other accounts</p>
                             <p>• Change your password regularly</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="border-red-200 dark:border-red-900">
+                        <CardHeader>
+                            <CardTitle className="text-red-600 dark:text-red-400 flex items-center gap-2">
+                                <AlertTriangle className="h-5 w-5" />
+                                Danger Zone
+                            </CardTitle>
+                            <CardDescription>
+                                Permanently delete your account and all associated data
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <div className="p-4 rounded-lg bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800">
+                                <p className="text-sm text-red-800 dark:text-red-200 font-semibold mb-2">
+                                    ⚠️ Warning: This action cannot be undone!
+                                </p>
+                                <p className="text-sm text-red-700 dark:text-red-300">
+                                    Deleting your account will permanently remove:
+                                </p>
+                                <ul className="text-sm text-red-700 dark:text-red-300 list-disc list-inside mt-2 space-y-1">
+                                    <li>All your expenses and transaction history</li>
+                                    <li>All your budgets and financial plans</li>
+                                    <li>All your savings goals and progress</li>
+                                    <li>Your profile and personal information</li>
+                                </ul>
+                            </div>
+                            <Button
+                                variant="destructive"
+                                onClick={handleDeleteAccount}
+                                disabled={isSaving}
+                                className="w-full"
+                            >
+                                <AlertTriangle className="h-4 w-4 mr-2" />
+                                {isSaving ? "Deleting Account..." : "Delete My Account"}
+                            </Button>
                         </CardContent>
                     </Card>
                 </TabsContent>

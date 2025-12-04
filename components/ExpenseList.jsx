@@ -3,32 +3,11 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pencil, Trash2, Plus, ShoppingBag, Coffee, Utensils, Car, Zap, Home, Film, HeartPulse, Briefcase, MoreHorizontal, Smartphone, Gift } from "lucide-react";
+import { Pencil, Trash2, Plus } from "lucide-react";
 import { format } from "date-fns";
 import ExpenseForm from "./ExpenseForm";
-import { Badge } from "@/components/ui/badge";
 
-const getCategoryStyles = (category) => {
-    const styles = {
-        Food: { icon: Utensils, color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20" },
-        Dining: { icon: Coffee, color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/20" },
-        Transport: { icon: Car, color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20" },
-        Shopping: { icon: ShoppingBag, color: "text-pink-500", bg: "bg-pink-500/10", border: "border-pink-500/20" },
-        Utilities: { icon: Zap, color: "text-yellow-500", bg: "bg-yellow-500/10", border: "border-yellow-500/20" },
-        Housing: { icon: Home, color: "text-indigo-500", bg: "bg-indigo-500/10", border: "border-indigo-500/20" },
-        Entertainment: { icon: Film, color: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/20" },
-        Health: { icon: HeartPulse, color: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/20" },
-        Work: { icon: Briefcase, color: "text-slate-500", bg: "bg-slate-500/10", border: "border-slate-500/20" },
-        Electronics: { icon: Smartphone, color: "text-cyan-500", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
-        Gifts: { icon: Gift, color: "text-rose-500", bg: "bg-rose-500/10", border: "border-rose-500/20" },
-    };
-
-    const defaultStyle = { icon: MoreHorizontal, color: "text-gray-500", bg: "bg-gray-500/10", border: "border-gray-500/20" };
-
-    // Case insensitive matching
-    const key = Object.keys(styles).find(k => k.toLowerCase() === category?.toLowerCase());
-    return styles[key] || defaultStyle;
-};
+import { getCategoryStyles } from "@/lib/categoryStyles";
 
 export default function ExpenseList() {
     const [expenses, setExpenses] = useState([]);
@@ -148,10 +127,10 @@ export default function ExpenseList() {
                                         <TableCell className="text-right font-bold">₹{expense.amount.toFixed(2)}</TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex justify-end gap-2">
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-blue-500" onClick={() => openEditModal(expense)}>
+                                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-blue-500" onClick={() => openEditModal(expense)} title="Edit expense" aria-label="Edit expense">
                                                     <Pencil className="h-4 w-4" />
                                                 </Button>
-                                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-500" onClick={() => handleDeleteExpense(expense._id)}>
+                                                <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-red-500" onClick={() => handleDeleteExpense(expense._id)} title="Delete expense" aria-label="Delete expense">
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
                                             </div>

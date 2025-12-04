@@ -1,4 +1,4 @@
-import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // Map categories to specific hex colors matching the Tailwind classes used elsewhere
@@ -21,7 +21,7 @@ const DEFAULT_COLOR = "#6b7280";
 
 export default function CategoryPieChart({ data }) {
     // Custom label renderer with better positioning
-    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+    const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, percent }) => {
         const RADIAN = Math.PI / 180;
         // Position labels further outside the pie
         const radius = outerRadius + 30;
@@ -45,56 +45,67 @@ export default function CategoryPieChart({ data }) {
         );
     };
 
+    const getColor = (name) => {
+        return CATEGORY_COLORS[name] || CATEGORY_COLORS[Object.keys(CATEGORY_COLORS).find(k => k.toLowerCase() === name.toLowerCase())] || DEFAULT_COLOR;
+    };
+
     return (
         <Card className="col-span-3 hover:shadow-lg transition-shadow duration-300">
             <CardHeader>
                 <CardTitle>Spending by Category</CardTitle>
             </CardHeader>
             <CardContent>
-                <ResponsiveContainer width="100%" height={350}>
-                    <PieChart>
-                        <Pie
-                            data={data}
-                            cx="50%"
-                            cy="45%"
-                            labelLine={{
-                                stroke: 'currentColor',
-                                strokeWidth: 1,
-                                className: "stroke-muted-foreground"
-                            }}
-                            outerRadius={90}
-                            fill="#8884d8"
-                            dataKey="value"
-                            label={renderCustomizedLabel}
-                        >
-                            {data.map((entry, index) => (
-                                <Cell
-                                    key={`cell-${index}`}
-                                    fill={CATEGORY_COLORS[entry.name] || CATEGORY_COLORS[Object.keys(CATEGORY_COLORS).find(k => k.toLowerCase() === entry.name.toLowerCase())] || DEFAULT_COLOR}
-                                    strokeWidth={2}
-                                    stroke="hsl(var(--card))"
-                                />
-                            ))}
-                        </Pie>
-                        <Tooltip
-                            formatter={(value) => `₹${value.toFixed(2)}`}
-                            contentStyle={{
-                                backgroundColor: 'hsl(var(--popover))',
-                                borderColor: 'hsl(var(--border))',
-                                borderRadius: '8px',
-                                color: 'hsl(var(--popover-foreground))'
-                            }}
-                            itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
-                        />
-                        <Legend
-                            verticalAlign="bottom"
-                            height={36}
-                            formatter={(value, entry) => (
-                                <span className="text-sm font-medium text-muted-foreground ml-1">{value}</span>
-                            )}
-                        />
-                    </PieChart>
-                </ResponsiveContainer>
+                <div className="h-[300px] w-full">
+                    <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                        <PieChart>
+                            <Pie
+                                data={data}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={{
+                                    stroke: 'currentColor',
+                                    strokeWidth: 1,
+                                    className: "stroke-muted-foreground"
+                                }}
+                                outerRadius={90}
+                                fill="#8884d8"
+                                dataKey="value"
+                                label={renderCustomizedLabel}
+                            >
+                                {data.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={getColor(entry.name)}
+                                        strokeWidth={2}
+                                        stroke="hsl(var(--card))"
+                                    />
+                                ))}
+                            </Pie>
+                            <Tooltip
+                                formatter={(value) => `₹${value.toFixed(2)}`}
+                                contentStyle={{
+                                    backgroundColor: 'hsl(var(--popover))',
+                                    borderColor: 'hsl(var(--border))',
+                                    borderRadius: '8px',
+                                    color: 'hsl(var(--popover-foreground))'
+                                }}
+                                itemStyle={{ color: 'hsl(var(--popover-foreground))' }}
+                            />
+                        </PieChart>
+                    </ResponsiveContainer>
+                </div>
+
+                <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 mt-4">
+                    {data.map((entry, index) => (
+                        <div key={`legend-${index}`} className="flex items-center gap-1.5">
+                            <div
+                                className="w-3 h-3 rounded-full"
+                                style={{ backgroundColor: getColor(entry.name) }}
+                            />
+                            <span className="text-sm text-muted-foreground">{entry.name}</span>
+                        </div>
+                    ))}
+                </div>
             </CardContent>
         </Card>
     );

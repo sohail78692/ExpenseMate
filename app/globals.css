@@ -116,8 +116,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  html,
+  :host {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 }
 
@@ -125,4 +132,3 @@
 #__next-build-watcher {
   display: none !important;
 }
-

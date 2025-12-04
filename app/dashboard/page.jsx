@@ -2,32 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DollarSign, Calendar, TrendingUp, ArrowUpRight, ArrowDownRight, ShoppingBag, Coffee, Utensils, Car, Zap, Home, Film, HeartPulse, Briefcase, MoreHorizontal, Smartphone, Gift } from "lucide-react";
+import { DollarSign, Calendar, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
-
-const getCategoryStyles = (category) => {
-    const styles = {
-        Food: { icon: Utensils, color: "text-orange-500", bg: "bg-orange-500/10", border: "border-orange-500/20" },
-        Dining: { icon: Coffee, color: "text-amber-500", bg: "bg-amber-500/10", border: "border-amber-500/20" },
-        Transport: { icon: Car, color: "text-blue-500", bg: "bg-blue-500/10", border: "border-blue-500/20" },
-        Shopping: { icon: ShoppingBag, color: "text-pink-500", bg: "bg-pink-500/10", border: "border-pink-500/20" },
-        Utilities: { icon: Zap, color: "text-yellow-500", bg: "bg-yellow-500/10", border: "border-yellow-500/20" },
-        Housing: { icon: Home, color: "text-indigo-500", bg: "bg-indigo-500/10", border: "border-indigo-500/20" },
-        Entertainment: { icon: Film, color: "text-purple-500", bg: "bg-purple-500/10", border: "border-purple-500/20" },
-        Health: { icon: HeartPulse, color: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/20" },
-        Work: { icon: Briefcase, color: "text-slate-500", bg: "bg-slate-500/10", border: "border-slate-500/20" },
-        Electronics: { icon: Smartphone, color: "text-cyan-500", bg: "bg-cyan-500/10", border: "border-cyan-500/20" },
-        Gifts: { icon: Gift, color: "text-rose-500", bg: "bg-rose-500/10", border: "border-rose-500/20" },
-    };
-
-    const defaultStyle = { icon: MoreHorizontal, color: "text-gray-500", bg: "bg-gray-500/10", border: "border-gray-500/20" };
-
-    // Case insensitive matching
-    const key = Object.keys(styles).find(k => k.toLowerCase() === category?.toLowerCase());
-    return styles[key] || defaultStyle;
-};
+import { getCategoryStyles } from "@/lib/categoryStyles";
 
 export default function DashboardPage() {
     const [data, setData] = useState(null);
@@ -91,7 +70,7 @@ export default function DashboardPage() {
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-bold">Dashboard</h1>
-                    <p className="text-muted-foreground">Welcome back! Here's your spending overview</p>
+                    <p className="text-muted-foreground">Welcome back! Here&apos;s your spending overview</p>
                 </div>
                 <Link href="/expenses">
                     <Button>
@@ -162,7 +141,7 @@ export default function DashboardPage() {
                 <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Recent Expenses</CardTitle>
                     <Link href="/expenses">
-                        <Button variant="ghost" size="sm">
+                        <Button variant="ghost" size="sm" title="View all expenses" aria-label="View all expenses">
                             View All
                             <ArrowUpRight className="ml-2 h-4 w-4" />
                         </Button>

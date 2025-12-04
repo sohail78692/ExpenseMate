@@ -19,8 +19,14 @@ export async function GET(request) {
         const dateParam = searchParams.get("date");
         const targetDate = dateParam ? new Date(dateParam) : new Date();
 
+        // Expand the date range to account for timezone differences
+        // This ensures we capture expenses from users in any timezone
+        // We'll filter/group by local date on the client side
         const start = startOfMonth(targetDate);
+        start.setDate(start.getDate() - 1); // Go back 1 day to catch early timezone entries
+
         const end = endOfMonth(targetDate);
+        end.setDate(end.getDate() + 1); // Go forward 1 day to catch late timezone entries
 
         // Run independent aggregations in parallel for better performance
         const [

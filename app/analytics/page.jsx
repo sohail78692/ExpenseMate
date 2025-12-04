@@ -46,11 +46,24 @@ export default function AnalyticsPage() {
         // Use rawExpenses if available for correct local timezone grouping
         if (data.rawExpenses && data.rawExpenses.length > 0) {
             console.log('Processing rawExpenses:', data.rawExpenses);
+
+            // Get current month boundaries in local timezone
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+
             const map = {};
             data.rawExpenses.forEach(item => {
-                const dateStr = format(new Date(item.date), "yyyy-MM-dd");
-                console.log(`Processing expense: ${item.date} -> ${dateStr}, amount: ${item.amount}`);
-                map[dateStr] = (map[dateStr] || 0) + item.amount;
+                const localDate = new Date(item.date);
+                const dateStr = format(localDate, "yyyy-MM-dd");
+
+                // Only include expenses from the current month in local timezone
+                if (localDate.getMonth() === currentMonth && localDate.getFullYear() === currentYear) {
+                    console.log(`Processing expense: ${item.date} -> ${dateStr}, amount: ${item.amount}`);
+                    map[dateStr] = (map[dateStr] || 0) + item.amount;
+                } else {
+                    console.log(`Skipping expense from different month: ${item.date} -> ${dateStr}`);
+                }
             });
             const result = Object.entries(map)
                 .map(([date, amount]) => ({ date, amount }))
@@ -71,9 +84,12 @@ export default function AnalyticsPage() {
         return <div className="p-8">Error loading data.</div>;
     }
 
+    // Recalculate total from processedDailyTrend for timezone accuracy
+    const correctedTotalSpent = processedDailyTrend.reduce((sum, item) => sum + item.amount, 0);
+
     // Calculate average daily spending
     const avgDailySpending = processedDailyTrend.length > 0
-        ? processedDailyTrend.reduce((sum, item) => sum + item.amount, 0) / processedDailyTrend.length
+        ? correctedTotalSpent / processedDailyTrend.length
         : 0;
 
     // Find highest spending day
@@ -96,7 +112,7 @@ export default function AnalyticsPage() {
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">₹{(data.totalSpent || 0).toFixed(2)}</div>
+                        <div className="text-2xl font-bold">₹{correctedTotalSpent.toFixed(2)}</div>
                         <p className="text-xs text-muted-foreground">Current month</p>
                     </CardContent>
                 </Card>
@@ -156,8 +172,8 @@ export default function AnalyticsPage() {
                     <div className="space-y-4">
                         {data.categoryBreakdown && data.categoryBreakdown.length > 0 ? (
                             data.categoryBreakdown.map((category, index) => {
-                                const percentage = data.totalSpent > 0
-                                    ? (category.value / data.totalSpent * 100).toFixed(1)
+                                const percentage = correctedTotalSpent > 0
+                                    ? (category.value / correctedTotalSpent * 100).toFixed(1)
                                     : 0;
                                 const { icon: Icon, color, bg, hex } = getCategoryStyles(category.name);
 

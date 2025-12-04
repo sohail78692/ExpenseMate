@@ -105,6 +105,14 @@ export async function GET(request) {
         const formattedDailyTrend = dailyTrend.map(item => ({ date: item._id, amount: item.amount }));
         const categoryBreakdown = categoryStats.map(item => ({ name: item._id, value: item.total }));
 
+        // Convert rawExpenses to plain objects with ISO date strings
+        const serializedRawExpenses = rawExpenses.map(expense => ({
+            date: expense.date.toISOString(),
+            amount: expense.amount,
+            title: expense.title,
+            category: expense.category
+        }));
+
         return NextResponse.json({
             totalSpent,
             todaySpent,
@@ -112,7 +120,7 @@ export async function GET(request) {
             dailyTrend: formattedDailyTrend,
             categoryBreakdown,
             heatmapData: formattedDailyTrend, // Keep for backward compat if needed, but we'll use rawExpenses
-            rawExpenses,
+            rawExpenses: serializedRawExpenses,
         }, {
             headers: { "Content-Type": "application/json; charset=utf-8" }
         });

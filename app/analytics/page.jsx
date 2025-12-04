@@ -45,16 +45,21 @@ export default function AnalyticsPage() {
         if (!data) return [];
         // Use rawExpenses if available for correct local timezone grouping
         if (data.rawExpenses && data.rawExpenses.length > 0) {
+            console.log('Processing rawExpenses:', data.rawExpenses);
             const map = {};
             data.rawExpenses.forEach(item => {
                 const dateStr = format(new Date(item.date), "yyyy-MM-dd");
+                console.log(`Processing expense: ${item.date} -> ${dateStr}, amount: ${item.amount}`);
                 map[dateStr] = (map[dateStr] || 0) + item.amount;
             });
-            return Object.entries(map)
+            const result = Object.entries(map)
                 .map(([date, amount]) => ({ date, amount }))
                 .sort((a, b) => a.date.localeCompare(b.date));
+            console.log('Processed daily trend:', result);
+            return result;
         }
         // Fallback to server-side dailyTrend if rawExpenses not available
+        console.log('Using server-side dailyTrend:', data.dailyTrend);
         return data.dailyTrend || [];
     }, [data]);
 

@@ -104,13 +104,20 @@ export async function GET(request) {
         // The heatmap component expects an array of objects with date and amount.
         // We can reuse formattedDailyTrend for the current month.
 
+        // Fetch raw expenses for client-side timezone handling
+        const rawExpenses = await Expense.find({
+            user: new mongoose.Types.ObjectId(session.user.id),
+            date: { $gte: start, $lte: end },
+        }).select("date amount title category").sort({ date: 1 });
+
         return NextResponse.json({
             totalSpent,
             todaySpent,
             highestCategory,
             dailyTrend: formattedDailyTrend,
             categoryBreakdown,
-            heatmapData: formattedDailyTrend, // Using same data for now
+            heatmapData: formattedDailyTrend, // Keep for backward compat if needed, but we'll use rawExpenses
+            rawExpenses,
         }, {
             headers: { "Content-Type": "application/json; charset=utf-8" }
         });

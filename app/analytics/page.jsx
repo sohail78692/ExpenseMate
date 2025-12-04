@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import DailyTrendChart from "@/components/charts/DailyTrendChart";
 import CategoryPieChart from "@/components/charts/CategoryPieChart";
 import CalendarHeatmap from "@/components/CalendarHeatmap";
 import { DollarSign, TrendingUp, TrendingDown, Calendar } from "lucide-react";
 import { getCategoryStyles } from "@/lib/categoryStyles";
+import { format } from "date-fns";
 
 export default function AnalyticsPage() {
     const [data, setData] = useState(null);
@@ -39,6 +40,24 @@ export default function AnalyticsPage() {
         fetchData();
     }, []);
 
+    // Process rawExpenses to create dailyTrend respecting local timezone
+    const processedDailyTrend = useMemo(() => {
+        if (!data) return [];
+        // Use rawExpenses if available for correct local timezone grouping
+        if (data.rawExpenses && data.rawExpenses.length > 0) {
+            const map = {};
+            data.rawExpenses.forEach(item => {
+                const dateStr = format(new Date(item.date), "yyyy-MM-dd");
+                map[dateStr] = (map[dateStr] || 0) + item.amount;
+            });
+            return Object.entries(map)
+                .map(([date, amount]) => ({ date, amount }))
+                .sort((a, b) => a.date.localeCompare(b.date));
+        }
+        // Fallback to server-side dailyTrend if rawExpenses not available
+        return data.dailyTrend || [];
+    }, [data]);
+
     if (loading) {
         return <div className="p-8">Loading analytics...</div>;
     }
@@ -48,13 +67,13 @@ export default function AnalyticsPage() {
     }
 
     // Calculate average daily spending
-    const avgDailySpending = data.dailyTrend && data.dailyTrend.length > 0
-        ? data.dailyTrend.reduce((sum, item) => sum + item.amount, 0) / data.dailyTrend.length
+    const avgDailySpending = processedDailyTrend.length > 0
+        ? processedDailyTrend.reduce((sum, item) => sum + item.amount, 0) / processedDailyTrend.length
         : 0;
 
     // Find highest spending day
-    const highestDay = data.dailyTrend && data.dailyTrend.length > 0
-        ? data.dailyTrend.reduce((max, item) => item.amount > max.amount ? item : max, data.dailyTrend[0])
+    const highestDay = processedDailyTrend.length > 0
+        ? processedDailyTrend.reduce((max, item) => item.amount > max.amount ? item : max, processedDailyTrend[0])
         : null;
 
     return (
@@ -119,7 +138,7 @@ export default function AnalyticsPage() {
 
             {/* Charts Section */}
             <div className="grid gap-4 md:grid-cols-7">
-                <DailyTrendChart data={data.dailyTrend || []} />
+                <DailyTrendChart data={processedDailyTrend} />
                 <CategoryPieChart data={data.categoryBreakdown || []} />
             </div>
 
@@ -168,7 +187,7 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* Calendar Heatmap */}
-            <CalendarHeatmap data={data.heatmapData || []} />
+            <CalendarHeatmap data={processedDailyTrend} />
 
             {/* Insights Card */}
             <Card>
@@ -200,7 +219,7 @@ export default function AnalyticsPage() {
                     <div className="space-y-2">
                         <h4 className="font-semibold">Monthly Progress</h4>
                         <p className="text-muted-foreground">
-                            You have tracked {data.dailyTrend ? data.dailyTrend.length : 0} days of expenses this month.
+                            You have tracked {processedDailyTrend.length} days of expenses this month.
                         </p>
                     </div>
                 </CardContent>

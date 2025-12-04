@@ -23,7 +23,8 @@ export default function CalendarHeatmap({ data, currentMonth = new Date() }) {
     const dataMap = useMemo(() => {
         const map = {};
         data.forEach((item) => {
-            map[format(new Date(item.date), "yyyy-MM-dd")] = item.amount;
+            const dateStr = format(new Date(item.date), "yyyy-MM-dd");
+            map[dateStr] = (map[dateStr] || 0) + item.amount;
         });
         return map;
     }, [data]);

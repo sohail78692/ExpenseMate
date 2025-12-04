@@ -38,7 +38,9 @@ export async function POST(request) {
 
         // Send email
         try {
-            await sendPasswordResetEmail(email, resetToken);
+            // Get base URL from request or environment
+            const baseUrl = process.env.NEXTAUTH_URL || `https://${request.headers.get('host')}`;
+            await sendPasswordResetEmail(email, resetToken, baseUrl);
             console.log(`Password reset email sent to ${email}`);
 
             return NextResponse.json({

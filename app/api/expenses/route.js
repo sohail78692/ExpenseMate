@@ -18,12 +18,13 @@ export async function GET(request) {
         const limit = parseInt(searchParams.get("limit")) || 10;
         const skip = (page - 1) * limit;
 
-        const expenses = await Expense.find({ user: session.user.id })
-            .sort({ date: -1 })
-            .skip(skip)
-            .limit(limit);
-
-        const total = await Expense.countDocuments({ user: session.user.id });
+        const [expenses, total] = await Promise.all([
+            Expense.find({ user: session.user.id })
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit),
+            Expense.countDocuments({ user: session.user.id })
+        ]);
 
         return NextResponse.json({ expenses, total, totalPages: Math.ceil(total / limit) }, {
             headers: { "Content-Type": "application/json; charset=utf-8" }

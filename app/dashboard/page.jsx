@@ -16,8 +16,12 @@ export default function DashboardPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Fetch analytics data
-                const analyticsRes = await fetch("/api/analytics");
+                // Fetch analytics and recent expenses in parallel
+                const [analyticsRes, expensesRes] = await Promise.all([
+                    fetch("/api/analytics"),
+                    fetch("/api/expenses?page=1&limit=5")
+                ]);
+
                 if (analyticsRes.status === 401) {
                     setData({
                         totalSpent: 0,
@@ -32,8 +36,6 @@ export default function DashboardPage() {
                     setData(analyticsData);
                 }
 
-                // Fetch recent expenses
-                const expensesRes = await fetch("/api/expenses?page=1&limit=5");
                 if (expensesRes.status !== 401) {
                     const expensesData = await expensesRes.json();
                     setRecentExpenses(expensesData.expenses || []);

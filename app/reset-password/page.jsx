@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+// Prevent static prerendering; ensures useSearchParams runs on the client at request time
+export const dynamic = 'force-dynamic';
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

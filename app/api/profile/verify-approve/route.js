@@ -129,6 +129,9 @@ export async function GET(request) {
                 },
             });
 
+            // Get base URL for profile link
+            const baseUrl = process.env.NEXTAUTH_URL || `https://${request.headers.get('host')}`;
+
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: user.email,
@@ -148,7 +151,7 @@ export async function GET(request) {
                         </div>
                         <p>You can now enjoy all the features of ExpenseMate!</p>
                         <div style="text-align: center; margin: 30px 0;">
-                            <a href="${process.env.NEXTAUTH_URL}/profile" 
+                            <a href="${baseUrl}/profile" 
                                style="background-color: #4CAF50; 
                                       color: white; 
                                       padding: 12px 30px; 

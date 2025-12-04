@@ -36,8 +36,9 @@ export async function POST(request) {
             },
         });
 
-        // Generate verification link
-        const verificationLink = `${process.env.NEXTAUTH_URL}/api/profile/verify-approve?userId=${user._id}&token=${Buffer.from(user._id.toString()).toString('base64')}`;
+        // Generate verification link - use production URL or detect from request
+        const baseUrl = process.env.NEXTAUTH_URL || `https://${request.headers.get('host')}`;
+        const verificationLink = `${baseUrl}/api/profile/verify-approve?userId=${user._id}&token=${Buffer.from(user._id.toString()).toString('base64')}`;
 
         // Email to admin
         const mailOptions = {

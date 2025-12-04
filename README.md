@@ -12,7 +12,7 @@
 
 **Track expenses • Set budgets • Achieve savings goals • Gain financial insights**
 
-[Live Demo](https://your-app.vercel.app) • [Report Bug](https://github.com/sohail78692/ExpenseMate/issues) • [Request Feature](https://github.com/sohail78692/ExpenseMate/issues)
+[Live Demo](https://expense-mate-beta.vercel.app) • [Report Bug](https://github.com/sohail78692/ExpenseMate/issues) • [Request Feature](https://github.com/sohail78692/ExpenseMate/issues)
 
 </div>
 

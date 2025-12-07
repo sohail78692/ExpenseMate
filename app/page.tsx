@@ -196,7 +196,7 @@ export default function HomePage() {
         {/* Footer */}
         <div className="text-center mt-16 pt-8 border-t border-white/10">
           <p className="text-slate-400">
-            © 2024 ExpenseMate. All rights reserved.
+            © 2025 ExpenseMate. All rights reserved.
           </p>
         </div>
       </div>

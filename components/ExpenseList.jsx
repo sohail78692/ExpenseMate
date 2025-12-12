@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pencil, Trash2, Plus } from "lucide-react";
@@ -9,13 +9,14 @@ import ExpenseForm from "./ExpenseForm";
 
 import { getCategoryStyles } from "@/lib/categoryStyles";
 
-export default function ExpenseList() {
-    const [expenses, setExpenses] = useState([]);
-    const [loading, setLoading] = useState(true);
+export default function ExpenseList({ initialExpenses = [], initialTotalPages = 1 }) {
+    const [expenses, setExpenses] = useState(initialExpenses);
+    const [loading, setLoading] = useState(!initialExpenses.length);
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
+    const [totalPages, setTotalPages] = useState(initialTotalPages);
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [expenseToEdit, setExpenseToEdit] = useState(null);
+    const isFirstRender = useRef(true);
 
     useEffect(() => {
         const fetchExpenses = async () => {
@@ -38,6 +39,11 @@ export default function ExpenseList() {
                 setLoading(false);
             }
         };
+
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            if (initialExpenses.length > 0) return;
+        }
 
         fetchExpenses();
     }, [page]);

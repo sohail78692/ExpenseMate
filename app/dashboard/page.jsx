@@ -1,70 +1,34 @@
-"use client";
-
-import { useState, useEffect } from "react";
+import { getDashboardData } from "@/lib/data";
+import { format } from "date-fns";
+import { getCategoryStyles } from "@/lib/categoryStyles";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, Calendar, TrendingUp, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import { getCategoryStyles } from "@/lib/categoryStyles";
 
-export default function DashboardPage() {
-    const [data, setData] = useState(null);
-    const [recentExpenses, setRecentExpenses] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch analytics and recent expenses in parallel
-                const [analyticsRes, expensesRes] = await Promise.all([
-                    fetch("/api/analytics"),
-                    fetch("/api/expenses?page=1&limit=5")
-                ]);
-
-                if (analyticsRes.status === 401) {
-                    setData({
-                        totalSpent: 0,
-                        todaySpent: 0,
-                        highestCategory: null,
-                        dailyTrend: [],
-                        categoryBreakdown: [],
-                        heatmapData: []
-                    });
-                } else {
-                    const analyticsData = await analyticsRes.json();
-                    setData(analyticsData);
-                }
-
-                if (expensesRes.status !== 401) {
-                    const expensesData = await expensesRes.json();
-                    setRecentExpenses(expensesData.expenses || []);
-                }
-            } catch (error) {
-                console.error("Error fetching dashboard data:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    if (loading) {
-        return <div className="p-8">Loading dashboard...</div>;
-    }
+export default async function DashboardPage() {
+    const data = await getDashboardData();
 
     if (!data) {
-        return <div className="p-8">Error loading data.</div>;
+        return (
+            <div className="p-8 text-center text-muted-foreground">
+                <p>Please log in to view your dashboard.</p>
+                <Link href="/login">
+                    <Button className="mt-4">Login</Button>
+                </Link>
+            </div>
+        );
     }
 
+    const { totalSpent, todaySpent, highestCategory, dailyTrend, recentExpenses } = data;
+
     // Calculate yesterday's spending for comparison
-    const yesterday = data.dailyTrend && data.dailyTrend.length > 1
-        ? data.dailyTrend[data.dailyTrend.length - 2]?.amount || 0
+    const yesterday = dailyTrend && dailyTrend.length > 1
+        ? dailyTrend[dailyTrend.length - 2]?.amount || 0
         : 0;
 
     const todayChange = yesterday > 0
-        ? ((data.todaySpent - yesterday) / yesterday * 100).toFixed(1)
+        ? ((todaySpent - yesterday) / yesterday * 100).toFixed(1)
         : 0;
 
     return (
@@ -90,7 +54,7 @@ export default function DashboardPage() {
                         <DollarSign className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">₹{(data.totalSpent || 0).toFixed(2)}</div>
+                        <div className="text-2xl font-bold">₹{(totalSpent || 0).toFixed(2)}</div>
                         <p className="text-xs text-muted-foreground">
                             Total spending in {new Date().toLocaleDateString('en-US', { month: 'long' })}
                         </p>
@@ -103,7 +67,7 @@ export default function DashboardPage() {
                         <Calendar className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-2xl font-bold">₹{(data.todaySpent || 0).toFixed(2)}</div>
+                        <div className="text-2xl font-bold">₹{(todaySpent || 0).toFixed(2)}</div>
                         <div className="flex items-center text-xs">
                             {todayChange > 0 ? (
                                 <>
@@ -129,10 +93,10 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">
-                            {data.highestCategory ? data.highestCategory._id : "N/A"}
+                            {highestCategory ? highestCategory._id : "N/A"}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                            {data.highestCategory ? `₹${data.highestCategory.total.toFixed(2)}` : "₹0.00"}
+                            {highestCategory ? `₹${highestCategory.total.toFixed(2)}` : "₹0.00"}
                         </p>
                     </CardContent>
                 </Card>

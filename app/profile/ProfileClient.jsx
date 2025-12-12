@@ -9,9 +9,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Camera, User, Lock, CheckCircle2, AlertTriangle } from "lucide-react";
+import { Camera, User, Lock, CheckCircle2, AlertTriangle, MessageSquare, Send } from "lucide-react";
+
 import { useTheme } from "next-themes";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 
@@ -34,6 +38,12 @@ export default function ProfileClient({ initialUser }) {
     const [isEditing, setIsEditing] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState("");
+
+    // Feedback state
+    const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState("");
+    const [feedbackType, setFeedbackType] = useState("feedback"); // "feedback" or "issue"
+    const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 
     const handleImageUpload = (e) => {
         const file = e.target.files?.[0];
@@ -177,6 +187,40 @@ export default function ProfileClient({ initialUser }) {
         }
     };
 
+    const handleSendFeedback = async () => {
+        if (!feedbackMessage.trim()) return;
+
+        setIsSendingFeedback(true);
+        try {
+            const res = await fetch("/api/feedback", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    message: feedbackMessage,
+                    type: feedbackType,
+                    // Pass name/email if session is not available on server or to override
+                    userName: name || session?.user?.name,
+                    userEmail: email || session?.user?.email,
+                })
+            });
+
+            if (res.ok) {
+                setMessage("Thank you! Your feedback has been sent.");
+                setIsFeedbackOpen(false);
+                setFeedbackMessage("");
+                setFeedbackType("feedback");
+            } else {
+                const data = await res.json();
+                alert(data.message || "Failed to send feedback");
+            }
+        } catch (error) {
+            console.error("Error sending feedback:", error);
+            alert("Error sending feedback. Please try again.");
+        } finally {
+            setIsSendingFeedback(false);
+        }
+    };
+
     return (
         <div className="space-y-6 max-w-4xl">
             <div>
@@ -230,6 +274,10 @@ export default function ProfileClient({ initialUser }) {
                                 <Button size="sm" onClick={() => setIsEditing(!isEditing)}>
                                     <User className="h-4 w-4 mr-2" />
                                     {isEditing ? "Cancel" : "Edit Profile"}
+                                </Button>
+                                <Button size="sm" variant="secondary" onClick={() => setIsFeedbackOpen(true)}>
+                                    <MessageSquare className="h-4 w-4 mr-2" />
+                                    Feedback
                                 </Button>
                                 {!session?.user?.isVerified && (
                                     <Button
@@ -471,6 +519,52 @@ export default function ProfileClient({ initialUser }) {
                     </Card>
                 </TabsContent>
             </Tabs >
-        </div >
+            {/* Feedback Dialog */}
+            <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Send Feedback & Issues</DialogTitle>
+                        <DialogDescription>
+                            We'd love to hear from you! Send us your feedback or report any issues you've encountered.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 py-4">
+                        <RadioGroup defaultValue="feedback" value={feedbackType} onValueChange={setFeedbackType} className="flex gap-4">
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="feedback" id="feedback" />
+                                <Label htmlFor="feedback">Feedback</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="issue" id="issue" />
+                                <Label htmlFor="issue">Report Issue</Label>
+                            </div>
+                        </RadioGroup>
+                        <div className="space-y-2">
+                            <Label htmlFor="feedback-message">Message</Label>
+                            <Textarea
+                                id="feedback-message"
+                                placeholder={feedbackType === "issue" ? "Describe the issue you are facing..." : "Tell us what you think..."}
+                                value={feedbackMessage}
+                                onChange={(e) => setFeedbackMessage(e.target.value)}
+                                rows={5}
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsFeedbackOpen(false)}>Cancel</Button>
+                        <Button onClick={handleSendFeedback} disabled={isSendingFeedback || !feedbackMessage.trim()}>
+                            {isSendingFeedback ? (
+                                <>Sending...</>
+                            ) : (
+                                <>
+                                    <Send className="mr-2 h-4 w-4" />
+                                    Send
+                                </>
+                            )}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 }

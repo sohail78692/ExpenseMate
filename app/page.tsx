@@ -298,7 +298,7 @@ export default function HomePage() {
 
       <main className="relative z-10 pt-16 sm:pt-20">
         {/* HERO SECTION WITH 3D CONTAINER SCROLL ANIMATION */}
-        <section id="showcase" className="relative pt-0 pb-6 sm:pb-8">
+        <section id="showcase" className="relative pt-0 pb-0 sm:pb-2">
           <ContainerScroll
             titleComponent={
               <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-5xl mb-4 sm:mb-6">
@@ -560,7 +560,7 @@ export default function HomePage() {
 
 
         {/* FEATURES GRID SECTION - POWERED BY CHROMAGRID & ANIMATEDCONTENT */}
-        <section id="features" className="scroll-mt-24 pt-8 sm:pt-12 pb-12 sm:pb-16">
+        <section id="features" className="scroll-mt-24 pt-6 sm:pt-8 pb-12 sm:pb-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             <AnimatedContent
               distance={50}

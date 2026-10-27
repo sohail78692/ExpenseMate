@@ -11,6 +11,7 @@ import RotatingText from "@/components/RotatingText";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
 import ChromaGrid, { ChromaItem } from "@/components/ChromaGrid";
 import AnimatedContent from "@/components/AnimatedContent";
+import DoodleCrewFooter from "@/components/ui/doodle-crew-footer";
 import { Button } from "@/components/ui/button";
 import {
   TrendingUp,
@@ -808,67 +809,74 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* MINIMALIST APPLE FOOTER */}
-      <footer className="border-t border-white/[0.08] bg-black pt-12 pb-10 relative z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            {/* Brand Identity */}
-            <div className="col-span-2 md:col-span-1 space-y-4">
-              <Link href="/" className="inline-flex items-center gap-2.5 group">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#0071E3] to-[#64D2FF] flex items-center justify-center text-white shadow-sm">
-                  <Wallet className="w-4 h-4 text-white" />
-                </div>
-                <span className="font-bold text-lg tracking-tight text-white">
-                  Expense<span className="text-[#0A84FF]">Mate</span>
-                </span>
-              </Link>
-              <p className="text-xs text-zinc-400 leading-relaxed">
-                Smart personal expense tracker engineered for total financial clarity and proactive savings.
-              </p>
-              <div className="inline-flex items-center gap-2 text-xs text-[#30D158] font-medium">
-                <span className="w-2 h-2 rounded-full bg-[#30D158] animate-pulse"></span>
-                <span>All systems operational</span>
-              </div>
-            </div>
-
-            {/* Column 2: Product */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Product</h4>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
-                <li><a href="#showcase" className="hover:text-white transition-colors">Preview</a></li>
-              </ul>
-            </div>
-
-            {/* Column 3: Management */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Finances</h4>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li><Link href="/expenses" className="hover:text-white transition-colors">Expense Tracking</Link></li>
-                <li><Link href="/analytics" className="hover:text-white transition-colors">Visual Analytics</Link></li>
-                <li><Link href="/budgets" className="hover:text-white transition-colors">Budget Limits</Link></li>
-                <li><Link href="/savings" className="hover:text-white transition-colors">Savings Goals</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 4: Account & Security */}
-            <div className="space-y-3">
-              <h4 className="text-xs font-semibold text-white uppercase tracking-wider">Account</h4>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li><Link href="/login" className="hover:text-white transition-colors">Sign In</Link></li>
-                <li><Link href="/register" className="hover:text-white transition-colors">Register Free</Link></li>
-                <li><a href="https://github.com/sohail78692/ExpenseMate" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1.5">GitHub Repository <ArrowUpRight className="w-3.5 h-3.5" /></a></li>
-                <li><a href="#faq" className="hover:text-white transition-colors">Privacy & FAQ</a></li>
-              </ul>
-            </div>
+      {/* DOODLE CREW FOOTER */}
+      <DoodleCrewFooter
+        wordmark="EXPENSEMATE"
+        logo={
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#0A84FF] to-[#0055B3] border border-white/25 flex items-center justify-center text-white shadow-md shadow-[#0A84FF]/25">
+            <Wallet className="w-4 h-4 text-white" />
           </div>
-
-          <div className="pt-8 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-500">
-            <p>© {new Date().getFullYear()} ExpenseMate. Engineered with precision for smart budgeters.</p>
-          </div>
-        </div>
-      </footer>
+        }
+        brand={
+          <span className="font-bold tracking-tight text-white">
+            Expense<span className="text-[#0A84FF]">Mate</span>
+          </span>
+        }
+        blurb="Smart personal expense tracker engineered for total financial clarity and proactive savings."
+        tagline=""
+        actions={[]}
+        height="auto"
+        columns={[
+          {
+            title: "Product",
+            links: [
+              { label: "Features", href: "#features" },
+              { label: "How It Works", href: "#how-it-works" },
+              { label: "Preview", href: "#showcase" },
+            ],
+          },
+          {
+            title: "Finances",
+            links: [
+              { label: "Expense Tracking", href: "/expenses" },
+              { label: "Visual Analytics", href: "/analytics" },
+              { label: "Budget Limits", href: "/budgets" },
+              { label: "Savings Goals", href: "/savings" },
+            ],
+          },
+          {
+            title: "Account",
+            links: [
+              { label: "Sign In", href: "/login" },
+              { label: "Register Free", href: "/register" },
+              { label: "GitHub Repository", href: "https://github.com/sohail78692/ExpenseMate" },
+              { label: "Privacy & FAQ", href: "#faq" },
+            ],
+          },
+          {
+            title: "Support",
+            links: [
+              { label: "sohail786akh@gmail.com", href: "mailto:sohail786akh@gmail.com" },
+              { label: "LinkedIn Profile", href: "https://www.linkedin.com/in/sohail-akhtar-49229032a/" },
+              { label: "GitHub Profile", href: "https://github.com/sohail78692" },
+            ],
+          },
+        ]}
+        copyright="© 2026 ExpenseMate. Making personal finance simple, visual, and stress-free."
+        legal={[{ label: "Privacy & FAQ", href: "#faq" }]}
+        socials={[
+          { label: "GitHub Repo", href: "https://github.com/sohail78692/ExpenseMate" },
+          { label: "GitHub", href: "https://github.com/sohail78692" },
+          { label: "LinkedIn", href: "https://www.linkedin.com/in/sohail-akhtar-49229032a/" },
+          { label: "Email Support", href: "mailto:sohail786akh@gmail.com" },
+        ]}
+        palette={{
+          background: "#000000",
+          ink: "#f4f4f5",
+          accent: "#0A84FF",
+        }}
+        className="border-t border-white/[0.08]"
+      />
     </div>
   );
 }

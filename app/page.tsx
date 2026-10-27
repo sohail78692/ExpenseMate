@@ -31,7 +31,9 @@ import {
   Coffee,
   Home,
   Car,
-  Laptop
+  Laptop,
+  Lock,
+  Sparkles
 } from "lucide-react";
 
 export default function HomePage() {
@@ -557,7 +559,7 @@ export default function HomePage() {
 
 
         {/* FEATURES GRID SECTION - POWERED BY CHROMAGRID & ANIMATEDCONTENT */}
-        <section id="features" className="scroll-mt-28 pt-12 sm:pt-16 pb-16 sm:pb-24 lg:pb-32">
+        <section id="features" className="scroll-mt-24 pt-8 sm:pt-12 pb-12 sm:pb-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             <AnimatedContent
               distance={50}
@@ -665,58 +667,105 @@ export default function HomePage() {
 
 
         {/* HOW IT WORKS SECTION */}
-        <section id="how-it-works" className="scroll-mt-28 py-16 sm:py-24 lg:py-32">
+        <section id="how-it-works" className="scroll-mt-24 py-10 sm:py-14 md:py-16 relative">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
-            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3 sm:mb-4">
-                Three simple steps to total financial clarity.
-              </h2>
-              <p className="text-zinc-400 text-sm sm:text-base px-2 sm:px-0">
-                No complex banking credentials or lengthy spreadsheets. Get rolling in seconds.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8 relative">
-              {/* Step 1 */}
-              <div className="p-6 sm:p-7 rounded-[22px] sm:rounded-[26px] ios-card relative">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0A84FF]/20 text-[#0A84FF] font-bold flex items-center justify-center mb-4 sm:mb-5 border border-[#0A84FF]/30 text-sm sm:text-base">
-                  1
+            <AnimatedContent
+              distance={30}
+              direction="vertical"
+              duration={0.7}
+              ease="power3.out"
+              threshold={0.15}
+            >
+              <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-xs font-semibold text-[#0A84FF] mb-3 sm:mb-4">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Simple by Design</span>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Create Your Space</h3>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                  Sign up in 30 seconds with email verification. No credit card, no intrusive permissions.
+                <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white tracking-tight mb-2.5 sm:mb-3">
+                  How ExpenseMate Works
+                </h2>
+                <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed px-2 sm:px-0">
+                  Three simple steps to take total control of your money.
                 </p>
               </div>
+            </AnimatedContent>
 
-              {/* Step 2 */}
-              <div className="p-6 sm:p-7 rounded-[22px] sm:rounded-[26px] ios-card relative">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#5E5CE6]/20 text-[#5E5CE6] font-bold flex items-center justify-center mb-4 sm:mb-5 border border-[#5E5CE6]/30 text-sm sm:text-base">
-                  2
+            <AnimatedContent
+              distance={40}
+              direction="vertical"
+              duration={0.8}
+              ease="power3.out"
+              threshold={0.1}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 relative">
+                {/* Step 1 */}
+                <div className="p-6 sm:p-7 rounded-[22px] bg-[#141416] border border-white/[0.08] hover:border-white/20 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-11 h-11 rounded-2xl bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] flex items-center justify-center">
+                        <Shield className="w-5 h-5" />
+                      </div>
+                      <span className="text-2xl font-black font-mono text-zinc-600">
+                        01
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 tracking-tight">
+                      Create your free account
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                      Sign up with your email in 30 seconds. No credit card, no bank passwords, and your transactions stay 100% private.
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Set Budgets & Log</h3>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                  Set comfortable category limits and log expenses on the go with one-tap quick add.
-                </p>
-              </div>
 
-              {/* Step 3 */}
-              <div className="p-6 sm:p-7 rounded-[22px] sm:rounded-[26px] ios-card relative">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#30D158]/20 text-[#30D158] font-bold flex items-center justify-center mb-4 sm:mb-5 border border-[#30D158]/30 text-sm sm:text-base">
-                  3
+                {/* Step 2 */}
+                <div className="p-6 sm:p-7 rounded-[22px] bg-[#141416] border border-white/[0.08] hover:border-white/20 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-11 h-11 rounded-2xl bg-[#5E5CE6]/15 border border-[#5E5CE6]/30 text-[#5E5CE6] flex items-center justify-center">
+                        <CreditCard className="w-5 h-5" />
+                      </div>
+                      <span className="text-2xl font-black font-mono text-zinc-600">
+                        02
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 tracking-tight">
+                      Log expenses in seconds
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                      Whenever you spend, add it in one tap. Choose a category like dining or groceries, enter the amount, and you&apos;re done.
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Watch Savings Grow</h3>
-                <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
-                  Review visual insights, adjust spending before overages, and celebrate your savings milestones.
-                </p>
+
+                {/* Step 3 */}
+                <div className="p-6 sm:p-7 rounded-[22px] bg-[#141416] border border-white/[0.08] hover:border-white/20 transition-all flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-11 h-11 rounded-2xl bg-[#30D158]/15 border border-[#30D158]/30 text-[#30D158] flex items-center justify-center">
+                        <Target className="w-5 h-5" />
+                      </div>
+                      <span className="text-2xl font-black font-mono text-zinc-600">
+                        03
+                      </span>
+                    </div>
+                    <h3 className="text-base sm:text-lg font-bold text-white mb-2 tracking-tight">
+                      Stay on budget &amp; save
+                    </h3>
+                    <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed">
+                      See visual progress bars showing what you have left to spend each day. Stop overspending and hit your savings goals.
+                    </p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </AnimatedContent>
           </div>
         </section>
 
 
 
         {/* FAQ ACCORDION - iOS Inset Grouped List Style */}
-        <section id="faq" className="scroll-mt-28 py-12 sm:py-16 lg:py-20">
+        <section id="faq" className="scroll-mt-24 pt-10 pb-14 sm:pt-12 sm:pb-18">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
             <div className="text-center mb-8 sm:mb-10">
               <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">
@@ -757,54 +806,10 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* GRAND FINALE CALL TO ACTION - Apple Intelligence Glow */}
-        <section className="py-14 sm:py-20 relative overflow-hidden">
-          <div className="container mx-auto px-3.5 sm:px-6 lg:px-8 max-w-5xl">
-            <div className="relative rounded-[26px] sm:rounded-[36px] p-6 sm:p-10 md:p-14 bg-gradient-to-r from-[#0A84FF]/25 via-[#5E5CE6]/20 to-[#64D2FF]/20 border border-white/[0.12] overflow-hidden text-center shadow-2xl">
-              {/* Radial backdrop */}
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-[#0A84FF]/20 via-transparent to-transparent"></div>
-
-              <div className="relative z-10 max-w-2xl mx-auto">
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 text-xs font-semibold text-white mb-5 sm:mb-6 backdrop-blur-xl">
-                  <span>Take command of your wealth</span>
-                </div>
-
-                <h2 className="text-2xl xs:text-3xl sm:text-5xl font-bold text-white tracking-tight mb-3 sm:mb-4">
-                  Ready to stop stressing over money?
-                </h2>
-                <p className="text-zinc-200 text-sm sm:text-base md:text-lg mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0">
-                  Join thousands taking control of their cash flow with ExpenseMate. Free forever, setup in 30 seconds.
-                </p>
-
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4">
-                  <Link href="/register" className="w-full sm:w-auto">
-                    <Button
-                      size="lg"
-                      className="w-full sm:w-auto px-7 sm:px-10 py-5 sm:py-6 text-sm sm:text-base font-bold rounded-full bg-white text-black hover:bg-zinc-100 shadow-xl hover:scale-105 transition-all"
-                    >
-                      Create Free Account
-                      <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-                    </Button>
-                  </Link>
-                  <Link href="/login" className="w-full sm:w-auto">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="w-full sm:w-auto px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base font-medium rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10 transition-all"
-                    >
-                      Sign In Instead
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
 
       {/* MINIMALIST APPLE FOOTER */}
-      <footer className="border-t border-white/[0.08] bg-black py-14 relative z-10">
+      <footer className="border-t border-white/[0.08] bg-black pt-12 pb-10 relative z-10">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
             {/* Brand Identity */}
@@ -832,7 +837,7 @@ export default function HomePage() {
               <ul className="space-y-2 text-sm text-zinc-400">
                 <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
                 <li><a href="#how-it-works" className="hover:text-white transition-colors">How It Works</a></li>
-                <li><Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link></li>
+                <li><a href="#showcase" className="hover:text-white transition-colors">Preview</a></li>
               </ul>
             </div>
 
@@ -859,15 +864,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="pt-8 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
+          <div className="pt-8 border-t border-white/[0.08] flex items-center justify-between text-xs text-zinc-500">
             <p>© {new Date().getFullYear()} ExpenseMate. Engineered with precision for smart budgeters.</p>
-            <p className="flex items-center gap-4">
-              <span>Next.js 16</span>
-              <span>•</span>
-              <span>Tailwind CSS</span>
-              <span>•</span>
-              <span>MongoDB</span>
-            </p>
           </div>
         </div>
       </footer>

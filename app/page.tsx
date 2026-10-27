@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import GooeyNav from "@/components/GooeyNav";
 import LiquidChrome from "@/components/LiquidChrome";
+import TextType from "@/components/TextType";
+import RotatingText from "@/components/RotatingText";
 import { Button } from "@/components/ui/button";
 import {
   TrendingUp,
@@ -305,11 +307,35 @@ export default function HomePage() {
         <section className="relative pt-14 pb-20 md:pt-20 md:pb-28">
           <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-5xl">
 
-            {/* Master Headline - Apple Keynote Aesthetic */}
-            <h1 className="text-3xl xs:text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-[1.12] mb-5 sm:mb-6 break-words">
-              Master your money with{" "}
-              <span className="bg-gradient-to-r from-[#2997FF] via-[#70B4FF] to-[#A1D2FF] bg-clip-text text-transparent">
-                effortless clarity.
+            {/* Master Headline - Combining TextType & RotatingText from React Bits */}
+            <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.15] mb-5 sm:mb-6 flex flex-col items-center justify-center">
+              <span className="inline-flex items-center justify-center text-center">
+                <TextType
+                  text="Master your money with"
+                  typingSpeed={40}
+                  pauseDuration={2000}
+                  loop={false}
+                  showCursor={false}
+                  cursorStyle="bar"
+                  cursorColor="#2997FF"
+                  className="text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
+                />
+              </span>
+              <span className="inline-flex items-center justify-center text-center mt-1 sm:mt-2 min-h-[1.25em]">
+                <RotatingText
+                  texts={[
+                    "effortless clarity.",
+                    "automated savings.",
+                    "intelligent budgets.",
+                    "total peace of mind."
+                  ]}
+                  effect="slide"
+                  direction="up"
+                  staggerDuration={0.025}
+                  rotationInterval={3000}
+                  mainClassName="text-[#2997FF] drop-shadow-[0_0_35px_rgba(41,151,255,0.45)] font-extrabold"
+                  splitLevelClassName="overflow-hidden pb-1"
+                />
               </span>
             </h1>
 

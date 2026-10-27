@@ -34,7 +34,8 @@ import {
   Car,
   Laptop,
   Lock,
-  Sparkles
+  Sparkles,
+  Command
 } from "lucide-react";
 
 export default function HomePage() {
@@ -679,7 +680,7 @@ export default function HomePage() {
             >
               <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-xs font-semibold text-[#0A84FF] mb-3 sm:mb-4">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Command className="w-3.5 h-3.5" />
                   <span>Simple by Design</span>
                 </div>
                 <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white tracking-tight mb-2.5 sm:mb-3">

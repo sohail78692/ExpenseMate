@@ -192,14 +192,14 @@ export default function HomePage() {
       </div>
 
       {/* TOP NAVIGATION BAR - FLOATING ISLAND (iOS Liquid Glass) */}
-      <header className="fixed top-2.5 sm:top-5 left-0 right-0 z-50 flex justify-center px-2.5 sm:px-6 pointer-events-none transition-all">
-        <div className="w-full max-w-6xl ios-liquid-glass rounded-2xl sm:rounded-full px-3.5 sm:px-6 h-14 sm:h-[68px] flex items-center justify-between pointer-events-auto transition-all shadow-xl">
+      <header className="fixed top-2.5 sm:top-4 left-0 right-0 z-50 flex justify-center px-2.5 sm:px-6 pointer-events-none transition-all">
+        <div className="w-full max-w-6xl ios-liquid-glass rounded-2xl sm:rounded-full px-3.5 sm:px-6 h-[52px] sm:h-[58px] flex items-center justify-between pointer-events-auto transition-all shadow-xl">
           {/* Brand Identity - Clean Apple-style Typographic Logo */}
           <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A84FF] rounded-full">
-            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-b from-[#0A84FF] to-[#0055B3] border border-white/25 flex items-center justify-center text-white shadow-md shadow-[#0A84FF]/25 group-hover:scale-105 transition-transform">
-              <Wallet className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-white" />
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-b from-[#0A84FF] to-[#0055B3] border border-white/25 flex items-center justify-center text-white shadow-md shadow-[#0A84FF]/25 group-hover:scale-105 transition-transform">
+              <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
             </div>
-            <span className="font-bold text-sm sm:text-lg tracking-tight text-white group-hover:text-zinc-200 transition-colors">
+            <span className="font-bold text-sm sm:text-base tracking-tight text-white group-hover:text-zinc-200 transition-colors">
               Expense<span className="text-[#0A84FF]">Mate</span>
             </span>
           </Link>
@@ -229,14 +229,14 @@ export default function HomePage() {
             <Link href="/login" className="hidden sm:inline-block">
               <Button
                 variant="ghost"
-                className="text-zinc-300 hover:text-white hover:bg-white/[0.08] text-xs sm:text-sm font-medium px-3 sm:px-4 h-8 sm:h-9 rounded-full transition-colors"
+                className="text-zinc-300 hover:text-white hover:bg-white/[0.08] text-xs sm:text-sm font-medium px-3 sm:px-3.5 h-8 rounded-full transition-colors"
               >
                 Sign In
               </Button>
             </Link>
             <Link href="/register">
               <Button
-                className="bg-gradient-to-b from-[#0A84FF] to-[#0066CC] hover:from-[#1A8CFF] hover:to-[#0071E3] active:scale-[0.97] text-white font-medium px-3 sm:px-5 h-8 sm:h-9 rounded-full text-xs sm:text-sm border border-white/20 shadow-md sm:shadow-lg shadow-[#0A84FF]/30 transition-all"
+                className="bg-gradient-to-b from-[#0A84FF] to-[#0066CC] hover:from-[#1A8CFF] hover:to-[#0071E3] active:scale-[0.97] text-white font-medium px-3.5 sm:px-4.5 h-8 rounded-full text-xs sm:text-sm border border-white/20 shadow-md sm:shadow-lg shadow-[#0A84FF]/30 transition-all"
               >
                 <span className="hidden xs:inline">Get </span>Started
                 <ArrowRight className="w-3.5 h-3.5 ml-1 sm:ml-1.5" />
@@ -246,10 +246,10 @@ export default function HomePage() {
             {/* Mobile / Tablet Menu Hamburger (visible on < lg) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 sm:p-2 rounded-full text-zinc-300 hover:text-white hover:bg-white/[0.08] focus:outline-none active:scale-95 transition-all"
+              className="lg:hidden p-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/[0.08] focus:outline-none active:scale-95 transition-all"
               aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
           </div>
         </div>
@@ -261,7 +261,7 @@ export default function HomePage() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden pointer-events-auto animate-in fade-in duration-200"
               onClick={() => setMobileMenuOpen(false)}
             />
-            <div className="absolute top-[68px] sm:top-20 left-3 right-3 sm:left-6 sm:right-6 max-w-lg mx-auto z-50 lg:hidden rounded-3xl ios-liquid-glass p-5 space-y-2 pointer-events-auto shadow-2xl border border-white/15 animate-in slide-in-from-top-3 duration-200">
+            <div className="absolute top-[62px] sm:top-[70px] left-3 right-3 sm:left-6 sm:right-6 max-w-lg mx-auto z-50 lg:hidden rounded-3xl ios-liquid-glass p-5 space-y-2 pointer-events-auto shadow-2xl border border-white/15 animate-in slide-in-from-top-3 duration-200">
               {navItems.map((item, index) => {
                 const isActive = activeNavIndex === index;
                 return (

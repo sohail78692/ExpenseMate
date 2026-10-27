@@ -716,38 +716,38 @@ export default function HomePage() {
 
 
         {/* FAQ ACCORDION - iOS Inset Grouped List Style */}
-        <section id="faq" className="scroll-mt-28 py-16 sm:py-24 lg:py-32">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-3xl">
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-2xl xs:text-3xl sm:text-4xl font-bold text-white tracking-tight mb-2.5 sm:mb-3">
+        <section id="faq" className="scroll-mt-28 py-12 sm:py-16 lg:py-20">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-2xl">
+            <div className="text-center mb-8 sm:mb-10">
+              <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">
                 Frequently Asked Questions
               </h2>
-              <p className="text-zinc-400 text-xs sm:text-base">
+              <p className="text-zinc-400 text-xs sm:text-sm">
                 Everything you need to know about ExpenseMate and getting started.
               </p>
             </div>
 
-            <div className="space-y-2.5 sm:space-y-3">
+            <div className="space-y-2 sm:space-y-2.5">
               {faqItems.map((item, idx) => {
                 const isOpen = openFaq === idx;
                 return (
                   <div
                     key={idx}
-                    className="rounded-2xl border border-white/[0.08] bg-[#161618] overflow-hidden transition-colors"
+                    className="rounded-xl border border-white/[0.08] bg-[#161618] overflow-hidden transition-colors"
                   >
                     <button
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
-                      className="w-full p-4 sm:p-5 text-left font-semibold text-white flex items-center justify-between gap-3 sm:gap-4 focus:outline-none"
+                      className="w-full p-3.5 sm:p-4 text-left font-semibold text-white flex items-center justify-between gap-3 focus:outline-none"
                     >
-                      <span className="text-sm sm:text-base">{item.q}</span>
+                      <span className="text-xs sm:text-sm">{item.q}</span>
                       <ChevronDown
-                        className={`w-4 h-4 sm:w-5 sm:h-5 text-zinc-400 transition-transform duration-200 shrink-0 ${
+                        className={`w-4 h-4 text-zinc-400 transition-transform duration-200 shrink-0 ${
                           isOpen ? "rotate-180 text-[#0A84FF]" : ""
                         }`}
                       />
                     </button>
                     {isOpen && (
-                      <div className="px-4 sm:px-5 pb-4 sm:pb-5 text-zinc-300 text-xs sm:text-sm leading-relaxed animate-in fade-in duration-200 border-t border-white/[0.04] pt-3">
+                      <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 text-zinc-300 text-xs sm:text-[13px] leading-relaxed animate-in fade-in duration-200 border-t border-white/[0.04] pt-2.5">
                         {item.a}
                       </div>
                     )}

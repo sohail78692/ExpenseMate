@@ -5,13 +5,26 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import GooeyNav from "@/components/GooeyNav";
-import LiquidChrome from "@/components/LiquidChrome";
+import dynamic from "next/dynamic";
+
+const LiquidChrome = dynamic(() => import("@/components/LiquidChrome"), {
+  ssr: false,
+  loading: () => <div className="w-full h-full" aria-hidden="true" />,
+});
+
+const DoodleCrewFooter = dynamic(() => import("@/components/ui/doodle-crew-footer"), {
+  ssr: false,
+});
+
+const ChromaGrid = dynamic(() => import("@/components/ChromaGrid"), {
+  ssr: false,
+});
 import TextType from "@/components/TextType";
 import RotatingText from "@/components/RotatingText";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
-import ChromaGrid, { ChromaItem } from "@/components/ChromaGrid";
+
 import AnimatedContent from "@/components/AnimatedContent";
-import DoodleCrewFooter from "@/components/ui/doodle-crew-footer";
+
 import { Button } from "@/components/ui/button";
 import {
   TrendingUp,
@@ -118,11 +131,12 @@ export default function HomePage() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/dashboard");
+      router.replace("/dashboard");
     }
   }, [status, router]);
 
-  if (status === "loading") {
+  // Non-blocking for unauthenticated visitors so LCP & initial render are instantaneous
+  if (false && status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-black">
         <div className="flex flex-col items-center gap-4">
@@ -185,6 +199,7 @@ export default function HomePage() {
           thickness={1.1}
           interactive={true}
           roughness={0.25}
+          maxDevicePixelRatio={1.5}
         />
       </div>
 
@@ -245,6 +260,7 @@ export default function HomePage() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="lg:hidden p-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/[0.08] focus:outline-none active:scale-95 transition-all"
               aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="w-4 h-4 sm:w-5 sm:h-5" /> : <Menu className="w-4 h-4 sm:w-5 sm:h-5" />}
             </button>
@@ -423,7 +439,7 @@ export default function HomePage() {
                       </span>
                     </div>
                     <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">$14,850.40</div>
-                    <div className="text-[10px] sm:text-[11px] text-zinc-500 mt-1">Across 3 connected cards</div>
+                    <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-1">Across 3 connected cards</div>
                   </div>
 
                   <div className="p-4 sm:p-5 rounded-2xl bg-[#1c1c1e] border border-white/[0.06] hover:border-[#0A84FF]/40 transition-colors">
@@ -432,7 +448,7 @@ export default function HomePage() {
                       <span className="text-xs text-[#0A84FF] font-semibold">On Track</span>
                     </div>
                     <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">$2,180.20</div>
-                    <div className="text-[10px] sm:text-[11px] text-zinc-500 mt-1">$819.80 remaining of $3,000 budget</div>
+                    <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-1">$819.80 remaining of $3,000 budget</div>
                   </div>
 
                   <div className="p-4 sm:p-5 rounded-2xl bg-[#1c1c1e] border border-white/[0.06] hover:border-[#0A84FF]/40 transition-colors">
@@ -441,7 +457,7 @@ export default function HomePage() {
                       <span className="text-xs text-[#64D2FF] font-semibold">85% Complete</span>
                     </div>
                     <div className="text-xl sm:text-2xl lg:text-3xl font-bold text-white tracking-tight">$8,500.00</div>
-                    <div className="text-[10px] sm:text-[11px] text-zinc-500 mt-1">Target: $10,000 (Target: Nov 2026)</div>
+                    <div className="text-[10px] sm:text-[11px] text-zinc-400 mt-1">Target: $10,000 (Target: Nov 2026)</div>
                   </div>
                 </div>
 
@@ -527,7 +543,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Day of week labels */}
-                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1.5 text-center text-[10px] sm:text-xs text-zinc-500 font-medium">
+                    <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1.5 text-center text-[10px] sm:text-xs text-zinc-400 font-medium">
                       {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, d) => (
                         <div key={d}>{day}</div>
                       ))}
@@ -707,7 +723,7 @@ export default function HomePage() {
                       <div className="w-11 h-11 rounded-2xl bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] flex items-center justify-center">
                         <Shield className="w-5 h-5" />
                       </div>
-                      <span className="text-2xl font-black font-mono text-zinc-600">
+                      <span className="text-2xl font-black font-mono text-zinc-400" aria-hidden="true">
                         01
                       </span>
                     </div>
@@ -727,7 +743,7 @@ export default function HomePage() {
                       <div className="w-11 h-11 rounded-2xl bg-[#5E5CE6]/15 border border-[#5E5CE6]/30 text-[#5E5CE6] flex items-center justify-center">
                         <CreditCard className="w-5 h-5" />
                       </div>
-                      <span className="text-2xl font-black font-mono text-zinc-600">
+                      <span className="text-2xl font-black font-mono text-zinc-400" aria-hidden="true">
                         02
                       </span>
                     </div>
@@ -747,7 +763,7 @@ export default function HomePage() {
                       <div className="w-11 h-11 rounded-2xl bg-[#30D158]/15 border border-[#30D158]/30 text-[#30D158] flex items-center justify-center">
                         <Target className="w-5 h-5" />
                       </div>
-                      <span className="text-2xl font-black font-mono text-zinc-600">
+                      <span className="text-2xl font-black font-mono text-zinc-400" aria-hidden="true">
                         03
                       </span>
                     </div>
@@ -787,7 +803,10 @@ export default function HomePage() {
                     className="rounded-xl border border-white/[0.08] bg-[#161618] overflow-hidden transition-colors"
                   >
                     <button
+                      id={`faq-btn-${idx}`}
                       onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      aria-expanded={isOpen}
+                      aria-controls={`faq-ans-${idx}`}
                       className="w-full p-3.5 sm:p-4 text-left font-semibold text-white flex items-center justify-between gap-3 focus:outline-none"
                     >
                       <span className="text-xs sm:text-sm">{item.q}</span>
@@ -795,10 +814,16 @@ export default function HomePage() {
                         className={`w-4 h-4 text-zinc-400 transition-transform duration-200 shrink-0 ${
                           isOpen ? "rotate-180 text-[#0A84FF]" : ""
                         }`}
+                        aria-hidden="true"
                       />
                     </button>
                     {isOpen && (
-                      <div className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 text-zinc-300 text-xs sm:text-[13px] leading-relaxed animate-in fade-in duration-200 border-t border-white/[0.04] pt-2.5">
+                      <div
+                        id={`faq-ans-${idx}`}
+                        role="region"
+                        aria-labelledby={`faq-btn-${idx}`}
+                        className="px-3.5 sm:px-4 pb-3.5 sm:pb-4 text-zinc-300 text-xs sm:text-[13px] leading-relaxed animate-in fade-in duration-200 border-t border-white/[0.04] pt-2.5"
+                      >
                         {item.a}
                       </div>
                     )}

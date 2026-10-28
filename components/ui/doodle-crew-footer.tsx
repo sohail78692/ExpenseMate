@@ -1244,7 +1244,7 @@ export default function DoodleCrewFooter({
           </ul>
         )}
         {backToTop && (
-          <button type="button" className="dcf-totop" onClick={toTop}>
+          <button type="button" className="dcf-totop" onClick={toTop} aria-label="Back to top">
             <span>Back to top</span>
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
               <path d="M12 20 C11 14 12.5 9 12 4 M6 10 C8 8 10 6 12 4 C14 6 16 8 18.5 9.5" />

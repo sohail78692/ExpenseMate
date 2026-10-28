@@ -20,8 +20,10 @@ export async function POST(request) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        const displayName = (name && name.trim()) ? name.trim() : (email ? email.split('@')[0] : 'ExpenseMate User');
+
         await User.create({
-            name,
+            name: displayName,
             email,
             password: hashedPassword,
         });

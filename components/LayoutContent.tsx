@@ -13,9 +13,9 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
         pathname.startsWith("/reset-password");
 
     return (
-        <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div className={`flex min-h-screen ${isAuthPage ? "bg-[#030712]" : "bg-gray-50 dark:bg-gray-900"}`}>
             {!isAuthPage && <Sidebar />}
-            <main className={`flex-1 ${!isAuthPage ? "p-4 md:p-8 mb-16 md:mb-0" : ""}`}>
+            <main className={`flex-1 ${!isAuthPage ? "p-4 md:p-8 mb-16 md:mb-0" : "w-full min-h-screen"}`}>
                 {children}
             </main>
         </div>

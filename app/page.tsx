@@ -22,6 +22,7 @@ const ChromaGrid = dynamic(() => import("@/components/ChromaGrid"), {
 import TextType from "@/components/TextType";
 import RotatingText from "@/components/RotatingText";
 import { ContainerScroll } from "@/components/ui/container-scroll-animation";
+import { AuthModal } from "@/components/ui/sign-up";
 
 import AnimatedContent from "@/components/AnimatedContent";
 
@@ -57,6 +58,10 @@ export default function HomePage() {
 
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authModal, setAuthModal] = useState<{ isOpen: boolean; mode: "signin" | "signup" }>({
+    isOpen: false,
+    mode: "signup",
+  });
 
   // Hero interactive showcase active tab
   const [activeShowcaseTab, setActiveShowcaseTab] = useState<"feed" | "budgets" | "heatmap">("feed");
@@ -238,22 +243,20 @@ export default function HomePage() {
 
           {/* Action Buttons - Apple Specular Pill Style */}
           <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-            <Link href="/login" className="hidden sm:inline-block">
-              <Button
-                variant="ghost"
-                className="text-zinc-300 hover:text-white hover:bg-white/[0.08] text-xs sm:text-sm font-medium px-3 sm:px-3.5 h-8 rounded-full transition-colors"
-              >
-                Sign In
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button
-                className="bg-gradient-to-b from-[#0A84FF] to-[#0066CC] hover:from-[#1A8CFF] hover:to-[#0071E3] active:scale-[0.97] text-white font-medium px-3.5 sm:px-4.5 h-8 rounded-full text-xs sm:text-sm border border-white/20 shadow-md sm:shadow-lg shadow-[#0A84FF]/30 transition-all"
-              >
-                <span className="hidden xs:inline">Get </span>Started
-                <ArrowRight className="w-3.5 h-3.5 ml-1 sm:ml-1.5" />
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              onClick={() => setAuthModal({ isOpen: true, mode: "signin" })}
+              className="hidden sm:inline-flex text-zinc-300 hover:text-white hover:bg-white/[0.08] text-xs sm:text-sm font-medium px-3 sm:px-3.5 h-8 rounded-full transition-colors cursor-pointer"
+            >
+              Sign In
+            </Button>
+            <Button
+              onClick={() => setAuthModal({ isOpen: true, mode: "signup" })}
+              className="bg-gradient-to-b from-[#0A84FF] to-[#0066CC] hover:from-[#1A8CFF] hover:to-[#0071E3] active:scale-[0.97] text-white font-medium px-3.5 sm:px-4.5 h-8 rounded-full text-xs sm:text-sm border border-white/20 shadow-md sm:shadow-lg shadow-[#0A84FF]/30 transition-all cursor-pointer"
+            >
+              <span className="hidden xs:inline">Get </span>Started
+              <ArrowRight className="w-3.5 h-3.5 ml-1 sm:ml-1.5" />
+            </Button>
 
             {/* Mobile / Tablet Menu Hamburger (visible on < lg) */}
             <button
@@ -297,16 +300,25 @@ export default function HomePage() {
                 );
               })}
               <div className="pt-3 border-t border-white/[0.08] flex flex-col gap-2.5">
-                <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="sm:hidden">
-                  <Button variant="outline" className="w-full justify-center rounded-full border-white/20 text-white hover:bg-white/10 text-sm h-10">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/register" onClick={() => setMobileMenuOpen(false)}>
-                  <Button className="w-full justify-center rounded-full bg-gradient-to-b from-[#0A84FF] to-[#0066CC] hover:from-[#1A8CFF] text-white font-medium text-sm border border-white/20 h-10">
-                    Create Free Account
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAuthModal({ isOpen: true, mode: "signin" });
+                  }}
+                  className="w-full justify-center rounded-full border-white/20 text-white hover:bg-white/10 text-sm h-10 cursor-pointer sm:hidden"
+                >
+                  Sign In
+                </Button>
+                <Button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setAuthModal({ isOpen: true, mode: "signup" });
+                  }}
+                  className="w-full justify-center rounded-full bg-gradient-to-b from-[#0A84FF] to-[#0066CC] hover:from-[#1A8CFF] text-white font-medium text-sm border border-white/20 h-10 cursor-pointer"
+                >
+                  Create Free Account
+                </Button>
               </div>
             </div>
           </>
@@ -358,15 +370,14 @@ export default function HomePage() {
 
                 {/* CTA Group - Apple Pill Buttons */}
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-2 sm:mb-4 w-full sm:w-auto px-2 sm:px-0">
-                  <Link href="/register" className="w-full sm:w-auto">
-                    <Button
-                      size="lg"
-                      className="w-full sm:w-auto text-sm sm:text-base font-semibold px-6 sm:px-8 py-5 sm:py-6 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-xl shadow-[#0071E3]/25 hover:shadow-[#0071E3]/40 hover:scale-[1.02] active:scale-[0.98] transition-all"
-                    >
-                      Start Tracking Free
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
+                  <Button
+                    size="lg"
+                    onClick={() => setAuthModal({ isOpen: true, mode: "signup" })}
+                    className="w-full sm:w-auto text-sm sm:text-base font-semibold px-6 sm:px-8 py-5 sm:py-6 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-xl shadow-[#0071E3]/25 hover:shadow-[#0071E3]/40 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+                  >
+                    Start Tracking Free
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
                   <a href="#how-it-works" className="w-full sm:w-auto">
                     <Button
                       size="lg"
@@ -388,7 +399,7 @@ export default function HomePage() {
                   <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#FFBD2E]"></div>
                   <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#27C93F]"></div>
                   <span className="ml-2 sm:ml-3 text-[11px] sm:text-xs font-mono text-zinc-400">
-                    ExpenseMate <span className="hidden md:inline">• Web Financial Workspace</span>
+                    ExpenseMate <span className="hidden md:inline">â€¢ Web Financial Workspace</span>
                   </span>
                 </div>
 
@@ -488,7 +499,7 @@ export default function HomePage() {
                           </div>
                           <div className="min-w-0">
                             <span className="text-xs sm:text-sm font-medium text-white truncate block">{item.name}</span>
-                            <span className="text-[10px] text-zinc-400 sm:hidden block truncate">{item.cat} • {item.date}</span>
+                            <span className="text-[10px] text-zinc-400 sm:hidden block truncate">{item.cat} â€¢ {item.date}</span>
                           </div>
                         </div>
                         <span className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 font-medium hidden sm:inline shrink-0">
@@ -888,7 +899,7 @@ export default function HomePage() {
             ],
           },
         ]}
-        copyright="© 2026 ExpenseMate. Making personal finance simple, visual, and stress-free."
+        copyright="Â© 2026 ExpenseMate. Making personal finance simple, visual, and stress-free."
         legal={[{ label: "Privacy & FAQ", href: "#faq" }]}
         socials={[
           { label: "GitHub Repo", href: "https://github.com/sohail78692/ExpenseMate" },
@@ -902,6 +913,15 @@ export default function HomePage() {
           accent: "#0A84FF",
         }}
         className="border-t border-white/[0.08]"
+      />
+
+      {/* Interactive Glass Auth Popup in Middle of Screen with Transparent Backdrop */}
+      <AuthModal
+        isModal={true}
+        isOpen={authModal.isOpen}
+        mode={authModal.mode}
+        onClose={() => setAuthModal((prev) => ({ ...prev, isOpen: false }))}
+        brandName="ExpenseMate"
       />
     </div>
   );

@@ -140,17 +140,24 @@ export interface AuthComponentProps {
   mode?: "signup" | "signin";
   onSwitchMode?: () => void;
   onSubmitCredentials?: (credentials: { name?: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
+  isModal?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 export const AuthComponent = ({
   logo = <DefaultLogo />,
   brandName = "ExpenseMate",
   onSuccess,
-  mode = "signup",
+  mode: initialMode = "signup",
   onSwitchMode,
-  onSubmitCredentials
+  onSubmitCredentials,
+  isModal = false,
+  isOpen = true,
+  onClose
 }: AuthComponentProps) => {
   const router = useRouter();
+  const [currentMode, setCurrentMode] = useState<"signup" | "signin">(initialMode);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -160,6 +167,29 @@ export const AuthComponent = ({
   const [modalStatus, setModalStatus] = useState<'closed' | 'loading' | 'error' | 'success'>('closed');
   const [modalErrorMessage, setModalErrorMessage] = useState('');
   const confettiRef = useRef<ConfettiRef>(null);
+
+  useEffect(() => {
+    setCurrentMode(initialMode);
+  }, [initialMode]);
+
+  useEffect(() => {
+    if (!isModal || !isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && onClose) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isModal, isOpen, onClose]);
+
+  const handleToggleMode = () => {
+    const next = currentMode === "signup" ? "signin" : "signup";
+    setCurrentMode(next);
+    setModalStatus('closed');
+    setModalErrorMessage('');
+    if (onSwitchMode) onSwitchMode();
+  };
 
   const isEmailValid = /\S+@\S+\.\S+/.test(email);
 
@@ -177,7 +207,7 @@ export const AuthComponent = ({
     e.preventDefault();
     if (modalStatus !== 'closed') return;
 
-    if (mode === "signup") {
+    if (currentMode === "signup") {
       if (!name.trim()) {
         setModalErrorMessage("Please enter your full name.");
         setModalStatus('error');
@@ -221,7 +251,7 @@ export const AuthComponent = ({
           setModalStatus('error');
           return;
         }
-      } else if (mode === "signin") {
+      } else if (currentMode === "signin") {
         const res = await signIn("credentials", {
           email,
           password,
@@ -327,204 +357,262 @@ export const AuthComponent = ({
     </AnimatePresence>
   );
 
-  return (
-    <div className="dark bg-[#030712] text-white min-h-screen w-full flex flex-col relative overflow-hidden">
-        <style>{`
-            input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none !important; } input[type="password"]::-webkit-credentials-auto-fill-button, input[type="password"]::-webkit-strong-password-auto-fill-button { display: none !important; } input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px transparent inset !important; -webkit-text-fill-color: var(--foreground) !important; background-color: transparent !important; background-clip: content-box !important; transition: background-color 5000s ease-in-out 0s !important; color: var(--foreground) !important; caret-color: var(--foreground) !important; } input:autofill { background-color: transparent !important; background-clip: content-box !important; -webkit-text-fill-color: var(--foreground) !important; color: var(--foreground) !important; } input:-internal-autofill-selected { background-color: transparent !important; background-image: none !important; color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; } input:-webkit-autofill::first-line { color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; }
-            @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; } @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
-            .glass-button-wrap { --anim-time: 400ms; --anim-ease: cubic-bezier(0.25, 1, 0.5, 1); --border-width: clamp(1px, 0.0625em, 4px); position: relative; z-index: 2; transform-style: preserve-3d; transition: transform var(--anim-time) var(--anim-ease); } .glass-button-wrap:has(.glass-button:active) { transform: rotateX(25deg); } .glass-button-shadow { --shadow-cutoff-fix: 2em; position: absolute; width: calc(100% + var(--shadow-cutoff-fix)); height: calc(100% + var(--shadow-cutoff-fix)); top: calc(0% - var(--shadow-cutoff-fix) / 2); left: calc(0% - var(--shadow-cutoff-fix) / 2); filter: blur(clamp(2px, 0.125em, 12px)); transition: filter var(--anim-time) var(--anim-ease); pointer-events: none; z-index: 0; } .glass-button-shadow::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: linear-gradient(180deg, oklch(from var(--foreground) l c h / 20%), oklch(from var(--foreground) l c h / 10%)); width: calc(100% - var(--shadow-cutoff-fix) - 0.25em); height: calc(100% - var(--shadow-cutoff-fix) - 0.25em); top: calc(var(--shadow-cutoff-fix) - 0.5em); left: calc(var(--shadow-cutoff-fix) - 0.875em); padding: 0.125em; box-sizing: border-box; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease); opacity: 1; }
-            .glass-button { -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all var(--anim-time) var(--anim-ease); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button:hover { transform: scale(0.975); backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button-text { color: oklch(from var(--foreground) l c h / 90%); text-shadow: 0em 0.25em 0.05em oklch(from var(--foreground) l c h / 10%); transition: all var(--anim-time) var(--anim-ease); } .glass-button:hover .glass-button-text { text-shadow: 0.025em 0.025em 0.025em oklch(from var(--foreground) l c h / 12%); } .glass-button-text::after { content: ""; display: block; position: absolute; width: calc(100% - var(--border-width)); height: calc(100% - var(--border-width)); top: calc(0% + var(--border-width) / 2); left: calc(0% + var(--border-width) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(var(--anim-time) * 1.25) var(--anim-ease), --angle-2 calc(var(--anim-time) * 1.25) var(--anim-ease); } .glass-button:hover .glass-button-text::after { background-position: 25% 50%; } .glass-button:active .glass-button-text::after { background-position: 50% 15%; --angle-2: -15deg; } .glass-button::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + var(--border-width)); height: calc(100% + var(--border-width)); top: calc(0% - var(--border-width) / 2); left: calc(0% - var(--border-width) / 2); padding: var(--border-width); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(var(--border-width) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-button:hover::after { --angle-1: -125deg; } .glass-button:active::after { --angle-1: -75deg; } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow { filter: blur(clamp(2px, 0.0625em, 6px)); } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.875em); opacity: 1; } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow { filter: blur(clamp(2px, 0.125em, 12px)); } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.5em); opacity: 0.75; } .glass-button-wrap:has(.glass-button:active) .glass-button-text { text-shadow: 0.025em 0.25em 0.05em oklch(from var(--foreground) l c h / 12%); } .glass-button-wrap:has(.glass-button:active) .glass-button { box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.125em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0.225em 0.05em 0 oklch(from var(--foreground) l c h / 5%), 0 0.25em 0 0 oklch(from var(--background) l c h / 75%), inset 0 0.25em 0.05em 0 oklch(from var(--foreground) l c h / 15%); } @media (hover: none) and (pointer: coarse) { .glass-button::after, .glass-button:hover::after, .glass-button:active::after { --angle-1: -75deg; } .glass-button .glass-button-text::after, .glass-button:active .glass-button-text::after { --angle-2: -45deg; } }
-            .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; } .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.25rem; -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input-wrap:focus-within .glass-input { backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + clamp(1px, 0.0625em, 4px)); height: calc(100% + clamp(1px, 0.0625em, 4px)); top: calc(0% - clamp(1px, 0.0625em, 4px) / 2); left: calc(0% - clamp(1px, 0.0625em, 4px) / 2); padding: clamp(1px, 0.0625em, 4px); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(clamp(1px, 0.0625em, 4px) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-input-wrap:focus-within .glass-input::after { --angle-1: -125deg; } .glass-input-text-area { position: absolute; inset: 0; border-radius: 9999px; pointer-events: none; } .glass-input-text-area::after { content: ""; display: block; position: absolute; width: calc(100% - clamp(1px, 0.0625em, 4px)); height: calc(100% - clamp(1px, 0.0625em, 4px)); top: calc(0% + clamp(1px, 0.0625em, 4px) / 2); left: calc(0% + clamp(1px, 0.0625em, 4px) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1), --angle-2 calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1); } .glass-input-wrap:focus-within .glass-input-text-area::after { background-position: 25% 50%; }
-        `}</style>
+  const glassStyles = `
+    input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none !important; } input[type="password"]::-webkit-credentials-auto-fill-button, input[type="password"]::-webkit-strong-password-auto-fill-button { display: none !important; } input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px transparent inset !important; -webkit-text-fill-color: var(--foreground) !important; background-color: transparent !important; background-clip: content-box !important; transition: background-color 5000s ease-in-out 0s !important; color: var(--foreground) !important; caret-color: var(--foreground) !important; } input:autofill { background-color: transparent !important; background-clip: content-box !important; -webkit-text-fill-color: var(--foreground) !important; color: var(--foreground) !important; } input:-internal-autofill-selected { background-color: transparent !important; background-image: none !important; color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; } input:-webkit-autofill::first-line { color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; }
+    @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; } @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
+    .glass-button-wrap { --anim-time: 400ms; --anim-ease: cubic-bezier(0.25, 1, 0.5, 1); --border-width: clamp(1px, 0.0625em, 4px); position: relative; z-index: 2; transform-style: preserve-3d; transition: transform var(--anim-time) var(--anim-ease); } .glass-button-wrap:has(.glass-button:active) { transform: rotateX(25deg); } .glass-button-shadow { --shadow-cutoff-fix: 2em; position: absolute; width: calc(100% + var(--shadow-cutoff-fix)); height: calc(100% + var(--shadow-cutoff-fix)); top: calc(0% - var(--shadow-cutoff-fix) / 2); left: calc(0% - var(--shadow-cutoff-fix) / 2); filter: blur(clamp(2px, 0.125em, 12px)); transition: filter var(--anim-time) var(--anim-ease); pointer-events: none; z-index: 0; } .glass-button-shadow::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: linear-gradient(180deg, oklch(from var(--foreground) l c h / 20%), oklch(from var(--foreground) l c h / 10%)); width: calc(100% - var(--shadow-cutoff-fix) - 0.25em); height: calc(100% - var(--shadow-cutoff-fix) - 0.25em); top: calc(var(--shadow-cutoff-fix) - 0.5em); left: calc(var(--shadow-cutoff-fix) - 0.875em); padding: 0.125em; box-sizing: border-box; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease); opacity: 1; }
+    .glass-button { -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all var(--anim-time) var(--anim-ease); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button:hover { transform: scale(0.975); backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button-text { color: oklch(from var(--foreground) l c h / 90%); text-shadow: 0em 0.25em 0.05em oklch(from var(--foreground) l c h / 10%); transition: all var(--anim-time) var(--anim-ease); } .glass-button:hover .glass-button-text { text-shadow: 0.025em 0.025em 0.025em oklch(from var(--foreground) l c h / 12%); } .glass-button-text::after { content: ""; display: block; position: absolute; width: calc(100% - var(--border-width)); height: calc(100% - var(--border-width)); top: calc(0% + var(--border-width) / 2); left: calc(0% + var(--border-width) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(var(--anim-time) * 1.25) var(--anim-ease), --angle-2 calc(var(--anim-time) * 1.25) var(--anim-ease); } .glass-button:hover .glass-button-text::after { background-position: 25% 50%; } .glass-button:active .glass-button-text::after { background-position: 50% 15%; --angle-2: -15deg; } .glass-button::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + var(--border-width)); height: calc(100% + var(--border-width)); top: calc(0% - var(--border-width) / 2); left: calc(0% - var(--border-width) / 2); padding: var(--border-width); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(var(--border-width) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-button:hover::after { --angle-1: -125deg; } .glass-button:active::after { --angle-1: -75deg; } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow { filter: blur(clamp(2px, 0.0625em, 6px)); } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.875em); opacity: 1; } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow { filter: blur(clamp(2px, 0.125em, 12px)); } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.5em); opacity: 0.75; } .glass-button-wrap:has(.glass-button:active) .glass-button-text { text-shadow: 0.025em 0.25em 0.05em oklch(from var(--foreground) l c h / 12%); } .glass-button-wrap:has(.glass-button:active) .glass-button { box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.125em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0.225em 0.05em 0 oklch(from var(--foreground) l c h / 5%), 0 0.25em 0 0 oklch(from var(--background) l c h / 75%), inset 0 0.25em 0.05em 0 oklch(from var(--foreground) l c h / 15%); } @media (hover: none) and (pointer: coarse) { .glass-button::after, .glass-button:hover::after, .glass-button:active::after { --angle-1: -75deg; } .glass-button .glass-button-text::after, .glass-button:active .glass-button-text::after { --angle-2: -45deg; } }
+    .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; } .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.25rem; -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input-wrap:focus-within .glass-input { backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + clamp(1px, 0.0625em, 4px)); height: calc(100% + clamp(1px, 0.0625em, 4px)); top: calc(0% - clamp(1px, 0.0625em, 4px) / 2); left: calc(0% - clamp(1px, 0.0625em, 4px) / 2); padding: clamp(1px, 0.0625em, 4px); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(clamp(1px, 0.0625em, 4px) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-input-wrap:focus-within .glass-input::after { --angle-1: -125deg; } .glass-input-text-area { position: absolute; inset: 0; border-radius: 9999px; pointer-events: none; } .glass-input-text-area::after { content: ""; display: block; position: absolute; width: calc(100% - clamp(1px, 0.0625em, 4px)); height: calc(100% - clamp(1px, 0.0625em, 4px)); top: calc(0% + clamp(1px, 0.0625em, 4px) / 2); left: calc(0% + clamp(1px, 0.0625em, 4px) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1), --angle-2 calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1); } .glass-input-wrap:focus-within .glass-input-text-area::after { background-position: 25% 50%; }
+  `;
 
-        <Confetti ref={confettiRef} manualstart className="fixed top-0 left-0 w-full h-full pointer-events-none z-[999]" />
-        <Modal />
+  const authContent = (
+    <fieldset disabled={modalStatus !== 'closed'} className="relative z-10 flex flex-col items-center gap-5 w-full mx-auto">
+      <div className="w-full text-center space-y-1">
+        <BlurFade delay={0.05}>
+          <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+            {currentMode === "signup" ? "Create Account" : "Welcome Back"}
+          </h2>
+        </BlurFade>
+        <BlurFade delay={0.1}>
+          <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+            {currentMode === "signup"
+              ? "Start tracking expenses in 30 seconds with complete privacy."
+              : "Enter your credentials to access your account."}
+          </p>
+        </BlurFade>
+      </div>
 
-        <Link
-            href="/"
-            className="fixed top-4 left-4 z-30 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-white/80 bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-colors"
-        >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Home</span>
-        </Link>
-
-        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
-            {logo}
-            <h1 className="text-base font-bold text-white">{brandName}</h1>
-        </div>
-
-        <div className={cn("flex w-full flex-1 h-full items-center justify-center bg-[#030712]", "relative overflow-hidden py-16 px-4")}>
-            <fieldset disabled={modalStatus !== 'closed'} className="relative z-10 flex flex-col items-center gap-6 w-full max-w-[360px] mx-auto">
-                <div className="w-full text-center space-y-1">
-                    <BlurFade delay={0.1}>
-                        <h2 className="font-serif font-light text-3xl sm:text-4xl tracking-tight text-white drop-shadow-sm">
-                            {mode === "signup" ? "Create Account" : "Welcome Back"}
-                        </h2>
-                    </BlurFade>
-                    <BlurFade delay={0.2}>
-                        <p className="text-sm font-medium text-zinc-400">
-                            {mode === "signup"
-                                ? "Start tracking expenses in 30 seconds with complete privacy."
-                                : "Enter your credentials to access your account."}
-                        </p>
-                    </BlurFade>
+      <form onSubmit={handleFinalSubmit} className="w-full space-y-3.5">
+        {currentMode === "signup" && (
+          <BlurFade delay={0.15}>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Full Name</label>
+              <div className="glass-input-wrap w-full">
+                <div className="glass-input">
+                  <span className="glass-input-text-area"></span>
+                  <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                    <User className="h-4 w-4 text-zinc-300" />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="John Doe"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
+                  />
                 </div>
+              </div>
+            </div>
+          </BlurFade>
+        )}
 
-                <form onSubmit={handleFinalSubmit} className="w-full space-y-4">
-                    {mode === "signup" && (
-                        <BlurFade delay={0.25}>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-semibold text-muted-foreground pl-2">Full Name</label>
-                                <div className="glass-input-wrap w-full">
-                                    <div className="glass-input">
-                                        <span className="glass-input-text-area"></span>
-                                        <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                                            <User className="h-5 w-5 text-foreground/70" />
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="John Doe"
-                                            value={name}
-                                            onChange={(e) => setName(e.target.value)}
-                                            required
-                                            className="relative z-10 h-10 w-0 flex-grow bg-transparent text-foreground placeholder:text-foreground/50 focus:outline-none text-sm pr-3"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </BlurFade>
-                    )}
+        <BlurFade delay={0.2}>
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Email Address</label>
+            <div className="glass-input-wrap w-full">
+              <div className="glass-input">
+                <span className="glass-input-text-area"></span>
+                <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                  <Mail className="h-4 w-4 text-zinc-300" />
+                </div>
+                <input
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
+                />
+              </div>
+            </div>
+          </div>
+        </BlurFade>
 
-                    <BlurFade delay={0.3}>
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-semibold text-muted-foreground pl-2">Email Address</label>
-                            <div className="glass-input-wrap w-full">
-                                <div className="glass-input">
-                                    <span className="glass-input-text-area"></span>
-                                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                                        <Mail className="h-5 w-5 text-foreground/70" />
-                                    </div>
-                                    <input
-                                        type="email"
-                                        placeholder="name@example.com"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        required
-                                        className="relative z-10 h-10 w-0 flex-grow bg-transparent text-foreground placeholder:text-foreground/50 focus:outline-none text-sm pr-3"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </BlurFade>
+        <BlurFade delay={0.25}>
+          <div className="space-y-1">
+            <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Password</label>
+            <div className="glass-input-wrap w-full">
+              <div className="glass-input">
+                <span className="glass-input-text-area"></span>
+                <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                  <Lock className="h-4 w-4 text-zinc-300" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder={currentMode === "signup" ? "Min. 6 characters" : "••••••••"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
+                />
+                <button
+                  type="button"
+                  aria-label="Toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+            {currentMode === "signin" && (
+              <div className="flex justify-end pt-0.5 pr-1">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs text-zinc-200 hover:text-white font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors underline-offset-4 hover:underline"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+            )}
+          </div>
+        </BlurFade>
 
-                    <BlurFade delay={0.35}>
-                        <div className="space-y-1.5">
-                            <label className="text-xs font-semibold text-muted-foreground pl-2">Password</label>
-                            <div className="glass-input-wrap w-full">
-                                <div className="glass-input">
-                                    <span className="glass-input-text-area"></span>
-                                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                                        <Lock className="h-5 w-5 text-foreground/70" />
-                                    </div>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder={mode === "signup" ? "Password (min. 6 characters)" : "••••••••"}
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        required
-                                        className="relative z-10 h-10 w-0 flex-grow bg-transparent text-foreground placeholder:text-foreground/50 focus:outline-none text-sm pr-2"
-                                    />
-                                    <button
-                                        type="button"
-                                        aria-label="Toggle password visibility"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        className="relative z-10 pr-3 text-foreground/60 hover:text-foreground transition-colors"
-                                    >
-                                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                    </button>
-                                </div>
-                            </div>
-                            {mode === "signin" && (
-                                <div className="flex justify-end pt-1 pr-1">
-                                    <Link
-                                        href="/forgot-password"
-                                        className="text-xs text-zinc-400 hover:text-white transition-colors underline-offset-4 hover:underline"
-                                    >
-                                        Forgot Password?
-                                    </Link>
-                                </div>
-                            )}
-                        </div>
-                    </BlurFade>
+        {currentMode === "signup" && (
+          <BlurFade delay={0.3}>
+            <div className="space-y-1">
+              <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Confirm Password</label>
+              <div className="glass-input-wrap w-full">
+                <div className="glass-input">
+                  <span className="glass-input-text-area"></span>
+                  <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                    <Lock className="h-4 w-4 text-zinc-300" />
+                  </div>
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
+                  />
+                  <button
+                    type="button"
+                    aria-label="Toggle confirm password visibility"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </BlurFade>
+        )}
 
-                    {mode === "signup" && (
-                        <BlurFade delay={0.4}>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-semibold text-muted-foreground pl-2">Confirm Password</label>
-                                <div className="glass-input-wrap w-full">
-                                    <div className="glass-input">
-                                        <span className="glass-input-text-area"></span>
-                                        <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                                            <Lock className="h-5 w-5 text-foreground/70" />
-                                        </div>
-                                        <input
-                                            type={showConfirmPassword ? "text" : "password"}
-                                            placeholder="Confirm your password"
-                                            value={confirmPassword}
-                                            onChange={(e) => setConfirmPassword(e.target.value)}
-                                            required
-                                            className="relative z-10 h-10 w-0 flex-grow bg-transparent text-foreground placeholder:text-foreground/50 focus:outline-none text-sm pr-2"
-                                        />
-                                        <button
-                                            type="button"
-                                            aria-label="Toggle confirm password visibility"
-                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className="relative z-10 pr-3 text-foreground/60 hover:text-foreground transition-colors"
-                                        >
-                                            {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </BlurFade>
-                    )}
-
-                    <div className="pt-2">
-                        <GlassButton
-                            type="submit"
-                            size="default"
-                            className="w-full"
-                            contentClassName="w-full flex items-center justify-center gap-2 font-semibold"
-                        >
-                            <span>{mode === "signup" ? "Create Account" : "Sign In"}</span>
-                            <ArrowRight className="w-4 h-4" />
-                        </GlassButton>
-                    </div>
-                </form>
-
-                <BlurFade delay={0.45} inView={true} className="w-full text-center">
-                    <div className="text-xs text-zinc-400 flex flex-col items-center gap-2">
-                        {mode === "signup" ? (
-                            <p>
-                                Already have an account?{" "}
-                                <Link href="/login" className="text-indigo-400 hover:text-indigo-300 hover:underline font-semibold ml-1">
-                                    Sign In
-                                </Link>
-                            </p>
-                        ) : (
-                            <p>
-                                Don&apos;t have an account?{" "}
-                                <Link href="/register" className="text-indigo-400 hover:text-indigo-300 hover:underline font-semibold ml-1">
-                                    Sign Up
-                                </Link>
-                            </p>
-                        )}
-                    </div>
-                </BlurFade>
-            </fieldset>
+        <div className="pt-2">
+          <GlassButton
+            type="submit"
+            size="default"
+            className="w-full"
+            contentClassName="w-full flex items-center justify-center gap-2 font-semibold"
+          >
+            <span>{currentMode === "signup" ? "Create Account" : "Sign In"}</span>
+            <ArrowRight className="w-4 h-4" />
+          </GlassButton>
         </div>
+      </form>
+
+      <BlurFade delay={0.35} inView={true} className="w-full text-center">
+        <div className="text-xs text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] flex flex-col items-center gap-2">
+          {currentMode === "signup" ? (
+            <p>
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={handleToggleMode}
+                className="text-sky-300 hover:text-sky-200 font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
+              >
+                Sign In
+              </button>
+            </p>
+          ) : (
+            <p>
+              Don&apos;t have an account?{" "}
+              <button
+                type="button"
+                onClick={handleToggleMode}
+                className="text-sky-300 hover:text-sky-200 font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
+              >
+                Sign Up
+              </button>
+            </p>
+          )}
+        </div>
+      </BlurFade>
+    </fieldset>
+  );
+
+  if (isModal) {
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <style>{glassStyles}</style>
+            <Confetti ref={confettiRef} manualstart className="fixed top-0 left-0 w-full h-full pointer-events-none z-[999]" />
+            <Modal />
+
+            {/* Transparent backdrop overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={onClose}
+              className="fixed inset-0 bg-transparent cursor-pointer"
+              aria-hidden="true"
+            />
+
+            {/* Modal Card in middle of screen - totally transparent glass */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="dark relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden"
+            >
+              {onClose && (
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close modal"
+                  className="absolute top-4 right-4 z-20 p-1.5 rounded-full text-zinc-300 hover:text-white hover:bg-white/10 active:scale-95 transition-all cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+
+              {authContent}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    );
+  }
+
+  return (
+    <div className="dark bg-[#030712] text-white min-h-screen w-full flex flex-col items-center justify-center relative overflow-hidden p-4">
+      <style>{glassStyles}</style>
+      <Confetti ref={confettiRef} manualstart className="fixed top-0 left-0 w-full h-full pointer-events-none z-[999]" />
+      <Modal />
+
+      <Link
+        href="/"
+        className="fixed top-4 left-4 z-30 inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-white/80 bg-white/10 hover:bg-white/20 border border-white/15 backdrop-blur-md transition-colors"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" />
+        <span>Back to Home</span>
+      </Link>
+
+      <div className="relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden my-auto">
+        {authContent}
+      </div>
     </div>
   );
 };
+
+export const AuthModal = (props: AuthComponentProps) => <AuthComponent {...props} isModal={true} />;
 
 export default AuthComponent;

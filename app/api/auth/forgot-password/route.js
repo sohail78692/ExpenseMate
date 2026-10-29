@@ -39,7 +39,7 @@ export async function POST(request) {
         // Send email
         try {
             // Get base URL from request or environment
-            const baseUrl = process.env.NEXTAUTH_URL || `https://${request.headers.get('host')}`;
+            const baseUrl = (process.env.NEXTAUTH_URL || `https://${request.headers.get('host')}`).replace(/\/+$/, '');
             await sendPasswordResetEmail(email, resetToken, baseUrl);
             console.log(`Password reset email sent to ${email}`);
 
@@ -52,14 +52,15 @@ export async function POST(request) {
             // Still log the token for development/testing
             console.log(`Password reset requested for ${email}`);
             console.log(`Reset token: ${resetToken}`);
-            console.log(`Reset link: ${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`);
+            const devBaseUrl = (process.env.NEXTAUTH_URL || 'http://localhost:3000').replace(/\/+$/, '');
+            console.log(`Reset link: ${devBaseUrl}/reset-password?token=${resetToken}`);
 
             return NextResponse.json(
                 {
                     message: "Email service is not configured. Please contact support.",
                     // In development, include the link
                     ...(process.env.NODE_ENV === "development" && {
-                        devLink: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/reset-password?token=${resetToken}`
+                        devLink: `${devBaseUrl}/reset-password?token=${resetToken}`
                     })
                 },
                 { status: 500 }

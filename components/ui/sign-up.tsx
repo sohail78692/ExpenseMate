@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 // Importing class-variance-authority for the built-in button component
 import { cva, type VariantProps } from "class-variance-authority";
 // Importing icons from lucide-react
-import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User, CheckCircle2, Check } from "lucide-react";
 // Importing animation components from framer-motion
 import { AnimatePresence, motion, useInView, Variants, Transition } from "framer-motion";
 import KineticDotsLoader from "@/components/ui/kinetic-dots-loader";
@@ -729,23 +729,38 @@ export const AuthComponent = ({
             exit="exit"
             className="w-full flex flex-col items-center gap-5"
           >
-            <div className="w-full text-center space-y-1">
-              <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                Forgot Password?
-              </h2>
-              <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
-                Enter your email address and we&apos;ll send you instructions to reset your password.
-              </p>
-            </div>
+            {!forgotSuccess && (
+              <div className="w-full text-center space-y-1">
+                <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                  Forgot Password?
+                </h2>
+                <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+                  Enter your email address and we&apos;ll send you instructions to reset your password.
+                </p>
+              </div>
+            )}
 
             {forgotSuccess ? (
               <div className="space-y-4 text-center py-2 w-full">
-                <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
-                  <CheckCircle2 className="w-7 h-7 text-emerald-400" />
+                <div className="relative w-16 h-16 mx-auto flex items-center justify-center my-1">
+                  {/* Ambient soft glow aura */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#0A84FF]/25 to-[#30D158]/35 blur-xl pointer-events-none" />
+                  
+                  {/* Frosted liquid glass orb */}
+                  <div className="relative w-16 h-16 rounded-full bg-white/[0.08] backdrop-blur-2xl border border-white/30 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.45),inset_0_-1.5px_2px_rgba(0,0,0,0.5),0_12px_28px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
+                    {/* Top specular highlight reflection arc */}
+                    <div className="absolute -top-1 inset-x-2 h-7 rounded-full bg-gradient-to-b from-white/35 to-transparent pointer-events-none" />
+                    
+                    {/* Soft ambient tint inside */}
+                    <div className="absolute inset-2 rounded-full bg-gradient-to-tr from-[#0A84FF]/15 via-transparent to-[#30D158]/20 blur-[2px] pointer-events-none" />
+                    
+                    {/* Clean crisp tick mark with neon glow drop-shadow */}
+                    <Check className="relative z-10 w-7 h-7 text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.85)] stroke-[2.75]" />
+                  </div>
                 </div>
                 <div className="space-y-1.5">
-                  <h3 className="font-semibold text-base text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
-                    Check your email!
+                  <h3 className="font-serif font-light text-2xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                    Check your email
                   </h3>
                   <p className="text-xs text-zinc-200/90 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
                     We&apos;ve sent password reset instructions to your email address. Please follow the link in your inbox.

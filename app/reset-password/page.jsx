@@ -4,7 +4,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { GlassButton, glassStyles } from "@/components/ui/sign-up";
-import { AlertCircle, CheckCircle2, Loader2, ArrowLeft, ArrowRight, Lock, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, CheckCircle2, Check, Loader2, ArrowLeft, ArrowRight, Lock, Eye, EyeOff } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -119,8 +119,21 @@ function ResetPasswordContent() {
 
             {success ? (
                 <div className="space-y-4 text-center py-2">
-                    <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
-                        <CheckCircle2 className="w-7 h-7 text-emerald-400" />
+                    <div className="relative w-16 h-16 mx-auto flex items-center justify-center my-2">
+                        {/* Ambient soft glow aura */}
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#0A84FF]/25 to-[#30D158]/35 blur-xl pointer-events-none" />
+                        
+                        {/* Frosted liquid glass orb */}
+                        <div className="relative w-16 h-16 rounded-full bg-white/[0.08] backdrop-blur-2xl border border-white/30 shadow-[inset_0_1.5px_2px_rgba(255,255,255,0.45),inset_0_-1.5px_2px_rgba(0,0,0,0.5),0_12px_28px_rgba(0,0,0,0.6)] flex items-center justify-center overflow-hidden">
+                            {/* Top specular highlight reflection arc */}
+                            <div className="absolute -top-1 inset-x-2 h-7 rounded-full bg-gradient-to-b from-white/35 to-transparent pointer-events-none" />
+                            
+                            {/* Soft ambient tint inside */}
+                            <div className="absolute inset-2 rounded-full bg-gradient-to-tr from-[#0A84FF]/15 via-transparent to-[#30D158]/20 blur-[2px] pointer-events-none" />
+                            
+                            {/* Clean crisp tick mark with neon glow drop-shadow */}
+                            <Check className="relative z-10 w-7 h-7 text-emerald-400 drop-shadow-[0_0_12px_rgba(52,211,153,0.85)] stroke-[2.75]" />
+                        </div>
                     </div>
                     <div className="space-y-1.5">
                         <h3 className="font-semibold text-base text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">

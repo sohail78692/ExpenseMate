@@ -248,3 +248,32 @@ html {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/* Ocean Flow Animations inside Button */
+@keyframes ocean-flow-inside {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+@keyframes ocean-wave-crest {
+  0% { transform: translateY(15%) scaleX(0.95); }
+  50% { transform: translateY(0%) scaleX(1.05); }
+  100% { transform: translateY(-10%) scaleX(0.98); }
+}
+
+@keyframes ocean-ripple {
+  0% {
+    width: 0px;
+    height: 0px;
+    opacity: 0.85;
+  }
+  100% {
+    width: 320px;
+    height: 320px;
+    opacity: 0;
+  }
+}
+
+.animate-ocean-ripple {
+  animation: ocean-ripple 0.65s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}

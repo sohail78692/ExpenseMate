@@ -59,6 +59,7 @@ export default function HomePage() {
 
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [buttonRipples, setButtonRipples] = useState<{ x: number; y: number; id: number }[]>([]);
   const [authModal, setAuthModal] = useState<{ isOpen: boolean; mode: "signin" | "signup" }>({
     isOpen: false,
     mode: "signup",
@@ -382,11 +383,59 @@ export default function HomePage() {
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-2 sm:mb-4 w-full sm:w-auto px-2 sm:px-0">
                   <Button
                     size="lg"
-                    onClick={() => setAuthModal({ isOpen: true, mode: "signup" })}
-                    className="w-full sm:w-auto text-sm sm:text-base font-semibold px-6 sm:px-8 py-5 sm:py-6 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-xl shadow-[#0071E3]/25 hover:shadow-[#0071E3]/40 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
+                    onClick={(e) => {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = e.clientX - rect.left;
+                      const y = e.clientY - rect.top;
+                      const id = Date.now();
+                      setButtonRipples((prev) => [...prev.slice(-3), { x, y, id }]);
+                      setTimeout(() => {
+                        setButtonRipples((prev) => prev.filter((r) => r.id !== id));
+                      }, 650);
+                      setAuthModal({ isOpen: true, mode: "signup" });
+                    }}
+                    className="relative group overflow-hidden w-full sm:w-auto text-sm sm:text-base font-semibold px-6 sm:px-8 py-5 sm:py-6 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-xl shadow-[#0071E3]/25 hover:shadow-[#0071E3]/40 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                   >
-                    Start Tracking Free
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    {/* Ocean Flow Current Layer (inside button on hover) */}
+                    <div
+                      className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{
+                        background: "linear-gradient(90deg, #0071E3 0%, #00c6ff 50%, #0071E3 100%)",
+                        backgroundSize: "200% 100%",
+                        animation: "ocean-flow-inside 2.5s linear infinite",
+                      }}
+                    />
+
+                    {/* Ocean Wave Crest (gentle liquid surge inside) */}
+                    <div
+                      className="absolute -inset-x-2 -bottom-2 h-full pointer-events-none opacity-30 mix-blend-screen"
+                      style={{
+                        background: "radial-gradient(ellipse 65% 50% at 50% 100%, rgba(56, 189, 248, 0.9), transparent 70%)",
+                        animation: "ocean-wave-crest 3.5s ease-in-out infinite alternate",
+                      }}
+                    />
+
+                    {/* Ocean Wave Shimmer Sweep (on hover) */}
+                    <span className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-100/30 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out pointer-events-none" />
+
+                    {/* Interactive Click Water Ripples */}
+                    {buttonRipples.map((ripple) => (
+                      <span
+                        key={ripple.id}
+                        className="absolute pointer-events-none rounded-full bg-cyan-200/50 animate-ocean-ripple"
+                        style={{
+                          left: ripple.x,
+                          top: ripple.y,
+                          transform: "translate(-50%, -50%)",
+                        }}
+                      />
+                    ))}
+
+                    {/* Button Text & Arrow */}
+                    <span className="relative z-10 flex items-center justify-center">
+                      Start Tracking Free
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </span>
                   </Button>
                   <a href="#how-it-works" className="w-full sm:w-auto">
                     <Button
@@ -931,6 +980,12 @@ export default function HomePage() {
         isOpen={authModal.isOpen}
         mode={authModal.mode}
         onClose={() => setAuthModal((prev) => ({ ...prev, isOpen: false }))}
+        onSwitchMode={() =>
+          setAuthModal((prev) => ({
+            ...prev,
+            mode: prev.mode === "signup" ? "signin" : "signup",
+          }))
+        }
         brandName="ExpenseMate"
       />
     </div>

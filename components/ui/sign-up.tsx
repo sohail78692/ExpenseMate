@@ -159,6 +159,7 @@ export const AuthComponent = ({
 }: AuthComponentProps) => {
   const router = useRouter();
   const [currentMode, setCurrentMode] = useState<"signup" | "signin">(initialMode);
+  const [direction, setDirection] = useState<number>(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -168,9 +169,14 @@ export const AuthComponent = ({
   const [modalStatus, setModalStatus] = useState<'closed' | 'loading' | 'error' | 'success'>('closed');
   const [modalErrorMessage, setModalErrorMessage] = useState('');
   const confettiRef = useRef<ConfettiRef>(null);
+  const prevInitialModeRef = useRef(initialMode);
 
   useEffect(() => {
-    setCurrentMode(initialMode);
+    if (prevInitialModeRef.current !== initialMode) {
+      prevInitialModeRef.current = initialMode;
+      setDirection(initialMode === "signup" ? 1 : -1);
+      setCurrentMode(initialMode);
+    }
   }, [initialMode]);
 
   useEffect(() => {
@@ -186,9 +192,13 @@ export const AuthComponent = ({
 
   const handleToggleMode = () => {
     const next = currentMode === "signup" ? "signin" : "signup";
+    setDirection(next === "signup" ? 1 : -1);
     setCurrentMode(next);
     setModalStatus('closed');
     setModalErrorMessage('');
+    if (!isModal && typeof window !== "undefined") {
+      window.history.replaceState(null, '', next === 'signup' ? '/register' : '/login');
+    }
     if (onSwitchMode) onSwitchMode();
   };
 
@@ -399,182 +409,304 @@ export const AuthComponent = ({
     .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; } .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.25rem; -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input-wrap:focus-within .glass-input { backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + clamp(1px, 0.0625em, 4px)); height: calc(100% + clamp(1px, 0.0625em, 4px)); top: calc(0% - clamp(1px, 0.0625em, 4px) / 2); left: calc(0% - clamp(1px, 0.0625em, 4px) / 2); padding: clamp(1px, 0.0625em, 4px); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(clamp(1px, 0.0625em, 4px) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-input-wrap:focus-within .glass-input::after { --angle-1: -125deg; } .glass-input-text-area { position: absolute; inset: 0; border-radius: 9999px; pointer-events: none; } .glass-input-text-area::after { content: ""; display: block; position: absolute; width: calc(100% - clamp(1px, 0.0625em, 4px)); height: calc(100% - clamp(1px, 0.0625em, 4px)); top: calc(0% + clamp(1px, 0.0625em, 4px) / 2); left: calc(0% + clamp(1px, 0.0625em, 4px) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1), --angle-2 calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1); } .glass-input-wrap:focus-within .glass-input-text-area::after { background-position: 25% 50%; }
   `;
 
+  const slideVariants: Variants = {
+    enter: (dir: number) => ({
+      x: dir > 0 ? 32 : -32,
+      opacity: 0,
+      filter: "blur(6px)",
+      scale: 0.98,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      filter: "blur(0px)",
+      scale: 1,
+      transition: {
+        x: { type: "spring", stiffness: 340, damping: 28 },
+        opacity: { duration: 0.24, ease: "easeOut" },
+        filter: { duration: 0.24, ease: "easeOut" },
+        scale: { duration: 0.24, ease: "easeOut" },
+      },
+    },
+    exit: (dir: number) => ({
+      x: dir > 0 ? -32 : 32,
+      opacity: 0,
+      filter: "blur(6px)",
+      scale: 0.98,
+      transition: {
+        x: { type: "spring", stiffness: 340, damping: 28 },
+        opacity: { duration: 0.16, ease: "easeIn" },
+        filter: { duration: 0.16, ease: "easeIn" },
+        scale: { duration: 0.16, ease: "easeIn" },
+      },
+    }),
+  };
+
   const authContent = (
     <fieldset disabled={modalStatus !== 'closed'} className="relative z-10 flex flex-col items-center gap-5 w-full mx-auto">
-      <div className="w-full text-center space-y-1">
-        <BlurFade delay={0.05}>
-          <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-            {currentMode === "signup" ? "Create Account" : "Welcome Back"}
-          </h2>
-        </BlurFade>
-        <BlurFade delay={0.1}>
-          <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
-            {currentMode === "signup"
-              ? "Take control of your money and build smarter spending habits."
-              : "Enter your credentials to access your account."}
-          </p>
-        </BlurFade>
-      </div>
+      <AnimatePresence mode="wait" custom={direction} initial={false}>
+        {currentMode === "signin" ? (
+          <motion.div
+            key="signin-view"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full flex flex-col items-center gap-5"
+          >
+            <div className="w-full text-center space-y-1">
+              <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                Welcome Back
+              </h2>
+              <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+                Enter your credentials to access your account.
+              </p>
+            </div>
 
-      <form onSubmit={handleFinalSubmit} className="w-full space-y-3.5">
-        {currentMode === "signup" && (
-          <BlurFade delay={0.15}>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Full Name</label>
-              <div className="glass-input-wrap w-full">
-                <div className="glass-input">
-                  <span className="glass-input-text-area"></span>
-                  <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                    <User className="h-4 w-4 text-zinc-300" />
+            <form onSubmit={handleFinalSubmit} className="w-full space-y-3.5">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Email Address</label>
+                <div className="glass-input-wrap w-full">
+                  <div className="glass-input">
+                    <span className="glass-input-text-area"></span>
+                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                      <Mail className="h-4 w-4 text-zinc-300" />
+                    </div>
+                    <input
+                      type="email"
+                      placeholder="name@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
+                    />
                   </div>
-                  <input
-                    type="text"
-                    placeholder="Your Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
-                  />
                 </div>
               </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Password</label>
+                <div className="glass-input-wrap w-full">
+                  <div className="glass-input">
+                    <span className="glass-input-text-area"></span>
+                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                      <Lock className="h-4 w-4 text-zinc-300" />
+                    </div>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+                <div className="flex justify-end pt-0.5 pr-1">
+                  <Link
+                    href="/forgot-password"
+                    className="text-xs text-zinc-200 hover:text-white font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors underline-offset-4 hover:underline"
+                  >
+                    Forgot Password?
+                  </Link>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <GlassButton
+                  type="submit"
+                  size="default"
+                  className="w-full"
+                  contentClassName="w-full flex items-center justify-center gap-2 font-semibold"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <span>Sign In</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </GlassButton>
+              </div>
+            </form>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="signup-view"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full flex flex-col items-center gap-5"
+          >
+            <div className="w-full text-center space-y-1">
+              <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                Create Account
+              </h2>
+              <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+                Take control of your money and build smarter spending habits.
+              </p>
             </div>
-          </BlurFade>
+
+            <form onSubmit={handleFinalSubmit} className="w-full space-y-3.5">
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Full Name</label>
+                <div className="glass-input-wrap w-full">
+                  <div className="glass-input">
+                    <span className="glass-input-text-area"></span>
+                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                      <User className="h-4 w-4 text-zinc-300" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Your Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                      className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Email Address</label>
+                <div className="glass-input-wrap w-full">
+                  <div className="glass-input">
+                    <span className="glass-input-text-area"></span>
+                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                      <Mail className="h-4 w-4 text-zinc-300" />
+                    </div>
+                    <input
+                      type="email"
+                      placeholder="name@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Password</label>
+                <div className="glass-input-wrap w-full">
+                  <div className="glass-input">
+                    <span className="glass-input-text-area"></span>
+                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                      <Lock className="h-4 w-4 text-zinc-300" />
+                    </div>
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Min. 6 characters"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle password visibility"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Confirm Password</label>
+                <div className="glass-input-wrap w-full">
+                  <div className="glass-input">
+                    <span className="glass-input-text-area"></span>
+                    <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                      <Lock className="h-4 w-4 text-zinc-300" />
+                    </div>
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
+                    />
+                    <button
+                      type="button"
+                      aria-label="Toggle confirm password visibility"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                    >
+                      {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <GlassButton
+                  type="submit"
+                  size="default"
+                  className="w-full"
+                  contentClassName="w-full flex items-center justify-center gap-2 font-semibold"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <span>Create Account</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </GlassButton>
+              </div>
+            </form>
+          </motion.div>
         )}
+      </AnimatePresence>
 
-        <BlurFade delay={0.2}>
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Email Address</label>
-            <div className="glass-input-wrap w-full">
-              <div className="glass-input">
-                <span className="glass-input-text-area"></span>
-                <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                  <Mail className="h-4 w-4 text-zinc-300" />
-                </div>
-                <input
-                  type="email"
-                  placeholder="name@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
-                />
-              </div>
-            </div>
-          </div>
-        </BlurFade>
-
-        <BlurFade delay={0.25}>
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Password</label>
-            <div className="glass-input-wrap w-full">
-              <div className="glass-input">
-                <span className="glass-input-text-area"></span>
-                <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                  <Lock className="h-4 w-4 text-zinc-300" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder={currentMode === "signup" ? "Min. 6 characters" : "••••••••"}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
-                />
-                <button
-                  type="button"
-                  aria-label="Toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-            {currentMode === "signin" && (
-              <div className="flex justify-end pt-0.5 pr-1">
-                <Link
-                  href="/forgot-password"
-                  className="text-xs text-zinc-200 hover:text-white font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors underline-offset-4 hover:underline"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-            )}
-          </div>
-        </BlurFade>
-
-        {currentMode === "signup" && (
-          <BlurFade delay={0.3}>
-            <div className="space-y-1">
-              <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">Confirm Password</label>
-              <div className="glass-input-wrap w-full">
-                <div className="glass-input">
-                  <span className="glass-input-text-area"></span>
-                  <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
-                    <Lock className="h-4 w-4 text-zinc-300" />
-                  </div>
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    placeholder="Confirm password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                    className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-2"
-                  />
+      <div className="w-full text-center">
+        <div className="text-xs text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] flex flex-col items-center gap-2">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.p
+              key={currentMode}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.18 }}
+            >
+              {currentMode === "signup" ? (
+                <>
+                  Already have an account?{" "}
                   <button
                     type="button"
-                    aria-label="Toggle confirm password visibility"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="relative z-10 pr-3 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                    onClick={handleToggleMode}
+                    className="text-sky-300 hover:text-sky-200 active:scale-90 hover:scale-105 transition-all inline-block font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    Sign In
                   </button>
-                </div>
-              </div>
-            </div>
-          </BlurFade>
-        )}
-
-        <div className="pt-2">
-          <GlassButton
-            type="submit"
-            size="default"
-            className="w-full"
-            contentClassName="w-full flex items-center justify-center gap-2 font-semibold"
-          >
-            <span>{currentMode === "signup" ? "Create Account" : "Sign In"}</span>
-            <ArrowRight className="w-4 h-4" />
-          </GlassButton>
+                </>
+              ) : (
+                <>
+                  Don&apos;t have an account?{" "}
+                  <button
+                    type="button"
+                    onClick={handleToggleMode}
+                    className="text-sky-300 hover:text-sky-200 active:scale-90 hover:scale-105 transition-all inline-block font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
+            </motion.p>
+          </AnimatePresence>
         </div>
-      </form>
-
-      <BlurFade delay={0.35} inView={true} className="w-full text-center">
-        <div className="text-xs text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] flex flex-col items-center gap-2">
-          {currentMode === "signup" ? (
-            <p>
-              Already have an account?{" "}
-              <button
-                type="button"
-                onClick={handleToggleMode}
-                className="text-sky-300 hover:text-sky-200 font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
-              >
-                Sign In
-              </button>
-            </p>
-          ) : (
-            <p>
-              Don&apos;t have an account?{" "}
-              <button
-                type="button"
-                onClick={handleToggleMode}
-                className="text-sky-300 hover:text-sky-200 font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
-              >
-                Sign Up
-              </button>
-            </p>
-          )}
-        </div>
-      </BlurFade>
+      </div>
     </fieldset>
   );
 
@@ -600,10 +732,15 @@ export const AuthComponent = ({
 
             {/* Modal Card in middle of screen - totally transparent glass */}
             <motion.div
+              layout
               initial={{ opacity: 0, scale: 0.94, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 16 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 0.25,
+                ease: [0.16, 1, 0.3, 1],
+                layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+              }}
               onClick={(e) => e.stopPropagation()}
               className="dark relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden"
             >
@@ -640,9 +777,13 @@ export const AuthComponent = ({
         <span>Back to Home</span>
       </Link>
 
-      <div className="relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden my-auto">
+      <motion.div
+        layout
+        transition={{ layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
+        className="relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden my-auto"
+      >
         {authContent}
-      </div>
+      </motion.div>
     </div>
   );
 };

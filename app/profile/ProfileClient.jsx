@@ -174,7 +174,7 @@ export default function ProfileClient({ initialUser }) {
 
             if (res.ok) {
                 alert("Your account has been permanently deleted. You will now be logged out.");
-                await signOut({ callbackUrl: "/login" });
+                await signOut({ callbackUrl: "/" });
             } else {
                 const data = await res.json();
                 setMessage(data.message || "Failed to delete account");

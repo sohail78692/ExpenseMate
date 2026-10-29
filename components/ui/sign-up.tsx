@@ -11,6 +11,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User } from "lucide-react";
 // Importing animation components from framer-motion
 import { AnimatePresence, motion, useInView, Variants, Transition } from "framer-motion";
+import KineticDotsLoader from "@/components/ui/kinetic-dots-loader";
 
 // --- CONFETTI LOGIC ---
 import type { ReactNode } from "react"
@@ -326,34 +327,67 @@ export const AuthComponent = ({
   
   const Modal = () => (
     <AnimatePresence>
-        {modalStatus !== 'closed' && (
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative bg-card/80 border-4 border-border rounded-2xl p-8 w-full max-w-sm flex flex-col items-center gap-4 mx-2">
-                    {(modalStatus === 'error' || modalStatus === 'success') && <button onClick={closeModal} className="absolute top-2 right-2 p-1 text-muted-foreground hover:text-foreground transition-colors"><X className="w-5 h-5" /></button>}
-                    {modalStatus === 'error' && <>
-                        <AlertCircle className="w-12 h-12 text-destructive" />
-                        <p className="text-lg font-medium text-foreground">{modalErrorMessage}</p>
-                        <GlassButton onClick={closeModal} size="sm" className="mt-4">Try Again</GlassButton>
-                    </>}
-                    {modalStatus === 'loading' && 
-                        <TextLoop interval={TEXT_LOOP_INTERVAL} stopOnEnd={true}>
-                            {modalSteps.slice(0, -1).map((step, i) => 
-                                <div key={i} className="flex flex-col items-center gap-4">
-                                    {step.icon}
-                                    <p className="text-lg font-medium text-foreground">{step.message}</p>
-                                </div>
-                            )}
-                        </TextLoop>
-                    }
-                    {modalStatus === 'success' &&
-                        <div className="flex flex-col items-center gap-4">
-                            {modalSteps[modalSteps.length - 1].icon}
-                            <p className="text-lg font-medium text-foreground">{modalSteps[modalSteps.length - 1].message}</p>
-                        </div>
-                    }
-                </motion.div>
+      {modalStatus !== 'closed' && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/20 backdrop-blur-xs pointer-events-auto"
+        >
+          {modalStatus === 'loading' && (
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="flex flex-col items-center justify-center bg-transparent"
+            >
+              <KineticDotsLoader
+                text={currentMode === "signup" ? "Creating your account..." : "Signing you in..."}
+              />
             </motion.div>
-        )}
+          )}
+
+          {modalStatus === 'success' && (
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="flex flex-col items-center justify-center gap-3 bg-transparent p-6 text-center"
+            >
+              <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)]">
+                <PartyPopper className="w-8 h-8 text-emerald-400" />
+              </div>
+              <p className="text-xl font-bold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
+                Welcome Aboard!
+              </p>
+            </motion.div>
+          )}
+
+          {modalStatus === 'error' && (
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative rounded-3xl border border-red-500/30 bg-black/60 backdrop-blur-xl p-7 w-full max-w-sm flex flex-col items-center gap-4 mx-4 shadow-2xl"
+            >
+              <button
+                type="button"
+                onClick={closeModal}
+                className="absolute top-3.5 right-3.5 p-1 rounded-full text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <AlertCircle className="w-12 h-12 text-red-400" />
+              <p className="text-sm font-medium text-zinc-100 text-center leading-relaxed">
+                {modalErrorMessage}
+              </p>
+              <GlassButton onClick={closeModal} size="sm" className="mt-2 w-full">
+                Try Again
+              </GlassButton>
+            </motion.div>
+          )}
+        </motion.div>
+      )}
     </AnimatePresence>
   );
 

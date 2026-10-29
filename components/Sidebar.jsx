@@ -48,7 +48,7 @@ export default function Sidebar() {
                 <Button
                     variant="ghost"
                     className="flex items-center space-x-2 text-muted-foreground hover:text-sidebar-accent-foreground hover:bg-sidebar-accent w-full justify-start"
-                    onClick={() => signOut({ callbackUrl: "/login" })}
+                    onClick={() => signOut({ callbackUrl: "/" })}
                 >
                     <LogOut className="h-5 w-5" />
                     <span>Logout</span>

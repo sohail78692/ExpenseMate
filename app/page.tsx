@@ -60,7 +60,7 @@ export default function HomePage() {
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [buttonRipples, setButtonRipples] = useState<{ x: number; y: number; id: number }[]>([]);
-  const [authModal, setAuthModal] = useState<{ isOpen: boolean; mode: "signin" | "signup" }>({
+  const [authModal, setAuthModal] = useState<{ isOpen: boolean; mode: "signin" | "signup" | "forgot" }>({
     isOpen: false,
     mode: "signup",
   });
@@ -980,10 +980,10 @@ export default function HomePage() {
         isOpen={authModal.isOpen}
         mode={authModal.mode}
         onClose={() => setAuthModal((prev) => ({ ...prev, isOpen: false }))}
-        onSwitchMode={() =>
+        onSwitchMode={(newMode) =>
           setAuthModal((prev) => ({
             ...prev,
-            mode: prev.mode === "signup" ? "signin" : "signup",
+            mode: newMode || (prev.mode === "signup" ? "signin" : "signup"),
           }))
         }
         brandName="ExpenseMate"

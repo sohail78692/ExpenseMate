@@ -8,7 +8,7 @@ import { signIn } from "next-auth/react";
 // Importing class-variance-authority for the built-in button component
 import { cva, type VariantProps } from "class-variance-authority";
 // Importing icons from lucide-react
-import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User } from "lucide-react";
+import { ArrowRight, Mail, Gem, Lock, Eye, EyeOff, ArrowLeft, X, AlertCircle, PartyPopper, Loader, User, CheckCircle2 } from "lucide-react";
 // Importing animation components from framer-motion
 import { AnimatePresence, motion, useInView, Variants, Transition } from "framer-motion";
 import KineticDotsLoader from "@/components/ui/kinetic-dots-loader";
@@ -134,12 +134,22 @@ const TEXT_LOOP_INTERVAL = 1.5;
 const DefaultLogo = () => ( <div className="bg-primary text-primary-foreground rounded-md p-1.5"> <Gem className="h-4 w-4" /> </div> );
 
 // --- MAIN COMPONENT ---
+export const glassStyles = `
+  input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none !important; } input[type="password"]::-webkit-credentials-auto-fill-button, input[type="password"]::-webkit-strong-password-auto-fill-button { display: none !important; } input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px transparent inset !important; -webkit-text-fill-color: var(--foreground) !important; background-color: transparent !important; background-clip: content-box !important; transition: background-color 5000s ease-in-out 0s !important; color: var(--foreground) !important; caret-color: var(--foreground) !important; } input:autofill { background-color: transparent !important; background-clip: content-box !important; -webkit-text-fill-color: var(--foreground) !important; color: var(--foreground) !important; } input:-internal-autofill-selected { background-color: transparent !important; background-image: none !important; color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; } input:-webkit-autofill::first-line { color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; }
+  @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; } @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
+  .glass-button-wrap { --anim-time: 400ms; --anim-ease: cubic-bezier(0.25, 1, 0.5, 1); --border-width: clamp(1px, 0.0625em, 4px); position: relative; z-index: 2; transform-style: preserve-3d; transition: transform var(--anim-time) var(--anim-ease); } .glass-button-wrap:has(.glass-button:active) { transform: rotateX(25deg); } .glass-button-shadow { --shadow-cutoff-fix: 2em; position: absolute; width: calc(100% + var(--shadow-cutoff-fix)); height: calc(100% + var(--shadow-cutoff-fix)); top: calc(0% - var(--shadow-cutoff-fix) / 2); left: calc(0% - var(--shadow-cutoff-fix) / 2); filter: blur(clamp(2px, 0.125em, 12px)); transition: filter var(--anim-time) var(--anim-ease); pointer-events: none; z-index: 0; } .glass-button-shadow::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: linear-gradient(180deg, oklch(from var(--foreground) l c h / 20%), oklch(from var(--foreground) l c h / 10%)); width: calc(100% - var(--shadow-cutoff-fix) - 0.25em); height: calc(100% - var(--shadow-cutoff-fix) - 0.25em); top: calc(var(--shadow-cutoff-fix) - 0.5em); left: calc(var(--shadow-cutoff-fix) - 0.875em); padding: 0.125em; box-sizing: border-box; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease); opacity: 1; }
+  .glass-button { -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all var(--anim-time) var(--anim-ease); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button:hover { transform: scale(0.975); backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button-text { color: oklch(from var(--foreground) l c h / 90%); text-shadow: 0em 0.25em 0.05em oklch(from var(--foreground) l c h / 10%); transition: all var(--anim-time) var(--anim-ease); } .glass-button:hover .glass-button-text { text-shadow: 0.025em 0.025em 0.025em oklch(from var(--foreground) l c h / 12%); } .glass-button-text::after { content: ""; display: block; position: absolute; width: calc(100% - var(--border-width)); height: calc(100% - var(--border-width)); top: calc(0% + var(--border-width) / 2); left: calc(0% + var(--border-width) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(var(--anim-time) * 1.25) var(--anim-ease), --angle-2 calc(var(--anim-time) * 1.25) var(--anim-ease); } .glass-button:hover .glass-button-text::after { background-position: 25% 50%; } .glass-button:active .glass-button-text::after { background-position: 50% 15%; --angle-2: -15deg; } .glass-button::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + var(--border-width)); height: calc(100% + var(--border-width)); top: calc(0% - var(--border-width) / 2); left: calc(0% - var(--border-width) / 2); padding: var(--border-width); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(var(--border-width) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-button:hover::after { --angle-1: -125deg; } .glass-button:active::after { --angle-1: -75deg; } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow { filter: blur(clamp(2px, 0.0625em, 6px)); } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.875em); opacity: 1; } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow { filter: blur(clamp(2px, 0.125em, 12px)); } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.5em); opacity: 0.75; } .glass-button-wrap:has(.glass-button:active) .glass-button-text { text-shadow: 0.025em 0.25em 0.05em oklch(from var(--foreground) l c h / 12%); } .glass-button-wrap:has(.glass-button:active) .glass-button { box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.125em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0.225em 0.05em 0 oklch(from var(--foreground) l c h / 5%), 0 0.25em 0 0 oklch(from var(--background) l c h / 75%), inset 0 0.25em 0.05em 0 oklch(from var(--foreground) l c h / 15%); } @media (hover: none) and (pointer: coarse) { .glass-button::after, .glass-button:hover::after, .glass-button:active::after { --angle-1: -75deg; } .glass-button .glass-button-text::after, .glass-button:active .glass-button-text::after { --angle-2: -45deg; } }
+  .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; } .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.25rem; -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input-wrap:focus-within .glass-input { backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + clamp(1px, 0.0625em, 4px)); height: calc(100% + clamp(1px, 0.0625em, 4px)); top: calc(0% - clamp(1px, 0.0625em, 4px) / 2); left: calc(0% - clamp(1px, 0.0625em, 4px) / 2); padding: clamp(1px, 0.0625em, 4px); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(clamp(1px, 0.0625em, 4px) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-input-wrap:focus-within .glass-input::after { --angle-1: -125deg; } .glass-input-text-area { position: absolute; inset: 0; border-radius: 9999px; pointer-events: none; } .glass-input-text-area::after { content: ""; display: block; position: absolute; width: calc(100% - clamp(1px, 0.0625em, 4px)); height: calc(100% - clamp(1px, 0.0625em, 4px)); top: calc(0% + clamp(1px, 0.0625em, 4px) / 2); left: calc(0% + clamp(1px, 0.0625em, 4px) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1), --angle-2 calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1); } .glass-input-wrap:focus-within .glass-input-text-area::after { background-position: 25% 50%; }
+`;
+
+export type AuthMode = "signup" | "signin" | "forgot";
+
 export interface AuthComponentProps {
   logo?: React.ReactNode;
   brandName?: string;
   onSuccess?: () => void;
-  mode?: "signup" | "signin";
-  onSwitchMode?: () => void;
+  mode?: AuthMode;
+  onSwitchMode?: (mode?: AuthMode) => void;
   onSubmitCredentials?: (credentials: { name?: string; email: string; password: string }) => Promise<{ success: boolean; error?: string }>;
   isModal?: boolean;
   isOpen?: boolean;
@@ -158,7 +168,7 @@ export const AuthComponent = ({
   onClose
 }: AuthComponentProps) => {
   const router = useRouter();
-  const [currentMode, setCurrentMode] = useState<"signup" | "signin">(initialMode);
+  const [currentMode, setCurrentMode] = useState<AuthMode>(initialMode);
   const [direction, setDirection] = useState<number>(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -168,13 +178,16 @@ export const AuthComponent = ({
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [modalStatus, setModalStatus] = useState<'closed' | 'loading' | 'error' | 'success'>('closed');
   const [modalErrorMessage, setModalErrorMessage] = useState('');
+  const [forgotSuccess, setForgotSuccess] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState("");
   const confettiRef = useRef<ConfettiRef>(null);
   const prevInitialModeRef = useRef(initialMode);
 
   useEffect(() => {
     if (prevInitialModeRef.current !== initialMode) {
       prevInitialModeRef.current = initialMode;
-      setDirection(initialMode === "signup" ? 1 : -1);
+      setDirection(initialMode === "signup" ? 1 : initialMode === "forgot" ? 1 : -1);
       setCurrentMode(initialMode);
     }
   }, [initialMode]);
@@ -190,19 +203,61 @@ export const AuthComponent = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isModal, isOpen, onClose]);
 
-  const handleToggleMode = () => {
-    const next = currentMode === "signup" ? "signin" : "signup";
-    setDirection(next === "signup" ? 1 : -1);
+  const handleSwitchTo = (next: AuthMode) => {
+    let dir = 1;
+    if (next === "signin") dir = -1;
+    else if (next === "signup" && currentMode === "signin") dir = 1;
+    else if (next === "forgot") dir = 1;
+
+    setDirection(dir);
     setCurrentMode(next);
     setModalStatus('closed');
     setModalErrorMessage('');
+    setForgotError('');
+    setForgotSuccess(false);
     if (!isModal && typeof window !== "undefined") {
-      window.history.replaceState(null, '', next === 'signup' ? '/register' : '/login');
+      const path = next === "signup" ? "/register" : next === "forgot" ? "/forgot-password" : "/login";
+      window.history.replaceState(null, '', path);
     }
-    if (onSwitchMode) onSwitchMode();
+    if (onSwitchMode) onSwitchMode(next);
+  };
+
+  const handleToggleMode = () => {
+    const next: AuthMode = currentMode === "signup" ? "signin" : "signup";
+    handleSwitchTo(next);
   };
 
   const isEmailValid = /\S+@\S+\.\S+/.test(email);
+
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isEmailValid) {
+      setForgotError("Please enter a valid email address.");
+      return;
+    }
+    setForgotLoading(true);
+    setForgotError("");
+
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setForgotError(data.message || "Failed to send reset instructions. Please try again.");
+        setForgotLoading(false);
+        return;
+      }
+      setForgotSuccess(true);
+    } catch (err: any) {
+      console.error("Forgot password error:", err);
+      setForgotError("Unable to send reset instructions. Please try again later.");
+    } finally {
+      setForgotLoading(false);
+    }
+  };
 
   const fireSideCanons = () => {
     const fire = confettiRef.current?.fire;
@@ -401,14 +456,6 @@ export const AuthComponent = ({
     </AnimatePresence>
   );
 
-  const glassStyles = `
-    input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none !important; } input[type="password"]::-webkit-credentials-auto-fill-button, input[type="password"]::-webkit-strong-password-auto-fill-button { display: none !important; } input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { -webkit-box-shadow: 0 0 0 30px transparent inset !important; -webkit-text-fill-color: var(--foreground) !important; background-color: transparent !important; background-clip: content-box !important; transition: background-color 5000s ease-in-out 0s !important; color: var(--foreground) !important; caret-color: var(--foreground) !important; } input:autofill { background-color: transparent !important; background-clip: content-box !important; -webkit-text-fill-color: var(--foreground) !important; color: var(--foreground) !important; } input:-internal-autofill-selected { background-color: transparent !important; background-image: none !important; color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; } input:-webkit-autofill::first-line { color: var(--foreground) !important; -webkit-text-fill-color: var(--foreground) !important; }
-    @property --angle-1 { syntax: "<angle>"; inherits: false; initial-value: -75deg; } @property --angle-2 { syntax: "<angle>"; inherits: false; initial-value: -45deg; }
-    .glass-button-wrap { --anim-time: 400ms; --anim-ease: cubic-bezier(0.25, 1, 0.5, 1); --border-width: clamp(1px, 0.0625em, 4px); position: relative; z-index: 2; transform-style: preserve-3d; transition: transform var(--anim-time) var(--anim-ease); } .glass-button-wrap:has(.glass-button:active) { transform: rotateX(25deg); } .glass-button-shadow { --shadow-cutoff-fix: 2em; position: absolute; width: calc(100% + var(--shadow-cutoff-fix)); height: calc(100% + var(--shadow-cutoff-fix)); top: calc(0% - var(--shadow-cutoff-fix) / 2); left: calc(0% - var(--shadow-cutoff-fix) / 2); filter: blur(clamp(2px, 0.125em, 12px)); transition: filter var(--anim-time) var(--anim-ease); pointer-events: none; z-index: 0; } .glass-button-shadow::after { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: linear-gradient(180deg, oklch(from var(--foreground) l c h / 20%), oklch(from var(--foreground) l c h / 10%)); width: calc(100% - var(--shadow-cutoff-fix) - 0.25em); height: calc(100% - var(--shadow-cutoff-fix) - 0.25em); top: calc(var(--shadow-cutoff-fix) - 0.5em); left: calc(var(--shadow-cutoff-fix) - 0.875em); padding: 0.125em; box-sizing: border-box; mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease); opacity: 1; }
-    .glass-button { -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all var(--anim-time) var(--anim-ease); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button:hover { transform: scale(0.975); backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-button-text { color: oklch(from var(--foreground) l c h / 90%); text-shadow: 0em 0.25em 0.05em oklch(from var(--foreground) l c h / 10%); transition: all var(--anim-time) var(--anim-ease); } .glass-button:hover .glass-button-text { text-shadow: 0.025em 0.025em 0.025em oklch(from var(--foreground) l c h / 12%); } .glass-button-text::after { content: ""; display: block; position: absolute; width: calc(100% - var(--border-width)); height: calc(100% - var(--border-width)); top: calc(0% + var(--border-width) / 2); left: calc(0% + var(--border-width) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(var(--anim-time) * 1.25) var(--anim-ease), --angle-2 calc(var(--anim-time) * 1.25) var(--anim-ease); } .glass-button:hover .glass-button-text::after { background-position: 25% 50%; } .glass-button:active .glass-button-text::after { background-position: 50% 15%; --angle-2: -15deg; } .glass-button::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + var(--border-width)); height: calc(100% + var(--border-width)); top: calc(0% - var(--border-width) / 2); left: calc(0% - var(--border-width) / 2); padding: var(--border-width); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all var(--anim-time) var(--anim-ease), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(var(--border-width) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-button:hover::after { --angle-1: -125deg; } .glass-button:active::after { --angle-1: -75deg; } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow { filter: blur(clamp(2px, 0.0625em, 6px)); } .glass-button-wrap:has(.glass-button:hover) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.875em); opacity: 1; } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow { filter: blur(clamp(2px, 0.125em, 12px)); } .glass-button-wrap:has(.glass-button:active) .glass-button-shadow::after { top: calc(var(--shadow-cutoff-fix) - 0.5em); opacity: 0.75; } .glass-button-wrap:has(.glass-button:active) .glass-button-text { text-shadow: 0.025em 0.25em 0.05em oklch(from var(--foreground) l c h / 12%); } .glass-button-wrap:has(.glass-button:active) .glass-button { box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.125em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0.225em 0.05em 0 oklch(from var(--foreground) l c h / 5%), 0 0.25em 0 0 oklch(from var(--background) l c h / 75%), inset 0 0.25em 0.05em 0 oklch(from var(--foreground) l c h / 15%); } @media (hover: none) and (pointer: coarse) { .glass-button::after, .glass-button:hover::after, .glass-button:active::after { --angle-1: -75deg; } .glass-button .glass-button-text::after, .glass-button:active .glass-button-text::after { --angle-2: -45deg; } }
-    .glass-input-wrap { position: relative; z-index: 2; transform-style: preserve-3d; border-radius: 9999px; } .glass-input { display: flex; position: relative; width: 100%; align-items: center; gap: 0.5rem; border-radius: 9999px; padding: 0.25rem; -webkit-tap-highlight-color: transparent; backdrop-filter: blur(clamp(1px, 0.125em, 4px)); transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1); background: linear-gradient(-75deg, oklch(from var(--background) l c h / 5%), oklch(from var(--background) l c h / 20%), oklch(from var(--background) l c h / 5%)); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.25em 0.125em -0.125em oklch(from var(--foreground) l c h / 20%), 0 0 0.1em 0.25em inset oklch(from var(--background) l c h / 20%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input-wrap:focus-within .glass-input { backdrop-filter: blur(0.01em); box-shadow: inset 0 0.125em 0.125em oklch(from var(--foreground) l c h / 5%), inset 0 -0.125em 0.125em oklch(from var(--background) l c h / 50%), 0 0.15em 0.05em -0.1em oklch(from var(--foreground) l c h / 25%), 0 0 0.05em 0.1em inset oklch(from var(--background) l c h / 50%), 0 0 0 0 oklch(from var(--background) l c h); } .glass-input::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: 9999px; width: calc(100% + clamp(1px, 0.0625em, 4px)); height: calc(100% + clamp(1px, 0.0625em, 4px)); top: calc(0% - clamp(1px, 0.0625em, 4px) / 2); left: calc(0% - clamp(1px, 0.0625em, 4px) / 2); padding: clamp(1px, 0.0625em, 4px); box-sizing: border-box; background: conic-gradient(from var(--angle-1) at 50% 50%, oklch(from var(--foreground) l c h / 50%) 0%, transparent 5% 40%, oklch(from var(--foreground) l c h / 50%) 50%, transparent 60% 95%, oklch(from var(--foreground) l c h / 50%) 100%), linear-gradient(180deg, oklch(from var(--background) l c h / 50%), oklch(from var(--background) l c h / 50%)); mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); mask-composite: exclude; transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1), --angle-1 500ms ease; box-shadow: inset 0 0 0 calc(clamp(1px, 0.0625em, 4px) / 2) oklch(from var(--background) l c h / 50%); pointer-events: none; } .glass-input-wrap:focus-within .glass-input::after { --angle-1: -125deg; } .glass-input-text-area { position: absolute; inset: 0; border-radius: 9999px; pointer-events: none; } .glass-input-text-area::after { content: ""; display: block; position: absolute; width: calc(100% - clamp(1px, 0.0625em, 4px)); height: calc(100% - clamp(1px, 0.0625em, 4px)); top: calc(0% + clamp(1px, 0.0625em, 4px) / 2); left: calc(0% + clamp(1px, 0.0625em, 4px) / 2); box-sizing: border-box; border-radius: 9999px; overflow: clip; background: linear-gradient(var(--angle-2), transparent 0%, oklch(from var(--background) l c h / 50%) 40% 50%, transparent 55%); z-index: 3; mix-blend-mode: screen; pointer-events: none; background-size: 200% 200%; background-position: 0% 50%; transition: background-position calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1), --angle-2 calc(400ms * 1.25) cubic-bezier(0.25, 1, 0.5, 1); } .glass-input-wrap:focus-within .glass-input-text-area::after { background-position: 25% 50%; }
-  `;
-
   const slideVariants: Variants = {
     enter: (dir: number) => ({
       x: dir > 0 ? 32 : -32,
@@ -445,7 +492,7 @@ export const AuthComponent = ({
   const authContent = (
     <fieldset disabled={modalStatus !== 'closed'} className="relative z-10 flex flex-col items-center gap-5 w-full mx-auto">
       <AnimatePresence mode="wait" custom={direction} initial={false}>
-        {currentMode === "signin" ? (
+        {currentMode === "signin" && (
           <motion.div
             key="signin-view"
             custom={direction}
@@ -512,12 +559,13 @@ export const AuthComponent = ({
                   </div>
                 </div>
                 <div className="flex justify-end pt-0.5 pr-1">
-                  <Link
-                    href="/forgot-password"
-                    className="text-xs text-zinc-200 hover:text-white font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors underline-offset-4 hover:underline"
+                  <button
+                    type="button"
+                    onClick={() => handleSwitchTo("forgot")}
+                    className="text-xs text-zinc-200 hover:text-white font-medium drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] transition-colors underline-offset-4 hover:underline cursor-pointer"
                   >
                     Forgot Password?
-                  </Link>
+                  </button>
                 </div>
               </div>
 
@@ -536,7 +584,9 @@ export const AuthComponent = ({
               </div>
             </form>
           </motion.div>
-        ) : (
+        )}
+
+        {currentMode === "signup" && (
           <motion.div
             key="signup-view"
             custom={direction}
@@ -668,6 +718,110 @@ export const AuthComponent = ({
             </form>
           </motion.div>
         )}
+
+        {currentMode === "forgot" && (
+          <motion.div
+            key="forgot-view"
+            custom={direction}
+            variants={slideVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            className="w-full flex flex-col items-center gap-5"
+          >
+            <div className="w-full text-center space-y-1">
+              <h2 className="font-serif font-light text-2xl sm:text-3xl tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                Forgot Password?
+              </h2>
+              <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
+                Enter your email address and we&apos;ll send you instructions to reset your password.
+              </p>
+            </div>
+
+            {forgotSuccess ? (
+              <div className="space-y-4 text-center py-2 w-full">
+                <div className="w-14 h-14 mx-auto rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shadow-[0_0_25px_rgba(16,185,129,0.35)]">
+                  <CheckCircle2 className="w-7 h-7 text-emerald-400" />
+                </div>
+                <div className="space-y-1.5">
+                  <h3 className="font-semibold text-base text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                    Check your email!
+                  </h3>
+                  <p className="text-xs text-zinc-200/90 leading-relaxed drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
+                    We&apos;ve sent password reset instructions to your email address. Please follow the link in your inbox.
+                  </p>
+                </div>
+                <p className="text-[11px] text-zinc-400 pt-1">
+                  Didn&apos;t receive the email? Check your spam folder or try again.
+                </p>
+                <div className="pt-2">
+                  <GlassButton
+                    type="button"
+                    onClick={() => setForgotSuccess(false)}
+                    size="sm"
+                    className="w-full"
+                  >
+                    Try Another Email
+                  </GlassButton>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleForgotSubmit} className="w-full space-y-3.5">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-zinc-100 drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] pl-2">
+                    Email Address
+                  </label>
+                  <div className="glass-input-wrap w-full">
+                    <div className="glass-input">
+                      <span className="glass-input-text-area"></span>
+                      <div className="relative z-10 flex-shrink-0 flex items-center justify-center w-10 pl-2">
+                        <Mail className="h-4 w-4 text-zinc-300" />
+                      </div>
+                      <input
+                        type="email"
+                        placeholder="name@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        disabled={forgotLoading}
+                        className="relative z-10 h-9 w-0 flex-grow bg-transparent text-white placeholder:text-zinc-300/80 focus:outline-none text-sm pr-3"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {forgotError && (
+                  <div className="flex items-start gap-2.5 p-3 rounded-2xl bg-red-500/15 border border-red-500/30 text-red-200 text-xs shadow-lg">
+                    <AlertCircle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
+                    <p className="leading-relaxed font-medium">{forgotError}</p>
+                  </div>
+                )}
+
+                <div className="pt-2">
+                  <GlassButton
+                    type="submit"
+                    size="default"
+                    disabled={forgotLoading}
+                    className="w-full"
+                    contentClassName="w-full flex items-center justify-center gap-2 font-semibold"
+                  >
+                    {forgotLoading ? (
+                      <span className="inline-flex items-center gap-2">
+                        <Loader className="w-4 h-4 animate-spin text-white" />
+                        <span>Sending...</span>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-2">
+                        <span>Send Reset Instructions</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </span>
+                    )}
+                  </GlassButton>
+                </div>
+              </form>
+            )}
+          </motion.div>
+        )}
       </AnimatePresence>
 
       <div className="w-full text-center">
@@ -685,7 +839,18 @@ export const AuthComponent = ({
                   Already have an account?{" "}
                   <button
                     type="button"
-                    onClick={handleToggleMode}
+                    onClick={() => handleSwitchTo("signin")}
+                    className="text-sky-300 hover:text-sky-200 active:scale-90 hover:scale-105 transition-all inline-block font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
+                  >
+                    Sign In
+                  </button>
+                </>
+              ) : currentMode === "forgot" ? (
+                <>
+                  Remember your password?{" "}
+                  <button
+                    type="button"
+                    onClick={() => handleSwitchTo("signin")}
                     className="text-sky-300 hover:text-sky-200 active:scale-90 hover:scale-105 transition-all inline-block font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
                   >
                     Sign In
@@ -696,7 +861,7 @@ export const AuthComponent = ({
                   Don&apos;t have an account?{" "}
                   <button
                     type="button"
-                    onClick={handleToggleMode}
+                    onClick={() => handleSwitchTo("signup")}
                     className="text-sky-300 hover:text-sky-200 active:scale-90 hover:scale-105 transition-all inline-block font-bold ml-1 cursor-pointer underline-offset-4 hover:underline drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]"
                   >
                     Sign Up

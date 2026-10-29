@@ -376,7 +376,7 @@ export const AuthComponent = ({
         <BlurFade delay={0.1}>
           <p className="text-xs sm:text-sm font-medium text-zinc-100 drop-shadow-[0_2px_6px_rgba(0,0,0,0.95)]">
             {currentMode === "signup"
-              ? "Start tracking expenses in 30 seconds with complete privacy."
+              ? "Take control of your money and build smarter spending habits."
               : "Enter your credentials to access your account."}
           </p>
         </BlurFade>
@@ -395,7 +395,7 @@ export const AuthComponent = ({
                   </div>
                   <input
                     type="text"
-                    placeholder="John Doe"
+                    placeholder="Your Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required

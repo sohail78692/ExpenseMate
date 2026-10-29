@@ -922,7 +922,7 @@ export const AuthComponent = ({
                 layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
               }}
               onClick={(e) => e.stopPropagation()}
-              className="dark relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden"
+              className="dark relative z-10 w-full max-w-[390px] max-h-[calc(100dvh-2rem)] overflow-y-auto no-scrollbar rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-5 sm:p-7 shadow-2xl"
             >
               {onClose && (
                 <button
@@ -960,7 +960,7 @@ export const AuthComponent = ({
       <motion.div
         layout
         transition={{ layout: { duration: 0.35, ease: [0.16, 1, 0.3, 1] } }}
-        className="relative z-10 w-full max-w-[390px] rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-6 sm:p-7 shadow-2xl overflow-hidden my-auto"
+        className="relative z-10 w-full max-w-[390px] max-h-[calc(100dvh-2rem)] overflow-y-auto no-scrollbar rounded-3xl border border-white/20 bg-black/25 backdrop-blur-xl p-5 sm:p-7 shadow-2xl my-auto"
       >
         {authContent}
       </motion.div>

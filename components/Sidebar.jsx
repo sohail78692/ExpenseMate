@@ -155,7 +155,7 @@ export default function Sidebar() {
                             key={item.href}
                             href={item.href}
                             className={cn(
-                                "flex flex-col items-center justify-center py-1.5 px-2 rounded-xl transition-all duration-200 active:scale-90 relative",
+                                "flex flex-col items-center justify-center py-1 xs:py-1.5 px-1 xs:px-2 rounded-xl transition-all duration-200 active:scale-90 relative shrink-0",
                                 isActive
                                     ? "text-[#0A84FF]"
                                     : "text-zinc-400 hover:text-white"

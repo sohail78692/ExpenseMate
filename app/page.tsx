@@ -558,7 +558,7 @@ export default function HomePage() {
                           </div>
                           <div className="min-w-0">
                             <span className="text-xs sm:text-sm font-medium text-white truncate block">{item.name}</span>
-                            <span className="text-[10px] text-zinc-400 sm:hidden block truncate">{item.cat} â€¢ {item.date}</span>
+                            <span className="text-[10px] text-zinc-400 sm:hidden block truncate">{item.cat} • {item.date}</span>
                           </div>
                         </div>
                         <span className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 font-medium hidden sm:inline shrink-0">
@@ -958,7 +958,7 @@ export default function HomePage() {
             ],
           },
         ]}
-        copyright="Â© 2026 ExpenseMate. Making personal finance simple, visual, and stress-free."
+        copyright="© 2026 ExpenseMate. Making personal finance simple, visual, and stress-free."
         legal={[{ label: "Privacy & FAQ", href: "#faq" }]}
         socials={[
           { label: "GitHub Repo", href: "https://github.com/sohail78692/ExpenseMate" },

@@ -48,6 +48,7 @@ import {
   Car,
   Laptop,
   Lock,
+  Sparkle,
   Sparkles,
   Command
 } from "lucide-react";
@@ -331,11 +332,19 @@ export default function HomePage() {
           <ContainerScroll
             titleComponent={
               <div className="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-5xl mb-4 sm:mb-6">
+                {/* Smarter Spending Pill Badge */}
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-md mb-3 sm:mb-5 shadow-[0_0_10px_rgba(41,151,255,0.06)] hover:border-white/20 transition-all">
+                  <Sparkle className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-sky-400 fill-sky-400 drop-shadow-[0_0_4px_rgba(56,189,248,0.5)]" />
+                  <span className="text-[11px] sm:text-xs font-medium tracking-wide text-zinc-300">
+                    Smarter Spending, Brighter Tomorrow
+                  </span>
+                </div>
+
                 {/* Master Headline - Combining TextType & RotatingText from React Bits */}
                 <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-[1.15] mb-5 sm:mb-6 flex flex-col items-center justify-center">
                   <span className="inline-flex items-center justify-center text-center">
                     <TextType
-                      text="Master your money with"
+                      text="Track your expenses"
                       typingSpeed={40}
                       pauseDuration={2000}
                       loop={false}
@@ -345,13 +354,14 @@ export default function HomePage() {
                       className="text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]"
                     />
                   </span>
-                  <span className="inline-flex items-center justify-center text-center mt-1 sm:mt-2 min-h-[1.25em]">
+                  <span className="inline-flex items-center justify-center text-center mt-1 sm:mt-2 min-h-[1.25em] flex-wrap gap-x-3 sm:gap-x-4">
+                    <span className="text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.8)]">with</span>
                     <RotatingText
                       texts={[
-                        "effortless clarity.",
-                        "automated savings.",
-                        "intelligent budgets.",
-                        "total peace of mind."
+                        "smart budgets.",
+                        "zero effort.",
+                        "clear insights.",
+                        "total ease."
                       ]}
                       effect="slide"
                       direction="up"
@@ -399,7 +409,7 @@ export default function HomePage() {
                   <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#FFBD2E]"></div>
                   <div className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#27C93F]"></div>
                   <span className="ml-2 sm:ml-3 text-[11px] sm:text-xs font-mono text-zinc-400">
-                    ExpenseMate <span className="hidden md:inline">â€¢ Web Financial Workspace</span>
+                    ExpenseMate <span className="hidden md:inline">• Web Financial Workspace</span>
                   </span>
                 </div>
 
@@ -588,7 +598,7 @@ export default function HomePage() {
 
 
         {/* FEATURES GRID SECTION - POWERED BY CHROMAGRID & ANIMATEDCONTENT */}
-        <section id="features" className="scroll-mt-24 pt-6 sm:pt-8 pb-12 sm:pb-16">
+        <section id="features" className="scroll-mt-24 pt-6 sm:pt-8 md:pt-10 pb-12 sm:pb-16">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
             <AnimatedContent
               distance={50}

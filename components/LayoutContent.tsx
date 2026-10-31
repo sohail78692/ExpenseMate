@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Sidebar from "@/components/Sidebar";
+import Navbar from "@/components/Navbar";
 import React from "react";
 
 export default function LayoutContent({ children }: { children: React.ReactNode }) {
@@ -24,9 +24,9 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff04_1px,transparent_1px),linear-gradient(to_bottom,#ffffff04_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_75%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
             </div>
 
-            <div className={`relative z-10 flex min-h-screen ${isAuthPage ? "w-full" : ""}`}>
-                {!isAuthPage && <Sidebar />}
-                <main className={`flex-1 min-w-0 ${!isAuthPage ? "p-3 sm:p-6 lg:p-8 pb-28 md:pb-8" : "w-full min-h-screen"}`}>
+            <div className={`relative z-10 min-h-screen ${isAuthPage ? "w-full" : "flex flex-col"}`}>
+                {!isAuthPage && <Navbar />}
+                <main className={`flex-1 min-w-0 ${!isAuthPage ? "pt-24 sm:pt-28 lg:pt-34 pb-32 sm:pb-24 lg:pb-12 p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full" : "w-full min-h-screen"}`}>
                     {children}
                 </main>
             </div>

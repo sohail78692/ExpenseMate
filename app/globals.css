@@ -42,6 +42,24 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --animate-gradient: gradient 8s linear infinite;
+  --animate-shine: shine var(--duration) infinite linear;
+  @keyframes gradient {
+  to {
+    background-position: var(--bg-size, 300%) 0;
+    }
+  }
+  @keyframes shine {
+  0% {
+    background-position: 0% 0%;
+    }
+  50% {
+    background-position: 100% 100%;
+    }
+  to {
+    background-position: 0% 0%;
+    }
+  }
 }
 
 :root {
@@ -277,4 +295,130 @@ html {
 
 .animate-ocean-ripple {
   animation: ocean-ripple 0.65s cubic-bezier(0.2, 0.8, 0.4, 1) forwards;
+}
+
+/* =========================================================================
+   Liquid Glass Navigation & Sidebar Styling (Matches Sign-In/Up Glass Button)
+   ========================================================================= */
+
+@property --nav-glass-angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -75deg;
+}
+
+@property --nav-glass-angle-2 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: -45deg;
+}
+
+.glass-nav-item {
+  position: relative;
+  isolation: isolate;
+  border-radius: 0.875rem;
+  transition: all 250ms cubic-bezier(0.25, 1, 0.5, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Inactive nav pill: ultra-clear frosted liquid glass */
+.glass-nav-item-idle {
+  background: linear-gradient(-75deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.055) 50%, rgba(255, 255, 255, 0.02) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35),
+    0 2px 8px -2px rgba(0, 0, 0, 0.25);
+  color: #94a3b8;
+}
+
+.glass-nav-item-idle:hover {
+  background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 100%);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  transform: translateY(-1px) scale(1.008);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
+    0 8px 24px -4px rgba(0, 0, 0, 0.4),
+    0 0 14px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-nav-item-idle:active {
+  transform: scale(0.98);
+}
+
+/* Active nav pill: sapphire liquid glass button matching signin/signup primary button */
+.glass-nav-item-active {
+  background: linear-gradient(-75deg, rgba(10, 132, 255, 0.24) 0%, rgba(10, 132, 255, 0.42) 50%, rgba(10, 132, 255, 0.2) 100%);
+  border: 1px solid rgba(10, 132, 255, 0.58);
+  color: #ffffff;
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5),
+    0 8px 25px -4px rgba(10, 132, 255, 0.42),
+    0 0 16px 0 rgba(10, 132, 255, 0.28);
+}
+
+.glass-nav-item-active:hover {
+  background: linear-gradient(-75deg, rgba(10, 132, 255, 0.32) 0%, rgba(10, 132, 255, 0.52) 50%, rgba(10, 132, 255, 0.28) 100%);
+  border-color: rgba(10, 132, 255, 0.8);
+  box-shadow: 
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5),
+    0 10px 30px -4px rgba(10, 132, 255, 0.58),
+    0 0 22px 0 rgba(10, 132, 255, 0.38);
+}
+
+.glass-nav-item-active:active {
+  transform: scale(0.98);
+}
+
+/* Specular reflection: soft top edge highlight & smooth hover polish */
+.glass-nav-sheen::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  pointer-events: none;
+  opacity: 0.4;
+  transition: all 250ms ease;
+}
+
+.glass-nav-item:hover .glass-nav-sheen::before {
+  opacity: 0.9;
+  left: 6%;
+  right: 6%;
+}
+
+.glass-nav-item-active .glass-nav-sheen::before {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+}
+
+/* Glass Sidebar Panel Background - Ultra Pure Translucent Liquid Glass */
+.glass-sidebar-panel {
+  background: rgba(6, 11, 23, 0.25);
+  backdrop-filter: blur(40px) saturate(210%);
+  -webkit-backdrop-filter: blur(40px) saturate(210%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.04),
+    12px 0 36px -4px rgba(0, 0, 0, 0.4);
+}
+
+/* Glass Floating Bottom Dock */
+.glass-dock-panel {
+  background: rgba(9, 14, 28, 0.52);
+  backdrop-filter: blur(36px) saturate(200%);
+  -webkit-backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5),
+    0 16px 40px -10px rgba(0, 0, 0, 0.75);
 }

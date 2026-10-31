@@ -362,16 +362,17 @@ export const AuthComponent = ({
         });
       }
 
-      fireSideCanons();
+      if (currentMode === "signup") {
+        fireSideCanons();
+      }
       setModalStatus('success');
       setTimeout(() => {
         if (onSuccess) {
           onSuccess();
         } else {
-          router.replace("/dashboard");
-          router.refresh();
+          window.location.href = "/dashboard";
         }
-      }, 1200);
+      }, 1000);
     } catch (err: any) {
       console.error("Auth error:", err);
       setModalErrorMessage(err?.message || "Something went wrong. Please try again later.");
@@ -385,10 +386,10 @@ export const AuthComponent = ({
   };
 
   useEffect(() => {
-    if (modalStatus === 'success') {
+    if (modalStatus === 'success' && currentMode === "signup") {
       fireSideCanons();
     }
-  }, [modalStatus]);
+  }, [modalStatus, currentMode]);
   
   const Modal = () => (
     <AnimatePresence>
@@ -419,11 +420,22 @@ export const AuthComponent = ({
               exit={{ scale: 0.9, opacity: 0 }}
               className="flex flex-col items-center justify-center gap-3 bg-transparent p-6 text-center"
             >
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center shadow-[0_0_30px_rgba(16,185,129,0.4)]">
-                <PartyPopper className="w-8 h-8 text-emerald-400" />
+              <div
+                className={cn(
+                  "w-16 h-16 rounded-full flex items-center justify-center transition-all",
+                  currentMode === "signup"
+                    ? "bg-emerald-500/20 border border-emerald-400/40 shadow-[0_0_30px_rgba(16,185,129,0.4)]"
+                    : "bg-[#0A84FF]/20 border border-[#0A84FF]/40 shadow-[0_0_30px_rgba(10,132,255,0.4)]"
+                )}
+              >
+                {currentMode === "signup" ? (
+                  <PartyPopper className="w-8 h-8 text-emerald-400" />
+                ) : (
+                  <Check className="w-8 h-8 text-[#0A84FF]" />
+                )}
               </div>
               <p className="text-xl font-bold tracking-tight text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]">
-                Welcome Aboard!
+                {currentMode === "signup" ? "Welcome Aboard!" : "Welcome Back!"}
               </p>
             </motion.div>
           )}

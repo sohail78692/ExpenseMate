@@ -137,10 +137,10 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
-    if (status === "authenticated") {
-      router.replace("/dashboard");
+    if (status === "authenticated" && !authModal.isOpen) {
+      window.location.replace("/dashboard");
     }
-  }, [status, router]);
+  }, [status, authModal.isOpen]);
 
   // Non-blocking for unauthenticated visitors so LCP & initial render are instantaneous
   if (false && status === "loading") {
@@ -157,8 +157,18 @@ export default function HomePage() {
     );
   }
 
-  if (status === "authenticated") {
-    return null;
+  if (status === "authenticated" && !authModal.isOpen) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-black">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative w-14 h-14">
+            <div className="absolute inset-0 rounded-full border-2 border-[#0A84FF]/20 animate-ping"></div>
+            <div className="w-14 h-14 rounded-full border-2 border-[#0A84FF] border-t-transparent animate-spin"></div>
+          </div>
+          <p className="text-zinc-400 text-xs font-medium tracking-wide">Opening your workspace...</p>
+        </div>
+      </div>
+    );
   }
 
 
@@ -980,6 +990,9 @@ export default function HomePage() {
         isOpen={authModal.isOpen}
         mode={authModal.mode}
         onClose={() => setAuthModal((prev) => ({ ...prev, isOpen: false }))}
+        onSuccess={() => {
+          window.location.href = "/dashboard";
+        }}
         onSwitchMode={(newMode) =>
           setAuthModal((prev) => ({
             ...prev,

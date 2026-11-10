@@ -2,11 +2,11 @@ import { getDashboardData, getBudgetsAndInsightsData, getSavingsGoalsData } from
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 import DashboardClient from "./DashboardClient";
 
 export const metadata = {
-    title: "Dashboard",
+    title: "Dashboard - ExpenseMate",
     description: "Your personal financial workspace with live insights, budget guardrails, and activity heatmaps.",
 };
 
@@ -15,18 +15,21 @@ export default async function DashboardPage() {
 
     if (!session) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6 sm:p-10">
-                <div className="w-16 h-16 rounded-2xl bg-white/[0.05] border border-white/[0.1] flex items-center justify-center mb-4 text-2xl shadow-xl shadow-black/40">
-                    🔒
+            <div className="w-full max-w-md mx-auto mt-12 p-8 rounded-2xl bg-zinc-950 border border-zinc-800 text-center space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 mx-auto">
+                    <Lock className="w-5 h-5" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Session Required</h2>
-                <p className="text-xs sm:text-sm text-zinc-400 max-w-sm mb-6 leading-relaxed">
-                    Please sign in to access your personal financial workspace, live heatmaps, and budget guardrails.
-                </p>
-                <Link href="/login">
-                    <Button className="bg-[#0A84FF] hover:bg-[#0071E3] text-white px-6 py-2.5 rounded-full font-semibold shadow-lg shadow-[#0A84FF]/25 cursor-pointer">
-                        Sign In to ExpenseMate
-                    </Button>
+                <div className="space-y-1">
+                    <h1 className="text-lg font-semibold text-white">Sign in required</h1>
+                    <p className="text-xs sm:text-sm text-zinc-400">
+                        Please sign in to access your personal financial workspace, budget guardrails, and activity heatmaps.
+                    </p>
+                </div>
+                <Link
+                    href="/login"
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors"
+                >
+                    Sign In
                 </Link>
             </div>
         );

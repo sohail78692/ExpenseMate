@@ -12,7 +12,14 @@ export async function PUT(request, { params }) {
         }
 
         const { id } = await params;
-        const { title, amount, category, date, note } = await request.json();
+        const { title, amount, category, date, note, paymentMethod } = await request.json();
+
+        if (!title || !String(title).trim() || !Number.isFinite(Number(amount)) || Number(amount) <= 0 || !category || !date) {
+            return NextResponse.json(
+                { message: "Please provide a valid title, positive amount, category, and date." },
+                { status: 400 }
+            );
+        }
 
         await dbConnect();
 
@@ -22,15 +29,20 @@ export async function PUT(request, { params }) {
             return NextResponse.json({ message: "Expense not found" }, { status: 404 });
         }
 
-        expense.title = title;
-        expense.amount = amount;
+        expense.title = String(title).trim();
+        expense.amount = Number(amount);
         expense.category = category;
         expense.date = date;
-        expense.note = note;
+        expense.note = note ? String(note).trim() : "";
+        if (paymentMethod) {
+            expense.paymentMethod = paymentMethod;
+        }
 
         await expense.save();
 
-        return NextResponse.json(expense, { headers: { "Content-Type": "application/json; charset=utf-8" } });
+        return NextResponse.json(expense, {
+            headers: { "Content-Type": "application/json; charset=utf-8" },
+        });
     } catch (error) {
         console.error("Error updating expense:", error);
         return NextResponse.json({ message: "Error updating expense" }, { status: 500 });
@@ -54,7 +66,10 @@ export async function DELETE(request, { params }) {
             return NextResponse.json({ message: "Expense not found" }, { status: 404 });
         }
 
-        return NextResponse.json({ message: "Expense deleted" }, { headers: { "Content-Type": "application/json; charset=utf-8" } });
+        return NextResponse.json(
+            { message: "Expense deleted" },
+            { headers: { "Content-Type": "application/json; charset=utf-8" } }
+        );
     } catch (error) {
         console.error("Error deleting expense:", error);
         return NextResponse.json({ message: "Error deleting expense" }, { status: 500 });

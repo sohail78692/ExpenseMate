@@ -1,78 +1,282 @@
 "use client";
 
-import { useMemo } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { format, eachDayOfInterval, startOfMonth, endOfMonth, getDay } from "date-fns";
+import { useMemo, useState, useEffect } from "react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+    format,
+    eachDayOfInterval,
+    startOfMonth,
+    endOfMonth,
+    getDay,
+    isSameDay,
+    parseISO,
+} from "date-fns";
+import { Calendar as CalendarIcon, X } from "lucide-react";
+import { getCategoryStyles } from "@/lib/categoryStyles";
+import { cn } from "@/lib/utils";
 
-export default function CalendarHeatmap({ data, currentMonth = new Date() }) {
-    const days = useMemo(() => eachDayOfInterval({
-        start: startOfMonth(currentMonth),
-        end: endOfMonth(currentMonth),
-    }), [currentMonth]);
+function formatINR(value) {
+    return `₹${Number(value || 0).toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`;
+}
 
-    const getColor = (amount) => {
-        if (amount === 0) return "bg-gray-100 dark:bg-gray-800";
-        if (amount <= 200) return "bg-green-200 dark:bg-green-900";
-        if (amount <= 500) return "bg-yellow-200 dark:bg-yellow-900";
-        if (amount <= 1000) return "bg-orange-200 dark:bg-orange-900";
-        return "bg-red-200 dark:bg-red-900";
-    };
+export default function CalendarHeatmap({
+    data = [],
+    rawExpenses = [],
+    currentMonth = new Date(),
+    className,
+}) {
+    const [selectedDateStr, setSelectedDateStr] = useState(null);
+    const [today, setToday] = useState(null);
 
-    // Create a map for easy lookup
-    const dataMap = useMemo(() => {
+    useEffect(() => {
+        setToday(new Date());
+    }, []);
+
+    // Clear selected day when switching months
+    useEffect(() => {
+        setSelectedDateStr(null);
+    }, [currentMonth]);
+
+    const days = useMemo(
+        () =>
+            eachDayOfInterval({
+                start: startOfMonth(currentMonth),
+                end: endOfMonth(currentMonth),
+            }),
+        [currentMonth]
+    );
+
+    // Map yyyy-MM-dd -> total amount
+    const { dataMap, maxAmount, activeDaysCount } = useMemo(() => {
         const map = {};
         data.forEach((item) => {
-            const dateStr = format(new Date(item.date), "yyyy-MM-dd");
-            map[dateStr] = (map[dateStr] || 0) + item.amount;
+            const parsed =
+                typeof item.date === "string" && item.date.length === 10
+                    ? parseISO(item.date)
+                    : new Date(item.date);
+            const dateStr = format(parsed, "yyyy-MM-dd");
+            map[dateStr] = (map[dateStr] || 0) + Number(item.amount || 0);
         });
-        return map;
+        const values = Object.values(map).filter((v) => v > 0);
+        return {
+            dataMap: map,
+            maxAmount: values.length > 0 ? Math.max(...values) : 0,
+            activeDaysCount: values.length,
+        };
     }, [data]);
 
-    // Calculate empty cells for start of month
+    // Group rawExpenses by yyyy-MM-dd for interactive day drill-down
+    const expensesByDay = useMemo(() => {
+        const grouped = {};
+        rawExpenses.forEach((expense) => {
+            const dateStr = format(new Date(expense.date), "yyyy-MM-dd");
+            if (!grouped[dateStr]) grouped[dateStr] = [];
+            grouped[dateStr].push(expense);
+        });
+        return grouped;
+    }, [rawExpenses]);
+
+    const getCellStyle = (amount) => {
+        if (!amount || amount <= 0 || maxAmount === 0) {
+            return "bg-zinc-900/60 border-zinc-800/70 text-zinc-500 hover:border-zinc-700";
+        }
+        const ratio = amount / maxAmount;
+        if (ratio <= 0.25) {
+            return "bg-emerald-950/60 border-emerald-800/60 text-emerald-300 hover:border-emerald-600";
+        }
+        if (ratio <= 0.5) {
+            return "bg-amber-950/60 border-amber-800/60 text-amber-300 hover:border-amber-600";
+        }
+        if (ratio <= 0.75) {
+            return "bg-orange-950/70 border-orange-700/70 text-orange-300 hover:border-orange-500";
+        }
+        return "bg-red-950/80 border-red-700/80 text-red-200 hover:border-red-500";
+    };
+
     const startDay = getDay(startOfMonth(currentMonth));
     const emptyDays = Array(startDay).fill(null);
 
+    const selectedDayExpenses = selectedDateStr ? expensesByDay[selectedDateStr] || [] : [];
+    const selectedDayTotal = selectedDateStr ? dataMap[selectedDateStr] || 0 : 0;
+
     return (
-        <Card className="col-span-7">
-            <CardHeader>
-                <CardTitle>Monthly Spending Heatmap</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <div className="grid grid-cols-7 gap-2">
-                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-                        <div key={day} className="text-center text-sm font-medium text-gray-500">
-                            {day}
-                        </div>
-                    ))}
-                    {emptyDays.map((_, i) => (
-                        <div key={`empty-${i}`} className="h-10 w-10" />
-                    ))}
-                    {days.map((day) => {
-                        const dateStr = format(day, "yyyy-MM-dd");
-                        const amount = dataMap[dateStr] || 0;
-                        return (
-                            <TooltipProvider key={dateStr}>
-                                <Tooltip>
-                                    <TooltipTrigger>
-                                        <div
-                                            className={`h-10 w-10 rounded-md flex items-center justify-center text-xs cursor-pointer ${getColor(
-                                                amount
-                                            )}`}
+        <div
+            className={cn(
+                "rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden",
+                className
+            )}
+        >
+            <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                    <h3 className="text-sm font-medium text-white">
+                        Monthly Spending Heatmap
+                    </h3>
+                    <p className="text-xs text-zinc-400 mt-1">
+                        Daily spend intensity for {format(currentMonth, "MMMM yyyy")}. Click any day to inspect transactions.
+                    </p>
+                </div>
+
+                {/* Intensity Scale Legend */}
+                <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 shrink-0">
+                    <span>Low</span>
+                    <span className="w-3 h-3 rounded bg-zinc-900/80 border border-zinc-800" title="No spend" />
+                    <span className="w-3 h-3 rounded bg-emerald-950/70 border border-emerald-800/70" title="Up to 25% of peak" />
+                    <span className="w-3 h-3 rounded bg-amber-950/70 border border-amber-800/70" title="26% – 50% of peak" />
+                    <span className="w-3 h-3 rounded bg-orange-950/80 border border-orange-700/80" title="51% – 75% of peak" />
+                    <span className="w-3 h-3 rounded bg-red-950/90 border border-red-700/90" title="76% – 100% of peak" />
+                    <span>Peak</span>
+                </div>
+            </div>
+
+            <div className="px-6 pb-6 space-y-5">
+                <TooltipProvider delayDuration={100}>
+                    <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                        {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                            <div
+                                key={day}
+                                className="text-center text-[11px] font-medium text-zinc-500 pb-1"
+                            >
+                                {day}
+                            </div>
+                        ))}
+
+                        {emptyDays.map((_, i) => (
+                            <div key={`empty-${i}`} className="aspect-square max-h-12 w-full" />
+                        ))}
+
+                        {days.map((day) => {
+                            const dateStr = format(day, "yyyy-MM-dd");
+                            const amount = dataMap[dateStr] || 0;
+                            const isSelected = selectedDateStr === dateStr;
+                            const isToday = today ? isSameDay(day, today) : false;
+                            const txCount = (expensesByDay[dateStr] || []).length;
+
+                            return (
+                                <Tooltip key={dateStr}>
+                                    <TooltipTrigger asChild>
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setSelectedDateStr((prev) =>
+                                                    prev === dateStr ? null : dateStr
+                                                )
+                                            }
+                                            aria-label={`${format(day, "MMMM d, yyyy")}: ${formatINR(amount)}`}
+                                            aria-pressed={isSelected}
+                                            className={cn(
+                                                "aspect-square max-h-12 w-full rounded-lg border flex flex-col items-center justify-center text-xs font-medium transition-all cursor-pointer relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
+                                                getCellStyle(amount),
+                                                isSelected && "ring-2 ring-white border-white text-white",
+                                                isToday && !isSelected && "ring-1 ring-zinc-400/70"
+                                            )}
                                         >
-                                            {format(day, "d")}
-                                        </div>
+                                            <span className="tabular-nums">{format(day, "d")}</span>
+                                            {amount > 0 && (
+                                                <span className="w-1 h-1 rounded-full bg-current opacity-80 mt-0.5 hidden sm:block" />
+                                            )}
+                                        </button>
                                     </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>{dateStr}</p>
-                                        <p>₹{amount.toFixed(2)}</p>
+                                    <TooltipContent className="bg-zinc-950 border border-zinc-800 text-zinc-100 px-3 py-2 rounded-xl shadow-xl">
+                                        <p className="text-[11px] text-zinc-400">
+                                            {format(day, "EEE, MMM d, yyyy")}
+                                        </p>
+                                        <p className="text-xs font-semibold font-mono text-white mt-0.5 tabular-nums">
+                                            {formatINR(amount)}
+                                        </p>
+                                        {txCount > 0 && (
+                                            <p className="text-[10px] text-zinc-500 mt-0.5">
+                                                {txCount} {txCount === 1 ? "expense" : "expenses"}
+                                            </p>
+                                        )}
                                     </TooltipContent>
                                 </Tooltip>
-                            </TooltipProvider>
-                        );
-                    })}
-                </div>
-            </CardContent>
-        </Card>
+                            );
+                        })}
+                    </div>
+                </TooltipProvider>
+
+                {/* Interactive Selected-Day Breakdown Drawer */}
+                {selectedDateStr && (
+                    <div className="rounded-xl bg-zinc-900/50 border border-zinc-800 p-4 space-y-3">
+                        <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2">
+                                <CalendarIcon className="w-3.5 h-3.5 text-zinc-400" />
+                                <span className="text-xs font-medium text-white">
+                                    {format(parseISO(selectedDateStr), "EEEE, MMMM d, yyyy")}
+                                </span>
+                                <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] font-mono text-zinc-300 tabular-nums">
+                                    {formatINR(selectedDayTotal)}
+                                </span>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setSelectedDateStr(null)}
+                                aria-label="Close selected day details"
+                                className="text-zinc-400 hover:text-white p-1 rounded-md hover:bg-zinc-800 transition-colors cursor-pointer"
+                            >
+                                <X className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+
+                        {selectedDayExpenses.length > 0 ? (
+                            <div className="divide-y divide-zinc-800/80">
+                                {selectedDayExpenses.map((expense, idx) => {
+                                    const { icon: Icon, color, bg } = getCategoryStyles(expense.category);
+                                    return (
+                                        <div
+                                            key={`${expense.date}-${expense.title}-${idx}`}
+                                            className="py-2 flex items-center justify-between gap-3 text-xs"
+                                        >
+                                            <div className="flex items-center gap-2.5 min-w-0">
+                                                <div
+                                                    className={cn(
+                                                        "w-7 h-7 rounded-lg flex items-center justify-center shrink-0",
+                                                        bg
+                                                    )}
+                                                >
+                                                    <Icon className={cn("w-3.5 h-3.5", color)} />
+                                                </div>
+                                                <div className="min-w-0">
+                                                    <p className="font-medium text-zinc-200 truncate">
+                                                        {expense.title}
+                                                    </p>
+                                                    <p className="text-[11px] text-zinc-500">
+                                                        {expense.category}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <span className="font-mono font-medium text-white tabular-nums shrink-0">
+                                                {formatINR(expense.amount)}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        ) : (
+                            <p className="text-xs text-zinc-500">
+                                No transactions logged on this day.
+                            </p>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                <span>
+                    {activeDaysCount} of {days.length} days with spending
+                </span>
+                <span className="font-mono text-zinc-400 tabular-nums">
+                    {maxAmount > 0 ? `Peak: ${formatINR(maxAmount)}` : "Peak: ₹0.00"}
+                </span>
+            </div>
+        </div>
     );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { format } from "date-fns";
 import {
     TrendingUp,
@@ -10,10 +11,63 @@ import {
     Wallet,
     Target,
     PieChart,
-    Plus
+    Plus,
+    Receipt,
+    Gauge,
+    CalendarDays,
+    AlertTriangle,
+    Bell,
+    Info,
+    CreditCard,
+    Check,
+    X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
+import ExpenseForm from "@/components/ExpenseForm";
 import { getCategoryStyles } from "@/lib/categoryStyles";
+import { cn } from "@/lib/utils";
+
+interface ExpenseItem {
+    _id: string;
+    title: string;
+    amount: number;
+    category: string;
+    date: string;
+    note?: string;
+    paymentMethod?: string;
+}
+
+interface BudgetItem {
+    _id: string;
+    category: string;
+    amount: number;
+    spent: number;
+    remaining: number;
+    percentage: number;
+    alertThreshold: number;
+}
+
+interface RecommendationItem {
+    type: string;
+    title: string;
+    message: string;
+    icon: string;
+}
+
+interface SavingsGoalItem {
+    _id: string;
+    name?: string;
+    title?: string;
+    icon?: string;
+    category?: string;
+    targetAmount: number;
+    currentAmount: number;
+    progress: number;
+    remaining: number;
+    daysLeft: number;
+    deadline: string;
+    isCompleted?: boolean;
+}
 
 interface DashboardClientProps {
     initialData: {
@@ -22,24 +76,10 @@ interface DashboardClientProps {
             todaySpent: number;
             highestCategory: { _id: string; total: number } | null;
             dailyTrend: { _id: string; amount: number }[];
-            recentExpenses: {
-                _id: string;
-                title: string;
-                amount: number;
-                category: string;
-                date: string;
-            }[];
+            recentExpenses: ExpenseItem[];
         } | null;
         budgetsAndInsights: {
-            budgets: {
-                _id: string;
-                category: string;
-                amount: number;
-                spent: number;
-                remaining: number;
-                percentage: number;
-                alertThreshold: number;
-            }[];
+            budgets: BudgetItem[];
             insights: {
                 monthlyComparison: {
                     current: number;
@@ -49,25 +89,13 @@ interface DashboardClientProps {
                 };
                 topCategories: { category: string; amount: number; count: number }[];
                 budgetAlerts: { category: string; budget: number; spent: number; percentage: string }[];
-                recommendations: {
-                    type: string;
-                    title: string;
-                    message: string;
-                    icon: string;
-                }[];
+                averagePerDay?: string | number;
+                totalTransactions?: number;
+                recommendations: RecommendationItem[];
             };
         } | null;
         savings: {
-            goals: {
-                _id: string;
-                title: string;
-                targetAmount: number;
-                currentAmount: number;
-                progress: number;
-                remaining: number;
-                daysLeft: number;
-                deadline: string;
-            }[];
+            goals: SavingsGoalItem[];
         } | null;
         user: {
             name?: string;
@@ -76,9 +104,48 @@ interface DashboardClientProps {
     };
 }
 
+function formatINR(value: number) {
+    return `₹${Number(value || 0).toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    })}`;
+}
+
+function getRecommendationIcon(type: string) {
+    if (type === "warning") {
+        return {
+            Icon: AlertTriangle,
+            color: "text-amber-400",
+            bg: "bg-amber-950/50 border-amber-800/70",
+        };
+    }
+    if (type === "alert") {
+        return {
+            Icon: Bell,
+            color: "text-red-400",
+            bg: "bg-red-950/50 border-red-800/70",
+        };
+    }
+    if (type === "success") {
+        return {
+            Icon: TrendingDown,
+            color: "text-emerald-400",
+            bg: "bg-emerald-950/50 border-emerald-800/70",
+        };
+    }
+    return {
+        Icon: Info,
+        color: "text-zinc-300",
+        bg: "bg-zinc-900 border-zinc-800",
+    };
+}
+
 export default function DashboardClient({ initialData }: DashboardClientProps) {
+    const router = useRouter();
     const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<"feed" | "budgets" | "heatmap">("feed");
-    const [buttonRipples, setButtonRipples] = useState<{ x: number; y: number; id: number }[]>([]);
+    const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [now] = useState(() => new Date());
 
     const { dashboard, budgetsAndInsights, savings, user } = initialData;
 
@@ -86,603 +153,817 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
     const todaySpent = dashboard?.todaySpent || 0;
     const highestCategory = dashboard?.highestCategory;
     const recentExpenses = dashboard?.recentExpenses || [];
-    const dailyTrend = dashboard?.dailyTrend || [];
+    const dailyTrend = useMemo(() => dashboard?.dailyTrend || [], [dashboard]);
 
-    const budgets = budgetsAndInsights?.budgets || [];
+    const budgets = useMemo(() => budgetsAndInsights?.budgets || [], [budgetsAndInsights]);
     const insights = budgetsAndInsights?.insights;
     const recommendations = insights?.recommendations || [];
-    const savingsGoals = savings?.goals || [];
+    const savingsGoals = useMemo(() => savings?.goals || [], [savings]);
 
-    // Calculate total budget and remaining across all budgets
-    const totalBudget = budgets.reduce((acc, b) => acc + (b.category === "Total" ? b.amount : 0), 0) ||
-        budgets.reduce((acc, b) => acc + b.amount, 0);
-    const remainingBudget = totalBudget > 0 ? totalBudget - totalSpent : 0;
-    const budgetPct = totalBudget > 0 ? Math.min(100, Math.round((totalSpent / totalBudget) * 100)) : null;
+    // Calculate total budget without double-counting when a "Total" cap exists
+    const { totalBudget, remainingBudget, budgetPct } = useMemo(() => {
+        const masterCap = budgets.find((b) => b.category === "Total");
+        const limit = masterCap
+            ? masterCap.amount
+            : budgets.reduce((acc, b) => acc + b.amount, 0);
+        const remaining = limit > 0 ? limit - totalSpent : 0;
+        const pct = limit > 0 ? Math.round((totalSpent / limit) * 100) : null;
+        return { totalBudget: limit, remainingBudget: remaining, budgetPct: pct };
+    }, [budgets, totalSpent]);
 
-    // Highest priority savings goal
-    const primaryGoal = savingsGoals.length > 0 ? savingsGoals[0] : null;
-
-    // Yesterday spending comparison
-    const yesterday = dailyTrend.length > 1 ? dailyTrend[dailyTrend.length - 2]?.amount || 0 : 0;
-    const todayChange = yesterday > 0 ? Number(((todaySpent - yesterday) / yesterday * 100).toFixed(1)) : 0;
+    const primaryGoal = useMemo(() => {
+        const active = savingsGoals.filter((g) => !g.isCompleted);
+        return active.length > 0 ? active[0] : savingsGoals.length > 0 ? savingsGoals[0] : null;
+    }, [savingsGoals]);
 
     // Current month calendar generation for Activity Heatmap
-    const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonthIndex = now.getMonth();
     const currentMonthName = format(now, "MMMM");
     const daysInMonth = new Date(currentYear, currentMonthIndex + 1, 0).getDate();
     const firstDayOfWeek = new Date(currentYear, currentMonthIndex, 1).getDay();
 
-    // Map daily spending to days of month
-    const spendingMap: { [day: number]: number } = {};
-    let maxDailySpend = 0;
-    dailyTrend.forEach((item) => {
-        const parts = item._id.split("-");
-        const dayNum = parseInt(parts[2], 10);
-        if (!isNaN(dayNum)) {
-            spendingMap[dayNum] = item.amount;
-            if (item.amount > maxDailySpend) {
-                maxDailySpend = item.amount;
-            }
-        }
-    });
+    const { spendingMap, maxDailySpend } = useMemo(() => {
+        const year = now.getFullYear();
+        const monthIndex = now.getMonth();
+        const map: Record<number, number> = {};
+        let peak = 0;
 
-    const handleButtonClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const id = Date.now();
-        setButtonRipples((prev) => [...prev.slice(-3), { x, y, id }]);
-        setTimeout(() => {
-            setButtonRipples((prev) => prev.filter((r) => r.id !== id));
-        }, 650);
+        dailyTrend.forEach((item) => {
+            const parts = item._id.split("-");
+            const y = parseInt(parts[0], 10);
+            const m = parseInt(parts[1], 10);
+            const d = parseInt(parts[2], 10);
+            if (y === year && m === monthIndex + 1 && !Number.isNaN(d)) {
+                map[d] = (map[d] || 0) + item.amount;
+                if (map[d] > peak) {
+                    peak = map[d];
+                }
+            }
+        });
+
+        return { spendingMap: map, maxDailySpend: peak };
+    }, [dailyTrend, now]);
+
+    const handleExpenseAdded = (newExpense: ExpenseItem) => {
+        setToastMessage(`Logged "${newExpense.title}" (${formatINR(newExpense.amount)})`);
+        setTimeout(() => setToastMessage(""), 4000);
+        router.refresh();
+    };
+
+    const comparison = insights?.monthlyComparison;
+    const comparisonNum = comparison ? Number(comparison.change || 0) : 0;
+
+    const tabs: { id: "feed" | "budgets" | "heatmap"; label: string; icon: React.ComponentType<{ className?: string }>; count?: number }[] = [
+        { id: "feed", label: "Recent Feed", icon: Receipt, count: recentExpenses.length },
+        { id: "budgets", label: "Budget Guardrails", icon: Gauge, count: budgets.length },
+        { id: "heatmap", label: "Activity Heatmap", icon: CalendarDays },
+    ];
+
+    const handleTabKeyDown = (e: React.KeyboardEvent, currentIndex: number) => {
+        if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+        e.preventDefault();
+        const delta = e.key === "ArrowRight" ? 1 : -1;
+        const nextIndex = (currentIndex + delta + tabs.length) % tabs.length;
+        setActiveWorkspaceTab(tabs[nextIndex].id);
     };
 
     return (
-        <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto pb-6">
-            {/* Top Header & Primary Action with Ocean Flow Animation */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-100">
+            {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="px-2.5 py-0.5 rounded-full bg-[#0A84FF]/15 border border-[#0A84FF]/30 text-[#0A84FF] text-xs font-semibold tracking-wide">
+                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             Live Workspace
                         </span>
-                        <span className="text-xs text-zinc-400 font-medium">
-                            {format(now, "EEEE, MMMM d, yyyy")}
+                        <span className="text-zinc-600">•</span>
+                        <span className="font-mono text-zinc-300" suppressHydrationWarning>
+                            {format(now, "EEE, MMM d, yyyy")}
                         </span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
                         Dashboard
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-0.5">
-                        Welcome back, <span className="text-white font-medium">{user?.name || "Member"}</span>! Here&apos;s your financial snapshot and live budget guardrails.
+                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                        Welcome back, <span className="text-zinc-200 font-medium">{user?.name || "Member"}</span>. Here is your {currentMonthName} spending snapshot and budget guardrails.
                     </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                    <Link href="/expenses">
-                        <Button
-                            size="lg"
-                            onClick={handleButtonClick}
-                            className="relative group overflow-hidden text-xs sm:text-sm font-semibold px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white shadow-xl shadow-[#0071E3]/25 hover:shadow-[#0071E3]/40 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
-                        >
-                            {/* Ocean Flow Current Layer (inside button on hover) */}
-                            <div
-                                className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                                style={{
-                                    background: "linear-gradient(90deg, #0071E3 0%, #00c6ff 50%, #0071E3 100%)",
-                                    backgroundSize: "200% 100%",
-                                    animation: "ocean-flow-inside 2.5s linear infinite",
-                                }}
-                            />
-
-                            {/* Ocean Wave Crest (gentle liquid surge inside) */}
-                            <div
-                                className="absolute -inset-x-2 -bottom-2 h-full pointer-events-none opacity-30 mix-blend-screen"
-                                style={{
-                                    background: "radial-gradient(ellipse 65% 50% at 50% 100%, rgba(56, 189, 248, 0.9), transparent 70%)",
-                                    animation: "ocean-wave-crest 3.5s ease-in-out infinite alternate",
-                                }}
-                            />
-
-                            {/* Ocean Wave Shimmer Sweep */}
-                            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-100/30 to-transparent -translate-x-[150%] group-hover:translate-x-[150%] transition-transform duration-700 ease-in-out pointer-events-none" />
-
-                            {/* Interactive Click Water Ripples */}
-                            {buttonRipples.map((ripple) => (
-                                <span
-                                    key={ripple.id}
-                                    className="absolute pointer-events-none rounded-full bg-cyan-200/50 animate-ocean-ripple"
-                                    style={{
-                                        left: ripple.x,
-                                        top: ripple.y,
-                                        transform: "translate(-50%, -50%)",
-                                    }}
-                                />
-                            ))}
-
-                            <div className="relative z-10 flex items-center gap-2">
-                                <Plus className="w-4 h-4" />
-                                <span>Add Expense</span>
-                            </div>
-                        </Button>
+                <div className="flex items-center gap-2 shrink-0">
+                    <Link
+                        href="/analytics"
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                    >
+                        <PieChart className="w-3.5 h-3.5" />
+                        <span>Analytics</span>
                     </Link>
+
+                    <button
+                        type="button"
+                        onClick={() => setIsExpenseModalOpen(true)}
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                    >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add Expense</span>
+                    </button>
                 </div>
             </div>
 
-            {/* Top iOS/macOS Widget Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5">
-                {/* 1. This Month Spend Card */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#0c1222]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#0A84FF]/40 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-zinc-400 font-medium">This Month&apos;s Spend</span>
-                        {insights?.monthlyComparison ? (
+            {/* Notification Banner */}
+            <AnimatePresence>
+                {toastMessage && (
+                    <motion.div
+                        role="status"
+                        aria-live="polite"
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        className="p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium bg-zinc-900 border border-zinc-700 text-zinc-200"
+                    >
+                        <div className="flex items-center gap-2.5">
+                            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <span>{toastMessage}</span>
+                        </div>
+                        <button
+                            type="button"
+                            onClick={() => setToastMessage("")}
+                            aria-label="Dismiss notification"
+                            className="text-zinc-400 hover:text-white transition-colors p-1 cursor-pointer"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Top 4 KPI Summary Strip */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* 1. Month Spend */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-zinc-400">
+                            {currentMonthName} Spend
+                        </span>
+                        {comparison && comparison.last > 0 ? (
                             <span
-                                className={`text-[11px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${
-                                    insights.monthlyComparison.trend === "up"
-                                        ? "text-red-400 bg-red-500/10 border border-red-500/20"
-                                        : "text-[#30D158] bg-[#30D158]/10 border border-[#30D158]/20"
-                                }`}
-                            >
-                                {insights.monthlyComparison.trend === "up" ? (
-                                    <>
-                                        +{insights.monthlyComparison.change}% <TrendingUp className="w-3 h-3" />
-                                    </>
-                                ) : (
-                                    <>
-                                        {insights.monthlyComparison.change}% <TrendingDown className="w-3 h-3" />
-                                    </>
+                                className={cn(
+                                    "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-mono font-medium border",
+                                    comparison.trend === "up"
+                                        ? "bg-red-950/60 border-red-800/80 text-red-400"
+                                        : "bg-emerald-950/60 border-emerald-800/80 text-emerald-400"
                                 )}
+                            >
+                                {comparison.trend === "up" ? (
+                                    <TrendingUp className="w-3 h-3" />
+                                ) : (
+                                    <TrendingDown className="w-3 h-3" />
+                                )}
+                                {comparisonNum > 0 ? `+${comparisonNum}%` : `${comparisonNum}%`}
                             </span>
                         ) : (
-                            <span className="text-xs text-[#0A84FF] font-semibold">Active</span>
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-900 border border-zinc-800 text-zinc-400">
+                                Active
+                            </span>
                         )}
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-mono">
-                        ₹{totalSpent.toFixed(2)}
-                    </div>
-                    <div className="text-[11px] sm:text-xs text-zinc-400 mt-1.5 flex items-center justify-between">
-                        <span>Total spending in {currentMonthName}</span>
-                        <span className="text-zinc-500 text-[10px]">Today: ₹{todaySpent.toFixed(2)}</span>
+                    <div>
+                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                            {formatINR(totalSpent)}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                            Today: {formatINR(todaySpent)}
+                        </p>
                     </div>
                 </div>
 
-                {/* 2. Budget Guardrails Status Card */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#0c1222]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#0A84FF]/40 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-zinc-400 font-medium">Budget Status</span>
+                {/* 2. Budget Remaining */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-zinc-400">Budget Status</span>
                         {budgetPct !== null ? (
                             <span
-                                className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                                    budgetPct > 100
-                                        ? "text-red-400 bg-red-500/10 border border-red-500/20"
-                                        : budgetPct > 80
-                                        ? "text-amber-400 bg-amber-500/10 border border-amber-500/20"
-                                        : "text-[#30D158] bg-[#30D158]/10 border border-[#30D158]/20"
-                                }`}
+                                className={cn(
+                                    "px-2 py-0.5 rounded-full text-[11px] font-medium border",
+                                    budgetPct >= 100
+                                        ? "bg-red-950/60 border-red-800/80 text-red-400"
+                                        : budgetPct >= 80
+                                        ? "bg-amber-950/60 border-amber-800/80 text-amber-300"
+                                        : "bg-emerald-950/60 border-emerald-800/80 text-emerald-400"
+                                )}
                             >
-                                {budgetPct > 100 ? "Exceeded" : budgetPct > 80 ? `${budgetPct}% Used` : "On Track"}
+                                {budgetPct >= 100
+                                    ? "Exceeded"
+                                    : budgetPct >= 80
+                                    ? `${budgetPct}% Used`
+                                    : "On Track"}
                             </span>
                         ) : (
-                            <Link href="/budgets" className="text-xs text-[#0A84FF] hover:underline font-medium">
-                                Set Budget →
+                            <Link
+                                href="/budgets/new"
+                                className="text-[11px] text-zinc-300 hover:text-white underline"
+                            >
+                                Set Cap
                             </Link>
                         )}
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-mono">
-                        {totalBudget > 0 ? `₹${remainingBudget.toFixed(2)}` : "₹0.00"}
-                    </div>
-                    <div className="text-[11px] sm:text-xs text-zinc-400 mt-1.5">
-                        {totalBudget > 0
-                            ? `Remaining of ₹${totalBudget.toFixed(2)} monthly budget`
-                            : "No monthly budget limit set yet"}
+                    <div>
+                        <p
+                            className={cn(
+                                "text-2xl font-semibold tracking-tight font-mono tabular-nums",
+                                remainingBudget < 0 ? "text-red-400" : "text-white"
+                            )}
+                        >
+                            {totalBudget > 0 ? formatINR(remainingBudget) : "₹0.00"}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                            {totalBudget > 0
+                                ? `Remaining of ${formatINR(totalBudget)} cap`
+                                : "No monthly budget limit set"}
+                        </p>
                     </div>
                 </div>
 
-                {/* 3. Emergency / Savings Goal or Top Category Card */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-[#0c1222]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#0A84FF]/40 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)] group">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-zinc-400 font-medium">
-                            {primaryGoal ? "Primary Goal" : "Top Spending Category"}
+                {/* 3. Primary Savings Goal / Top Category */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-zinc-400">
+                            {primaryGoal ? "Primary Goal" : "Top Category"}
                         </span>
                         {primaryGoal ? (
-                            <span className="text-[11px] text-[#64D2FF] font-semibold px-2 py-0.5 rounded-full bg-[#64D2FF]/10 border border-[#64D2FF]/20">
-                                {primaryGoal.progress}% Complete
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-mono font-medium bg-emerald-950/60 border border-emerald-800/80 text-emerald-400">
+                                {primaryGoal.progress}%
                             </span>
                         ) : highestCategory ? (
-                            <span className="text-[11px] text-[#FF9F0A] font-semibold px-2 py-0.5 rounded-full bg-[#FF9F0A]/10 border border-[#FF9F0A]/20">
-                                Top Category
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-900 border border-zinc-800 text-zinc-300">
+                                Leading
                             </span>
                         ) : (
-                            <span className="text-xs text-zinc-500">None yet</span>
+                            <span className="text-[11px] text-zinc-500">—</span>
                         )}
                     </div>
-                    <div className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight truncate">
-                        {primaryGoal
-                            ? primaryGoal.title
-                            : highestCategory
-                            ? highestCategory._id
-                            : "All Clear"}
+                    <div>
+                        <p className="text-2xl font-semibold tracking-tight text-white truncate">
+                            {primaryGoal
+                                ? primaryGoal.name || primaryGoal.title || "Savings Goal"
+                                : highestCategory
+                                ? highestCategory._id
+                                : "No Activity"}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1 tabular-nums truncate">
+                            {primaryGoal
+                                ? `${formatINR(primaryGoal.currentAmount)} of ${formatINR(primaryGoal.targetAmount)}`
+                                : highestCategory
+                                ? `${formatINR(highestCategory.total)} spent this month`
+                                : "Log an expense to begin"}
+                        </p>
                     </div>
-                    <div className="text-[11px] sm:text-xs text-zinc-400 mt-1.5">
-                        {primaryGoal
-                            ? `₹${primaryGoal.currentAmount.toFixed(2)} of ₹${primaryGoal.targetAmount.toFixed(2)}`
-                            : highestCategory
-                            ? `₹${highestCategory.total.toFixed(2)} total spent this month`
-                            : "Track your first expense to see trends"}
+                </div>
+
+                {/* 4. Daily Velocity */}
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                    <div className="flex items-center justify-between gap-2">
+                        <span className="text-xs font-medium text-zinc-400">Daily Pace</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                            <Gauge className="w-3.5 h-3.5" />
+                        </div>
+                    </div>
+                    <div>
+                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                            {formatINR(Number(insights?.averagePerDay || 0))}
+                        </p>
+                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                            {insights?.totalTransactions || 0}{" "}
+                            {(insights?.totalTransactions || 0) === 1
+                                ? "transaction"
+                                : "transactions"}{" "}
+                            this month
+                        </p>
                     </div>
                 </div>
             </div>
 
-            {/* Smart Financial Recommendations / Guardrail Alerts (if any) */}
+            {/* Smart Recommendations Strip (if any) */}
             {recommendations.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
-                    {recommendations.slice(0, 2).map((rec, index) => (
-                        <div
-                            key={index}
-                            className={`p-3.5 sm:p-4 rounded-2xl backdrop-blur-xl border flex items-start gap-3 transition-all ${
-                                rec.type === "warning" || rec.type === "alert"
-                                    ? "bg-red-500/[0.06] border-red-500/20 text-red-200"
-                                    : rec.type === "success"
-                                    ? "bg-emerald-500/[0.06] border-emerald-500/20 text-emerald-200"
-                                    : "bg-[#0A84FF]/[0.06] border-[#0A84FF]/20 text-blue-200"
-                            }`}
-                        >
-                            <span className="text-xl sm:text-2xl shrink-0 p-1">{rec.icon}</span>
-                            <div className="min-w-0">
-                                <h4 className="text-xs sm:text-sm font-semibold text-white">{rec.title}</h4>
-                                <p className="text-[11px] sm:text-xs text-zinc-300 mt-0.5 leading-relaxed">
-                                    {rec.message}
-                                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {recommendations.slice(0, 2).map((rec, index) => {
+                        const { Icon, color, bg } = getRecommendationIcon(rec.type);
+                        return (
+                            <div
+                                key={`${rec.type}-${index}`}
+                                className="p-4 rounded-2xl bg-zinc-950 border border-zinc-800 flex items-start gap-3.5"
+                            >
+                                <div
+                                    className={cn(
+                                        "w-9 h-9 rounded-xl border flex items-center justify-center shrink-0 mt-0.5",
+                                        bg
+                                    )}
+                                >
+                                    <Icon className={cn("w-4 h-4", color)} />
+                                </div>
+                                <div className="min-w-0">
+                                    <h2 className="text-xs sm:text-sm font-medium text-white">
+                                        {rec.title}
+                                    </h2>
+                                    <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                                        {rec.message}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             )}
 
-            {/* THE SIGNATURE WORKSPACE CONTAINER (Apple macOS Window & Segmented Tabs) */}
-            <div className="rounded-3xl bg-[#090e1d]/90 backdrop-blur-2xl border border-white/[0.08] shadow-[0_16px_50px_rgba(0,0,0,0.5)] overflow-hidden">
-                {/* Workspace Top Window Bar */}
-                <div className="p-3 sm:p-4.5 border-b border-white/[0.06] bg-[#0c1326]/60 flex flex-col xs:flex-row items-center justify-between gap-3">
-                    {/* Window Control Dots */}
-                    <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FF5F56] border border-red-600/30"></span>
-                            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FFBD2E] border border-yellow-600/30"></span>
-                            <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#27C93F] border border-green-600/30"></span>
-                        </div>
-                        <span className="text-[11px] sm:text-xs font-semibold text-zinc-300 ml-2 tracking-wide flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#0A84FF] animate-pulse"></span>
-                            ExpenseMate • Financial Workspace
-                        </span>
-                    </div>
-
-                    {/* Segmented Workspace Controller Tabs */}
-                    <div className="flex items-center bg-[#182035]/80 p-1 rounded-full border border-white/[0.08] text-[11px] sm:text-xs w-full xs:w-auto justify-center shrink-0">
-                        <button
-                            type="button"
-                            onClick={() => setActiveWorkspaceTab("feed")}
-                            className={`flex-1 xs:flex-initial px-3 sm:px-4 py-1.5 rounded-full font-medium transition-all text-center cursor-pointer ${
-                                activeWorkspaceTab === "feed"
-                                    ? "bg-[#0A84FF] text-white shadow-md shadow-[#0A84FF]/25 font-semibold"
-                                    : "text-zinc-400 hover:text-white"
-                            }`}
-                        >
-                            Recent Feed
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveWorkspaceTab("budgets")}
-                            className={`flex-1 xs:flex-initial px-3 sm:px-4 py-1.5 rounded-full font-medium transition-all text-center cursor-pointer ${
-                                activeWorkspaceTab === "budgets"
-                                    ? "bg-[#0A84FF] text-white shadow-md shadow-[#0A84FF]/25 font-semibold"
-                                    : "text-zinc-400 hover:text-white"
-                            }`}
-                        >
-                            Budget Rings
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setActiveWorkspaceTab("heatmap")}
-                            className={`flex-1 xs:flex-initial px-3 sm:px-4 py-1.5 rounded-full font-medium transition-all text-center cursor-pointer ${
-                                activeWorkspaceTab === "heatmap"
-                                    ? "bg-[#0A84FF] text-white shadow-md shadow-[#0A84FF]/25 font-semibold"
-                                    : "text-zinc-400 hover:text-white"
-                            }`}
-                        >
-                            Activity Heatmap
-                        </button>
-                    </div>
+            {/* Signature Workspace Section (Horizontal Underline Tabs) */}
+            <div className="space-y-5">
+                <div
+                    role="tablist"
+                    aria-label="Dashboard workspace views"
+                    className="flex border-b border-zinc-800 gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
+                    {tabs.map((tab, idx) => {
+                        const isActive = activeWorkspaceTab === tab.id;
+                        const Icon = tab.icon;
+                        return (
+                            <button
+                                key={tab.id}
+                                id={`dashboard-tab-${tab.id}`}
+                                role="tab"
+                                type="button"
+                                aria-selected={isActive}
+                                aria-controls={`dashboard-panel-${tab.id}`}
+                                tabIndex={isActive ? 0 : -1}
+                                onClick={() => setActiveWorkspaceTab(tab.id)}
+                                onKeyDown={(e) => handleTabKeyDown(e, idx)}
+                                className={cn(
+                                    "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-white",
+                                    isActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+                                )}
+                            >
+                                <Icon className="w-4 h-4" />
+                                <span>{tab.label}</span>
+                                {typeof tab.count === "number" && (
+                                    <span
+                                        className={cn(
+                                            "px-1.5 py-0.5 rounded-md text-[10px] font-mono tabular-nums",
+                                            isActive
+                                                ? "bg-zinc-800 text-zinc-200"
+                                                : "bg-zinc-900 text-zinc-500"
+                                        )}
+                                    >
+                                        {tab.count}
+                                    </span>
+                                )}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="dashboardTabUnderline"
+                                        className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                                    />
+                                )}
+                            </button>
+                        );
+                    })}
                 </div>
 
-                {/* Tab 1: Recent Feed */}
-                {activeWorkspaceTab === "feed" && (
-                    <div className="p-4 sm:p-6 space-y-3 animate-in fade-in duration-200">
-                        <div className="flex items-center justify-between pb-2 border-b border-white/[0.06] text-[11px] sm:text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                            <span>Description</span>
-                            <span className="hidden sm:inline">Category</span>
-                            <span className="hidden sm:inline">Date</span>
-                            <span className="text-right">Amount</span>
-                        </div>
-
-                        {recentExpenses.length > 0 ? (
-                            recentExpenses.map((expense) => {
-                                const { icon: CategoryIcon, color, bg } = getCategoryStyles(expense.category);
-                                return (
-                                    <div
-                                        key={expense._id}
-                                        className="flex items-center justify-between p-3 sm:p-3.5 rounded-2xl bg-[#11182c]/70 hover:bg-[#15203a] border border-white/[0.04] hover:border-white/[0.1] transition-all group"
-                                    >
-                                        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
-                                            <div className={`p-2 sm:p-2.5 rounded-xl shrink-0 ${bg}`}>
-                                                <CategoryIcon className={`w-4 h-4 ${color}`} />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <span className="text-xs sm:text-sm font-semibold text-white truncate block group-hover:text-[#64D2FF] transition-colors">
-                                                    {expense.title}
-                                                </span>
-                                                <span className="text-[10px] sm:text-[11px] text-zinc-400 sm:hidden block truncate">
-                                                    {expense.category} • {format(new Date(expense.date), "MMM d, yyyy")}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        <span className="text-xs px-3 py-1 rounded-full bg-white/[0.06] text-zinc-300 font-medium hidden sm:inline shrink-0">
-                                            {expense.category}
-                                        </span>
-
-                                        <span className="text-xs text-zinc-400 hidden sm:inline shrink-0">
-                                            {format(new Date(expense.date), "MMM d, yyyy")}
-                                        </span>
-
-                                        <span className="text-xs sm:text-sm font-bold text-white font-mono shrink-0 ml-2">
-                                            -₹{expense.amount.toFixed(2)}
-                                        </span>
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <div className="text-center py-10 sm:py-14 text-zinc-400 space-y-3">
-                                <div className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto text-xl">
-                                    💳
+                <AnimatePresence mode="wait">
+                    {/* Tab 1: Recent Feed */}
+                    {activeWorkspaceTab === "feed" && (
+                        <motion.div
+                            key="feed"
+                            id="dashboard-panel-feed"
+                            role="tabpanel"
+                            aria-labelledby="dashboard-tab-feed"
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.15 }}
+                            className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden"
+                        >
+                            <div className="p-6 pb-4 flex items-center justify-between gap-3">
+                                <div>
+                                    <h3 className="text-sm font-medium text-white">
+                                        Recent Transactions
+                                    </h3>
+                                    <p className="text-xs text-zinc-400 mt-1">
+                                        Your latest 5 entries logged in ExpenseMate.
+                                    </p>
                                 </div>
-                                <p className="text-sm font-medium text-zinc-300">No transactions recorded yet</p>
-                                <p className="text-xs text-zinc-500 max-w-sm mx-auto">
-                                    Click &quot;Add Expense&quot; above to log your first transaction and start generating insights.
-                                </p>
-                                <Link href="/expenses" className="inline-block mt-2">
-                                    <Button size="sm" variant="outline" className="rounded-full text-xs border-white/10 hover:bg-white/[0.08]">
-                                        Log Expense
-                                    </Button>
+                                <Link
+                                    href="/expenses"
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors shrink-0"
+                                >
+                                    Full Ledger
                                 </Link>
                             </div>
-                        )}
 
-                        <div className="pt-2 flex justify-end">
-                            <Link
-                                href="/expenses"
-                                className="inline-flex items-center gap-1.5 text-xs text-[#0A84FF] hover:text-[#64D2FF] font-semibold transition-colors"
-                            >
-                                <span>View all expenses</span>
-                                <ArrowUpRight className="w-3.5 h-3.5" />
-                            </Link>
-                        </div>
-                    </div>
-                )}
-
-                {/* Tab 2: Budget Rings & Category Guardrails */}
-                {activeWorkspaceTab === "budgets" && (
-                    <div className="p-4 sm:p-6 space-y-3.5 sm:space-y-4 animate-in fade-in duration-200">
-                        {budgets.length > 0 ? (
-                            budgets.map((b) => {
-                                const { icon: CategoryIcon, color, hex } = getCategoryStyles(b.category);
-                                const isAlert = b.percentage >= (b.alertThreshold || 80);
-
-                                return (
-                                    <div
-                                        key={b._id}
-                                        className="p-3.5 sm:p-4 rounded-2xl bg-[#11182c]/70 border border-white/[0.05] hover:border-white/[0.1] transition-all"
-                                    >
-                                        <div className="flex justify-between items-center text-xs sm:text-sm mb-2 sm:mb-2.5">
-                                            <div className="flex items-center gap-2 min-w-0">
-                                                <CategoryIcon className={`w-4 h-4 shrink-0 ${color}`} />
-                                                <span className="font-semibold text-white truncate">{b.category}</span>
-                                                {isAlert && (
-                                                    <span className="text-[10px] font-bold text-red-400 bg-red-500/10 border border-red-500/20 px-2 py-0.5 rounded-full shrink-0">
-                                                        Alert
-                                                    </span>
-                                                )}
-                                            </div>
-
-                                            <span className="text-[11px] sm:text-xs text-zinc-400 shrink-0 ml-2 font-mono">
-                                                <span className="text-white font-bold">₹{b.spent.toFixed(2)}</span> of ₹{b.amount.toFixed(2)} ({b.percentage}%)
-                                            </span>
-                                        </div>
-
-                                        <div className="w-full h-2 sm:h-2.5 rounded-full bg-white/10 overflow-hidden relative">
+                            {recentExpenses.length > 0 ? (
+                                <div className="divide-y divide-zinc-800/80">
+                                    {recentExpenses.map((expense) => {
+                                        const { icon: CategoryIcon, color, bg, hex } =
+                                            getCategoryStyles(expense.category);
+                                        return (
                                             <div
-                                                className={`h-full rounded-full transition-all duration-700 ${
-                                                    b.percentage >= 100
-                                                        ? "bg-red-500"
-                                                        : b.percentage >= 80
-                                                        ? "bg-amber-500"
-                                                        : "bg-[#0A84FF]"
-                                                }`}
-                                                style={{ width: `${Math.min(100, b.percentage)}%`, backgroundColor: b.percentage < 80 ? hex : undefined }}
-                                            />
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        ) : (
-                            <div className="text-center py-10 sm:py-14 text-zinc-400 space-y-3">
-                                <div className="w-12 h-12 rounded-2xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto text-xl">
-                                    🎯
+                                                key={expense._id}
+                                                className="px-6 py-3.5 flex items-center justify-between gap-4 hover:bg-zinc-900/30 transition-colors"
+                                            >
+                                                <div className="flex items-center gap-3 min-w-0">
+                                                    <div
+                                                        className={cn(
+                                                            "w-9 h-9 rounded-xl border border-zinc-800/80 flex items-center justify-center shrink-0",
+                                                            bg
+                                                        )}
+                                                    >
+                                                        <CategoryIcon className={cn("w-4 h-4", color)} />
+                                                    </div>
+                                                    <div className="min-w-0">
+                                                        <p className="text-xs sm:text-sm font-medium text-white truncate">
+                                                            {expense.title}
+                                                        </p>
+                                                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-500 mt-0.5">
+                                                            <span className="inline-flex items-center gap-1">
+                                                                <span
+                                                                    className="w-1.5 h-1.5 rounded-full"
+                                                                    style={{ backgroundColor: hex }}
+                                                                />
+                                                                {expense.category}
+                                                            </span>
+                                                            <span>•</span>
+                                                            <span>
+                                                                {format(
+                                                                    new Date(expense.date),
+                                                                    "MMM d, yyyy"
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <span className="text-xs sm:text-sm font-semibold font-mono text-white tabular-nums shrink-0">
+                                                    -{formatINR(expense.amount)}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
                                 </div>
-                                <p className="text-sm font-medium text-zinc-300">No monthly budgets configured</p>
-                                <p className="text-xs text-zinc-500 max-w-sm mx-auto">
-                                    Set monthly spending limits for categories like Food, Utilities, or Dining to get smart overspend alerts.
-                                </p>
-                                <Link href="/budgets" className="inline-block mt-2">
-                                    <Button size="sm" className="bg-[#0A84FF] hover:bg-[#0071E3] text-white rounded-full text-xs font-semibold">
-                                        Configure Budgets
-                                    </Button>
+                            ) : (
+                                <div className="px-6 py-12 text-center space-y-3">
+                                    <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mx-auto">
+                                        <CreditCard className="w-4 h-4" />
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-medium text-zinc-200">
+                                            No transactions recorded yet
+                                        </p>
+                                        <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                                            Add your first expense to populate your feed, budgets, and activity heatmap.
+                                        </p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsExpenseModalOpen(true)}
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer"
+                                    >
+                                        <Plus className="w-3.5 h-3.5" />
+                                        <span>Add Expense</span>
+                                    </button>
+                                </div>
+                            )}
+
+                            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                <span>Showing latest {recentExpenses.length} transactions</span>
+                                <Link
+                                    href="/expenses"
+                                    className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium transition-colors"
+                                >
+                                    <span>View all expenses</span>
+                                    <ArrowUpRight className="w-3.5 h-3.5" />
                                 </Link>
                             </div>
-                        )}
+                        </motion.div>
+                    )}
 
-                        <div className="pt-2 flex justify-end">
-                            <Link
-                                href="/budgets"
-                                className="inline-flex items-center gap-1.5 text-xs text-[#0A84FF] hover:text-[#64D2FF] font-semibold transition-colors"
-                            >
-                                <span>Manage all budgets & alert thresholds</span>
-                                <ArrowUpRight className="w-3.5 h-3.5" />
-                            </Link>
-                        </div>
-                    </div>
-                )}
-
-                {/* Tab 3: Activity Heatmap */}
-                {activeWorkspaceTab === "heatmap" && (
-                    <div className="p-4 sm:p-6 animate-in fade-in duration-200">
-                        <div className="text-xs sm:text-sm font-medium text-zinc-300 mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                            <span>Daily Spending Intensity ({currentMonthName} {currentYear})</span>
-                            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-zinc-400">
-                                <span>Low</span>
-                                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-white/10" />
-                                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-[#0A84FF]/30" />
-                                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-[#0A84FF]/65" />
-                                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded bg-[#0A84FF]" />
-                                <span>High</span>
+                    {/* Tab 2: Budget Guardrails */}
+                    {activeWorkspaceTab === "budgets" && (
+                        <motion.div
+                            key="budgets"
+                            id="dashboard-panel-budgets"
+                            role="tabpanel"
+                            aria-labelledby="dashboard-tab-budgets"
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.15 }}
+                            className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden"
+                        >
+                            <div className="p-6 pb-4 flex items-center justify-between gap-3">
+                                <div>
+                                    <h3 className="text-sm font-medium text-white">
+                                        Monthly Budget Guardrails
+                                    </h3>
+                                    <p className="text-xs text-zinc-400 mt-1">
+                                        Live progress against your configured {currentMonthName} limits.
+                                    </p>
+                                </div>
+                                <Link
+                                    href="/budgets/new"
+                                    className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors shrink-0 inline-flex items-center gap-1"
+                                >
+                                    <Plus className="w-3 h-3" />
+                                    <span>New Budget</span>
+                                </Link>
                             </div>
-                        </div>
 
-                        {/* Day of Week Labels */}
-                        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-1.5 text-center text-[10px] sm:text-xs text-zinc-400 font-semibold">
-                            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day, d) => (
-                                <div key={d}>{day}</div>
-                            ))}
-                        </div>
+                            {budgets.length > 0 ? (
+                                <div className="divide-y divide-zinc-800/80">
+                                    {budgets.map((b) => {
+                                        const { icon: CategoryIcon, color, bg } =
+                                            getCategoryStyles(b.category);
+                                        const threshold = b.alertThreshold || 80;
+                                        const isOver = b.percentage >= 100;
+                                        const isAlert = b.percentage >= threshold;
 
-                        {/* Calendar Grid */}
-                        <div className="grid grid-cols-7 gap-1 sm:gap-2">
-                            {/* Empty offset padding for days before 1st of month */}
-                            {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
-                                <div key={`empty-${idx}`} className="h-9 sm:h-12 rounded-lg sm:rounded-xl opacity-20" />
-                            ))}
+                                        return (
+                                            <div key={b._id} className="px-6 py-4 space-y-2.5">
+                                                <div className="flex items-center justify-between gap-3 text-xs">
+                                                    <div className="flex items-center gap-2.5 min-w-0">
+                                                        <div
+                                                            className={cn(
+                                                                "w-8 h-8 rounded-lg border border-zinc-800/80 flex items-center justify-center shrink-0",
+                                                                b.category === "Total"
+                                                                    ? "bg-zinc-900"
+                                                                    : bg
+                                                            )}
+                                                        >
+                                                            {b.category === "Total" ? (
+                                                                <Wallet className="w-3.5 h-3.5 text-white" />
+                                                            ) : (
+                                                                <CategoryIcon
+                                                                    className={cn("w-3.5 h-3.5", color)}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                        <span className="font-medium text-sm text-white truncate">
+                                                            {b.category === "Total"
+                                                                ? "Overall Monthly Cap"
+                                                                : b.category}
+                                                        </span>
+                                                        {isAlert && (
+                                                            <span
+                                                                className={cn(
+                                                                    "px-2 py-0.5 rounded-full text-[10px] font-medium border shrink-0",
+                                                                    isOver
+                                                                        ? "bg-red-950/60 border-red-800/80 text-red-400"
+                                                                        : "bg-amber-950/60 border-amber-800/80 text-amber-300"
+                                                                )}
+                                                            >
+                                                                {isOver ? "Over limit" : "Alert"}
+                                                            </span>
+                                                        )}
+                                                    </div>
 
-                            {/* Actual days of month */}
-                            {Array.from({ length: daysInMonth }).map((_, i) => {
-                                const dayNum = i + 1;
-                                const spentOnDay = spendingMap[dayNum] || 0;
-                                let intensity = 0;
-                                if (spentOnDay > 0) {
-                                    if (maxDailySpend > 0) {
-                                        const ratio = spentOnDay / maxDailySpend;
-                                        if (ratio > 0.66) intensity = 3;
-                                        else if (ratio > 0.33) intensity = 2;
-                                        else intensity = 1;
-                                    } else {
-                                        intensity = 1;
-                                    }
-                                }
+                                                    <span className="font-mono text-zinc-400 tabular-nums shrink-0">
+                                                        <span className="text-white font-semibold">
+                                                            {formatINR(b.spent)}
+                                                        </span>{" "}
+                                                        / {formatINR(b.amount)} ({b.percentage}%)
+                                                    </span>
+                                                </div>
 
-                                const intensityClasses = [
-                                    "bg-white/[0.04] border-white/[0.04] text-zinc-500",
-                                    "bg-[#0A84FF]/25 border-[#0A84FF]/30 text-white",
-                                    "bg-[#0A84FF]/60 border-[#0A84FF]/65 text-white font-semibold",
-                                    "bg-[#0A84FF] border-[#64D2FF] text-white font-bold shadow-sm shadow-[#0A84FF]/30",
-                                ];
-
-                                return (
-                                    <div
-                                        key={dayNum}
-                                        className={`h-9 sm:h-12 rounded-lg sm:rounded-xl flex flex-col items-center justify-center border p-0.5 sm:p-1 transition-all hover:scale-105 cursor-pointer ${intensityClasses[intensity]}`}
-                                        title={`Day ${dayNum}: ₹${spentOnDay.toFixed(2)}`}
-                                    >
-                                        <span className="text-[9px] sm:text-[10px] leading-none opacity-70">
-                                            {dayNum}
-                                        </span>
-                                        <span className="text-[9px] sm:text-[11px] leading-tight mt-0.5 font-mono truncate max-w-full px-0.5">
-                                            {spentOnDay > 0 ? `₹${spentOnDay.toFixed(0)}` : "₹0"}
-                                        </span>
+                                                <div className="relative h-2 w-full rounded-full bg-zinc-900 border border-zinc-800/80 overflow-hidden">
+                                                    <div
+                                                        className={cn(
+                                                            "h-full rounded-full transition-all duration-300",
+                                                            isOver
+                                                                ? "bg-red-500"
+                                                                : isAlert
+                                                                ? "bg-amber-400"
+                                                                : "bg-emerald-400"
+                                                        )}
+                                                        style={{
+                                                            width: `${Math.min(100, Math.max(0, b.percentage))}%`,
+                                                        }}
+                                                    />
+                                                    {threshold > 0 && threshold < 100 && (
+                                                        <div
+                                                            className="absolute top-0 bottom-0 w-0.5 bg-zinc-400/70"
+                                                            style={{ left: `${threshold}%` }}
+                                                        />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="px-6 py-12 text-center space-y-3">
+                                    <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mx-auto">
+                                        <Wallet className="w-4 h-4" />
                                     </div>
-                                );
-                            })}
-                        </div>
+                                    <div className="space-y-1">
+                                        <p className="text-sm font-medium text-zinc-200">
+                                            No monthly budgets configured
+                                        </p>
+                                        <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                                            Set spending caps for categories like Food, Transport, or Overall Monthly Total.
+                                        </p>
+                                    </div>
+                                    <Link
+                                        href="/budgets/new"
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors"
+                                    >
+                                        <Plus className="w-3.5 h-3.5" />
+                                        <span>Configure Budget</span>
+                                    </Link>
+                                </div>
+                            )}
 
-                        <div className="pt-4 flex justify-end">
-                            <Link
-                                href="/analytics"
-                                className="inline-flex items-center gap-1.5 text-xs text-[#0A84FF] hover:text-[#64D2FF] font-semibold transition-colors"
-                            >
-                                <span>Open full interactive analytics heatmap</span>
-                                <ArrowUpRight className="w-3.5 h-3.5" />
-                            </Link>
-                        </div>
-                    </div>
-                )}
+                            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                <span>{budgets.length} active budget rules</span>
+                                <Link
+                                    href="/budgets"
+                                    className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium transition-colors"
+                                >
+                                    <span>Manage budgets & alerts</span>
+                                    <ArrowUpRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </div>
+                        </motion.div>
+                    )}
+
+                    {/* Tab 3: Activity Heatmap */}
+                    {activeWorkspaceTab === "heatmap" && (
+                        <motion.div
+                            key="heatmap"
+                            id="dashboard-panel-heatmap"
+                            role="tabpanel"
+                            aria-labelledby="dashboard-tab-heatmap"
+                            initial={{ opacity: 0, y: 6 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -6 }}
+                            transition={{ duration: 0.15 }}
+                            className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden"
+                        >
+                            <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <h3 className="text-sm font-medium text-white">
+                                        Daily Spending Intensity
+                                    </h3>
+                                    <p className="text-xs text-zinc-400 mt-1">
+                                        {currentMonthName} {currentYear} heatmap scaled relative to your peak spending day.
+                                    </p>
+                                </div>
+
+                                <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 shrink-0">
+                                    <span>Low</span>
+                                    <span className="w-3 h-3 rounded bg-zinc-900/80 border border-zinc-800" />
+                                    <span className="w-3 h-3 rounded bg-emerald-950/70 border border-emerald-800/70" />
+                                    <span className="w-3 h-3 rounded bg-amber-950/70 border border-amber-800/70" />
+                                    <span className="w-3 h-3 rounded bg-orange-950/80 border border-orange-700/80" />
+                                    <span className="w-3 h-3 rounded bg-red-950/90 border border-red-700/90" />
+                                    <span>Peak</span>
+                                </div>
+                            </div>
+
+                            <div className="px-6 pb-6 space-y-2">
+                                <div className="grid grid-cols-7 gap-1.5 sm:gap-2 text-center text-[11px] text-zinc-500 font-medium">
+                                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                                        <div key={day} className="pb-1">
+                                            {day}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="grid grid-cols-7 gap-1.5 sm:gap-2">
+                                    {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
+                                        <div key={`empty-${idx}`} className="h-11 sm:h-13 rounded-lg" />
+                                    ))}
+
+                                    {Array.from({ length: daysInMonth }).map((_, i) => {
+                                        const dayNum = i + 1;
+                                        const spentOnDay = spendingMap[dayNum] || 0;
+                                        let tileClass =
+                                            "bg-zinc-900/60 border-zinc-800/70 text-zinc-500";
+
+                                        if (spentOnDay > 0 && maxDailySpend > 0) {
+                                            const ratio = spentOnDay / maxDailySpend;
+                                            if (ratio <= 0.25) {
+                                                tileClass =
+                                                    "bg-emerald-950/60 border-emerald-800/60 text-emerald-300";
+                                            } else if (ratio <= 0.5) {
+                                                tileClass =
+                                                    "bg-amber-950/60 border-amber-800/60 text-amber-300";
+                                            } else if (ratio <= 0.75) {
+                                                tileClass =
+                                                    "bg-orange-950/70 border-orange-700/70 text-orange-300";
+                                            } else {
+                                                tileClass =
+                                                    "bg-red-950/80 border-red-700/80 text-red-200";
+                                            }
+                                        }
+
+                                        return (
+                                            <div
+                                                key={dayNum}
+                                                className={cn(
+                                                    "h-11 sm:h-13 rounded-lg border flex flex-col items-center justify-center p-1 transition-colors",
+                                                    tileClass
+                                                )}
+                                                title={`${currentMonthName} ${dayNum}: ${formatINR(spentOnDay)}`}
+                                            >
+                                                <span className="text-[10px] opacity-75 leading-none tabular-nums">
+                                                    {dayNum}
+                                                </span>
+                                                <span className="text-[10px] sm:text-[11px] font-mono leading-tight mt-0.5 truncate max-w-full tabular-nums">
+                                                    {spentOnDay > 0 ? `₹${Math.round(spentOnDay)}` : "—"}
+                                                </span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                <span>
+                                    Peak day:{" "}
+                                    <span className="font-mono text-zinc-300 tabular-nums">
+                                        {formatINR(maxDailySpend)}
+                                    </span>
+                                </span>
+                                <Link
+                                    href="/analytics"
+                                    className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium transition-colors"
+                                >
+                                    <span>Open interactive analytics</span>
+                                    <ArrowUpRight className="w-3.5 h-3.5" />
+                                </Link>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
-            {/* Quick Action Navigation Cards (iOS Card Polish) */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-5">
+            {/* Quick Navigation Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Link
                     href="/analytics"
-                    className="p-4 sm:p-5 rounded-2xl bg-[#0c1222]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#0A84FF]/40 hover:-translate-y-1 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)] group cursor-pointer"
+                    className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-colors group"
                 >
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="p-2.5 rounded-xl bg-[#0A84FF]/15 text-[#0A84FF] border border-[#0A84FF]/30">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 group-hover:text-white transition-colors">
                             <PieChart className="w-4 h-4" />
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#64D2FF] transition-colors">
-                        Visual Analytics
-                    </h3>
+                    <h3 className="text-sm font-medium text-white">Visual Analytics</h3>
                     <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                        Explore category breakdowns, historical trends, and spending patterns.
+                        Explore daily velocity curves, category breakdowns, and monthly heatmaps.
                     </p>
                 </Link>
 
                 <Link
                     href="/budgets"
-                    className="p-4 sm:p-5 rounded-2xl bg-[#0c1222]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#0A84FF]/40 hover:-translate-y-1 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)] group cursor-pointer"
+                    className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-colors group"
                 >
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="p-2.5 rounded-xl bg-[#30D158]/15 text-[#30D158] border border-[#30D158]/30">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 group-hover:text-white transition-colors">
                             <Wallet className="w-4 h-4" />
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#30D158] transition-colors">
-                        Budget Guardrails
-                    </h3>
+                    <h3 className="text-sm font-medium text-white">Budget Guardrails</h3>
                     <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                        Set custom spending limits and trigger alerts before exceeding caps.
+                        Configure category caps and alert thresholds before exceeding monthly limits.
                     </p>
                 </Link>
 
                 <Link
                     href="/savings"
-                    className="p-4 sm:p-5 rounded-2xl bg-[#0c1222]/85 backdrop-blur-xl border border-white/[0.08] hover:border-[#0A84FF]/40 hover:-translate-y-1 transition-all shadow-[0_8px_30px_rgba(0,0,0,0.3)] group cursor-pointer"
+                    className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-colors group"
                 >
-                    <div className="flex items-center justify-between mb-2">
-                        <div className="p-2.5 rounded-xl bg-[#64D2FF]/15 text-[#64D2FF] border border-[#64D2FF]/30">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 group-hover:text-white transition-colors">
                             <Target className="w-4 h-4" />
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-white transition-colors" />
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-[#64D2FF] transition-colors">
-                        Savings Goals
-                    </h3>
+                    <h3 className="text-sm font-medium text-white">Savings Goals</h3>
                     <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
-                        Track progress toward emergency funds, gadgets, and personal milestones.
+                        Track milestone progress, log deposits, and review recommended monthly pace.
                     </p>
                 </Link>
             </div>
+
+            {/* Quick Add Expense Modal directly from Dashboard */}
+            <ExpenseForm
+                isOpen={isExpenseModalOpen}
+                setIsOpen={setIsExpenseModalOpen}
+                onExpenseAdded={handleExpenseAdded}
+                expenseToEdit={null}
+                onExpenseUpdated={() => {}}
+            />
         </div>
     );
 }
-

@@ -1,17 +1,28 @@
 import { getBudgetsAndInsightsData } from "@/lib/data";
 import BudgetsClient from "./BudgetsClient";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import { Lock } from "lucide-react";
 
 export default async function BudgetsPage() {
     const data = await getBudgetsAndInsightsData();
 
     if (!data) {
         return (
-            <div className="p-8 text-center text-muted-foreground">
-                <p>Please log in to view budgets.</p>
-                <Link href="/login">
-                    <Button className="mt-4">Login</Button>
+            <div className="w-full max-w-md mx-auto mt-12 p-8 rounded-2xl bg-zinc-950 border border-zinc-800 text-center space-y-4">
+                <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 mx-auto">
+                    <Lock className="w-5 h-5" />
+                </div>
+                <div className="space-y-1">
+                    <h1 className="text-lg font-semibold text-white">Sign in required</h1>
+                    <p className="text-xs sm:text-sm text-zinc-400">
+                        Please sign in to your ExpenseMate account to manage your monthly budgets.
+                    </p>
+                </div>
+                <Link
+                    href="/login"
+                    className="inline-flex items-center justify-center px-4 py-2 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors"
+                >
+                    Sign In
                 </Link>
             </div>
         );

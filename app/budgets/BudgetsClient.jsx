@@ -58,34 +58,34 @@ function getBudgetStatus(budget) {
         return {
             key: "over",
             label: "Over limit",
-            badgeClass: "bg-red-950/60 border-red-800/80 text-red-400",
+            badgeClass: "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/60 dark:border-red-800/80 dark:text-red-400",
             barClass: "bg-red-500",
-            textClass: "text-red-400",
+            textClass: "text-red-600 dark:text-red-400",
         };
     }
     if (pct >= threshold) {
         return {
             key: "risk",
             label: "Near limit",
-            badgeClass: "bg-amber-950/60 border-amber-800/80 text-amber-300",
-            barClass: "bg-amber-400",
-            textClass: "text-amber-300",
+            badgeClass: "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/60 dark:border-amber-800/80 dark:text-amber-300",
+            barClass: "bg-amber-500 dark:bg-amber-400",
+            textClass: "text-amber-600 dark:text-amber-300",
         };
     }
     return {
         key: "healthy",
         label: "On track",
-        badgeClass: "bg-emerald-950/60 border-emerald-800/80 text-emerald-400",
-        barClass: "bg-emerald-400",
-        textClass: "text-emerald-400",
+        badgeClass: "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:border-emerald-800/80 dark:text-emerald-400",
+        barClass: "bg-emerald-500 dark:bg-emerald-400",
+        textClass: "text-emerald-600 dark:text-emerald-400",
     };
 }
 
 function getRecommendationIcon(type) {
-    if (type === "warning") return { Icon: AlertTriangle, color: "text-amber-400", bg: "bg-amber-950/50 border-amber-800/70" };
-    if (type === "alert") return { Icon: Bell, color: "text-red-400", bg: "bg-red-950/50 border-red-800/70" };
-    if (type === "success") return { Icon: TrendingDown, color: "text-emerald-400", bg: "bg-emerald-950/50 border-emerald-800/70" };
-    return { Icon: Info, color: "text-zinc-300", bg: "bg-zinc-900 border-zinc-800" };
+    if (type === "warning") return { Icon: AlertTriangle, color: "text-amber-600 dark:text-amber-400", bg: "bg-amber-50 border-amber-200 dark:bg-amber-950/50 dark:border-amber-800/70" };
+    if (type === "alert") return { Icon: Bell, color: "text-red-600 dark:text-red-400", bg: "bg-red-50 border-red-200 dark:bg-red-950/50 dark:border-red-800/70" };
+    if (type === "success") return { Icon: TrendingDown, color: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/50 dark:border-emerald-800/70" };
+    return { Icon: Info, color: "text-zinc-600 dark:text-zinc-300", bg: "bg-zinc-100 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800" };
 }
 
 export default function BudgetsClient({ initialBudgets, initialInsights }) {
@@ -308,27 +308,27 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-100">
+        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-900 dark:text-zinc-100">
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-medium">
+                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
                             <span
                                 className={cn(
                                     "w-1.5 h-1.5 rounded-full",
-                                    summary.alertsCount > 0 ? "bg-amber-400" : "bg-emerald-400"
+                                    summary.alertsCount > 0 ? "bg-amber-500 dark:bg-amber-400" : "bg-emerald-500 dark:bg-emerald-400"
                                 )}
                             />
                             Budget Guardrails
                         </span>
-                        <span className="text-zinc-600">•</span>
-                        <span className="font-mono text-zinc-300">{monthLabel}</span>
+                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="font-mono text-zinc-600 dark:text-zinc-300">{monthLabel}</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
                         Budgets & Insights
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                         Set category spending caps, monitor threshold alerts, and control your monthly pace.
                     </p>
                 </div>
@@ -336,7 +336,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
                     {/* Month Switcher */}
                     <div
-                        className="inline-flex items-center rounded-lg bg-zinc-900 border border-zinc-800 p-0.5"
+                        className="inline-flex items-center rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-0.5"
                         role="group"
                         aria-label="Budget month navigation"
                     >
@@ -345,7 +345,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             onClick={() => handleMonthChange(subMonths(selectedMonth, 1))}
                             disabled={isLoadingMonth}
                             aria-label="Previous month"
-                            className="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                            className="p-1.5 rounded-md text-zinc-500 hover:text-zinc-950 hover:bg-white dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                         >
                             <ChevronLeft className="w-3.5 h-3.5" />
                         </button>
@@ -358,12 +358,12 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             className={cn(
                                 "px-2.5 py-1 text-xs font-medium min-w-[92px] text-center flex items-center justify-center gap-1.5 transition-colors",
                                 isCurrentMonth
-                                    ? "text-zinc-200 cursor-default"
-                                    : "text-zinc-200 hover:text-white cursor-pointer"
+                                    ? "text-zinc-700 dark:text-zinc-200 cursor-default"
+                                    : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white cursor-pointer"
                             )}
                         >
                             {isLoadingMonth && (
-                                <Loader2 className="w-3 h-3 animate-spin text-zinc-400" />
+                                <Loader2 className="w-3 h-3 animate-spin text-zinc-500 dark:text-zinc-400" />
                             )}
                             <span>{shortMonthLabel}</span>
                         </button>
@@ -373,7 +373,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             onClick={() => handleMonthChange(addMonths(selectedMonth, 1))}
                             disabled={isLoadingMonth}
                             aria-label="Next month"
-                            className="p-1.5 rounded-md text-zinc-400 hover:text-white hover:bg-zinc-800 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                            className="p-1.5 rounded-md text-zinc-500 hover:text-zinc-950 hover:bg-white dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                         >
                             <ChevronRight className="w-3.5 h-3.5" />
                         </button>
@@ -382,7 +382,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                     <a
                         href={exportHref}
                         download
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white hover:bg-zinc-100 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 shadow-xs dark:shadow-none"
                     >
                         <Download className="w-3.5 h-3.5" />
                         <span>Export CSV</span>
@@ -390,7 +390,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
 
                     <Link
                         href={newBudgetHref}
-                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 shadow-xs dark:shadow-none"
                     >
                         <Plus className="w-3.5 h-3.5" />
                         <span>New Budget</span>
@@ -408,17 +408,17 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
                         className={cn(
-                            "p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium border",
+                            "p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium border shadow-sm dark:shadow-none",
                             messageType === "success"
-                                ? "bg-zinc-900 border-zinc-700 text-zinc-200"
-                                : "bg-red-950/40 border-red-800 text-red-200"
+                                ? "bg-white border-zinc-200 text-zinc-800 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200"
+                                : "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-200"
                         )}
                     >
                         <div className="flex items-center gap-2.5">
                             {messageType === "success" ? (
-                                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                             ) : (
-                                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                                <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                             )}
                             <span>{message}</span>
                         </div>
@@ -426,7 +426,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             type="button"
                             onClick={() => setMessage("")}
                             aria-label="Dismiss notification"
-                            className="text-zinc-400 hover:text-white transition-colors p-1 cursor-pointer"
+                            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-1 cursor-pointer"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -441,17 +441,17 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                     isLoadingMonth && "opacity-60 pointer-events-none"
                 )}
             >
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                             {totalBudget ? "Overall Budget Cap" : "Allocated Budgets"}
                         </span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <Wallet className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(summary.totalBudgeted)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 tabular-nums">
@@ -462,21 +462,21 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                             Monthly Comparison
                         </span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center">
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center">
                             {comparison && comparisonNumeric > 0 ? (
-                                <TrendingUp className="w-3.5 h-3.5 text-red-400" />
+                                <TrendingUp className="w-3.5 h-3.5 text-red-600 dark:text-red-400" />
                             ) : (
-                                <TrendingDown className="w-3.5 h-3.5 text-emerald-400" />
+                                <TrendingDown className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                             )}
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {comparison
                                 ? comparison.last === 0
                                     ? formatINR(comparison.current)
@@ -493,17 +493,17 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                             Avg. Daily Spending
                         </span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <Gauge className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {insights
                                 ? formatINR(insights.averagePerDay)
                                 : formatINR(summary.dailyAllowance)}
@@ -516,24 +516,24 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Budget Alerts</span>
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Budget Alerts</span>
                         <div
                             className={cn(
-                                "w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center",
+                                "w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center",
                                 summary.overCount > 0
-                                    ? "text-red-400"
+                                    ? "text-red-600 dark:text-red-400"
                                     : summary.alertsCount > 0
-                                    ? "text-amber-400"
-                                    : "text-emerald-400"
+                                    ? "text-amber-600 dark:text-amber-400"
+                                    : "text-emerald-600 dark:text-emerald-400"
                             )}
                         >
                             <ShieldAlert className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {summary.alertsCount}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1">
@@ -551,7 +551,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
             <div
                 role="tablist"
                 aria-label="Budget sections"
-                className="flex border-b border-zinc-800 gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="flex border-b border-zinc-200 dark:border-zinc-800 gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {tabs.map((tab, idx) => {
                     const isActive = activeTab === tab.id;
@@ -568,8 +568,10 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             onClick={() => setActiveTab(tab.id)}
                             onKeyDown={(e) => handleTabKeyDown(e, idx)}
                             className={cn(
-                                "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-white",
-                                isActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+                                "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-zinc-950 dark:focus-visible:text-white",
+                                isActive
+                                    ? "text-zinc-950 dark:text-white"
+                                    : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                             )}
                         >
                             <Icon className="w-4 h-4" />
@@ -578,8 +580,8 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                 className={cn(
                                     "px-1.5 py-0.5 rounded-md text-[10px] font-mono tabular-nums",
                                     isActive
-                                        ? "bg-zinc-800 text-zinc-200"
-                                        : "bg-zinc-900 text-zinc-500"
+                                        ? "bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-200"
+                                        : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500"
                                 )}
                             >
                                 {tab.count}
@@ -587,7 +589,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             {isActive && (
                                 <motion.div
                                     layoutId="budgetsTabUnderline"
-                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-900 dark:bg-white"
                                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                 />
                             )}
@@ -621,16 +623,16 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             {totalBudget && (() => {
                                 const status = getBudgetStatus(totalBudget);
                                 return (
-                                    <div className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                                    <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                                         <div className="p-6 space-y-4">
                                             <div className="flex items-start justify-between gap-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-white shrink-0">
+                                                    <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-800 dark:text-white shrink-0">
                                                         <Wallet className="w-4 h-4" />
                                                     </div>
                                                     <div>
                                                         <div className="flex flex-wrap items-center gap-2">
-                                                            <h3 className="text-sm sm:text-base font-medium text-white">
+                                                            <h3 className="text-sm sm:text-base font-medium text-zinc-950 dark:text-white">
                                                                 Overall Monthly Budget
                                                             </h3>
                                                             <span
@@ -642,7 +644,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                                 {status.label}
                                                             </span>
                                                         </div>
-                                                        <p className="text-xs text-zinc-400 mt-0.5">
+                                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                                                             Tracks combined spending across all categories in {monthLabel}.
                                                         </p>
                                                     </div>
@@ -653,7 +655,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                     onClick={() => setBudgetToDelete(totalBudget)}
                                                     aria-label="Delete Total budget"
                                                     title="Delete budget"
-                                                    className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-zinc-900 transition-colors cursor-pointer shrink-0"
+                                                    className="p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:text-zinc-500 dark:hover:text-red-400 dark:hover:bg-zinc-900 transition-colors cursor-pointer shrink-0"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5" />
                                                 </button>
@@ -662,7 +664,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                             <div className="space-y-2">
                                                 <div className="flex items-baseline justify-between gap-2">
                                                     <div className="flex items-baseline gap-1.5 font-mono tabular-nums">
-                                                        <span className="text-xl font-semibold text-white">
+                                                        <span className="text-xl font-semibold text-zinc-950 dark:text-white">
                                                             {formatINR(totalBudget.spent)}
                                                         </span>
                                                         <span className="text-xs text-zinc-500">
@@ -676,7 +678,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
 
                                                 {/* Progress Bar with Alert Threshold Marker */}
                                                 <div
-                                                    className="relative h-2.5 w-full rounded-full bg-zinc-900 border border-zinc-800/80 overflow-hidden"
+                                                    className="relative h-2.5 w-full rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden"
                                                     role="progressbar"
                                                     aria-valuenow={Math.min(100, totalBudget.percentage)}
                                                     aria-valuemin={0}
@@ -700,17 +702,17 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                             </div>
                                         </div>
 
-                                        <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-xs">
+                                        <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex flex-wrap items-center justify-between gap-2 text-xs">
                                             <span className="text-zinc-500">
                                                 Alert threshold at{" "}
-                                                <span className="font-mono text-zinc-300">
+                                                <span className="font-mono text-zinc-700 dark:text-zinc-300">
                                                     {totalBudget.alertThreshold}%
                                                 </span>
                                                 {totalBudget.remaining > 0 && isCurrentMonth && (
                                                     <> · {formatINR(summary.dailyAllowance)}/day safe pace</>
                                                 )}
                                             </span>
-                                            <span className={cn("font-mono tabular-nums", totalBudget.remaining >= 0 ? "text-zinc-300" : "text-red-400")}>
+                                            <span className={cn("font-mono tabular-nums", totalBudget.remaining >= 0 ? "text-zinc-700 dark:text-zinc-300" : "text-red-600 dark:text-red-400")}>
                                                 {totalBudget.remaining >= 0
                                                     ? `${formatINR(totalBudget.remaining)} remaining`
                                                     : `${formatINR(Math.abs(totalBudget.remaining))} over budget`}
@@ -739,8 +741,8 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                     className={cn(
                                                         "px-2.5 py-1 rounded-md text-xs font-medium border whitespace-nowrap transition-colors cursor-pointer",
                                                         active
-                                                            ? "bg-zinc-800 border-zinc-600 text-white"
-                                                            : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                                                            ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                                                            : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-950 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                                                     )}
                                                 >
                                                     {filter.label}
@@ -749,7 +751,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                         })}
                                     </div>
 
-                                    <div className="inline-flex items-center p-1 rounded-lg bg-zinc-900 border border-zinc-800 self-start sm:self-auto shrink-0">
+                                    <div className="inline-flex items-center p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 self-start sm:self-auto shrink-0">
                                         {[
                                             { id: "usage", label: "Highest %" },
                                             { id: "remaining", label: "Remaining" },
@@ -765,8 +767,8 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                     className={cn(
                                                         "px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer",
                                                         active
-                                                            ? "bg-zinc-800 text-white"
-                                                            : "text-zinc-400 hover:text-zinc-200"
+                                                            ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-white"
+                                                            : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                                                     )}
                                                 >
                                                     {opt.label}
@@ -779,35 +781,35 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
 
                             {/* Category Budget Cards */}
                             {budgets.length === 0 ? (
-                                <div className="rounded-2xl bg-zinc-950 border border-zinc-800 p-12 text-center space-y-4">
-                                    <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mx-auto">
+                                <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none p-12 text-center space-y-4">
+                                    <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mx-auto">
                                         <Wallet className="w-5 h-5" />
                                     </div>
                                     <div className="space-y-1">
-                                        <h3 className="text-sm font-medium text-white">
+                                        <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                             No budgets set for {monthLabel}
                                         </h3>
-                                        <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
                                             Create category spending limits or an overall monthly cap to track expenses before you overspend.
                                         </p>
                                     </div>
                                     <Link
                                         href={newBudgetHref}
-                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors"
+                                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors"
                                     >
                                         <Plus className="w-3.5 h-3.5" />
                                         <span>Create your first budget</span>
                                     </Link>
                                 </div>
                             ) : visibleCategoryBudgets.length === 0 && categoryBudgets.length > 0 ? (
-                                <div className="rounded-2xl bg-zinc-950 border border-zinc-800 p-10 text-center space-y-2">
-                                    <p className="text-xs sm:text-sm font-medium text-zinc-300">
+                                <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none p-10 text-center space-y-2">
+                                    <p className="text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                         No category budgets match this filter
                                     </p>
                                     <button
                                         type="button"
                                         onClick={() => setStatusFilter("all")}
-                                        className="text-xs text-zinc-400 hover:text-white underline cursor-pointer"
+                                        className="text-xs text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white underline cursor-pointer"
                                     >
                                         Show all category budgets
                                     </button>
@@ -823,21 +825,21 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                         return (
                                             <div
                                                 key={budget._id}
-                                                className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden flex flex-col justify-between"
+                                                className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden flex flex-col justify-between transition-colors"
                                             >
                                                 <div className="p-6 space-y-4">
                                                     <div className="flex items-start justify-between gap-3">
                                                         <div className="flex items-center gap-3 min-w-0">
                                                             <div
                                                                 className={cn(
-                                                                    "w-10 h-10 rounded-xl border border-zinc-800/80 flex items-center justify-center shrink-0",
+                                                                    "w-10 h-10 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center shrink-0",
                                                                     bg
                                                                 )}
                                                             >
                                                                 <Icon className={cn("w-4 h-4", color)} />
                                                             </div>
                                                             <div className="min-w-0">
-                                                                <h3 className="text-sm sm:text-base font-medium text-white truncate">
+                                                                <h3 className="text-sm sm:text-base font-medium text-zinc-950 dark:text-white truncate">
                                                                     {budget.category}
                                                                 </h3>
                                                                 <span
@@ -856,7 +858,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                             onClick={() => setBudgetToDelete(budget)}
                                                             aria-label={`Delete ${budget.category} budget`}
                                                             title="Delete budget"
-                                                            className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-zinc-900 transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                                                            className="p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:text-zinc-500 dark:hover:text-red-400 dark:hover:bg-zinc-900 transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />
                                                         </button>
@@ -865,7 +867,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                     <div className="space-y-2">
                                                         <div className="flex items-baseline justify-between gap-2">
                                                             <div className="flex items-baseline gap-1.5 font-mono tabular-nums">
-                                                                <span className="text-lg font-semibold text-white">
+                                                                <span className="text-lg font-semibold text-zinc-950 dark:text-white">
                                                                     {formatINR(budget.spent)}
                                                                 </span>
                                                                 <span className="text-xs text-zinc-500">
@@ -883,7 +885,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                         </div>
 
                                                         <div
-                                                            className="relative h-2 w-full rounded-full bg-zinc-900 border border-zinc-800/80 overflow-hidden"
+                                                            className="relative h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden"
                                                             role="progressbar"
                                                             aria-valuenow={Math.min(100, budget.percentage)}
                                                             aria-valuemin={0}
@@ -913,10 +915,10 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                     </div>
                                                 </div>
 
-                                                <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs">
+                                                <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
                                                     <span className="text-zinc-500">
                                                         Alert at{" "}
-                                                        <span className="font-mono text-zinc-300">
+                                                        <span className="font-mono text-zinc-700 dark:text-zinc-300">
                                                             {budget.alertThreshold}%
                                                         </span>
                                                     </span>
@@ -924,8 +926,8 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                         className={cn(
                                                             "font-mono tabular-nums",
                                                             budget.remaining >= 0
-                                                                ? "text-zinc-300"
-                                                                : "text-red-400"
+                                                                ? "text-zinc-700 dark:text-zinc-300"
+                                                                : "text-red-600 dark:text-red-400"
                                                         )}
                                                     >
                                                         {budget.remaining >= 0
@@ -955,14 +957,14 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             className="space-y-6"
                         >
                             {!isCurrentMonth && (
-                                <div className="p-3.5 rounded-xl bg-zinc-900/60 border border-zinc-800 flex items-center justify-between gap-3 text-xs text-zinc-400">
+                                <div className="p-3.5 rounded-xl bg-white dark:bg-zinc-900/60 border border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-3 text-xs text-zinc-600 dark:text-zinc-400">
                                     <span>
                                         Automated recommendations below summarize your live current month, while the Budgets tab shows {monthLabel}.
                                     </span>
                                     <button
                                         type="button"
                                         onClick={() => handleMonthChange(currentMonthStart)}
-                                        className="text-white hover:underline shrink-0 cursor-pointer"
+                                        className="text-zinc-950 dark:text-white font-medium hover:underline shrink-0 cursor-pointer"
                                     >
                                         Jump to current month
                                     </button>
@@ -971,18 +973,18 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
 
                             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
                                 {/* Recommendations */}
-                                <div className="lg:col-span-7 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                                <div className="lg:col-span-7 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                                     <div className="p-6 pb-4">
-                                        <h3 className="text-sm font-medium text-white">
+                                        <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                             Spending Recommendations
                                         </h3>
-                                        <p className="text-xs text-zinc-400 mt-1">
+                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                             Automated signals derived from your monthly spending velocity and budget thresholds.
                                         </p>
                                     </div>
 
                                     {insights?.recommendations && insights.recommendations.length > 0 ? (
-                                        <div className="divide-y divide-zinc-800/80">
+                                        <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                                             {insights.recommendations.map((rec, index) => {
                                                 const { Icon, color, bg } = getRecommendationIcon(rec.type);
                                                 return (
@@ -999,10 +1001,10 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                             <Icon className={cn("w-4 h-4", color)} />
                                                         </div>
                                                         <div className="space-y-1 min-w-0">
-                                                            <h4 className="text-xs sm:text-sm font-medium text-white">
+                                                            <h4 className="text-xs sm:text-sm font-medium text-zinc-950 dark:text-white">
                                                                 {rec.title}
                                                             </h4>
-                                                            <p className="text-xs text-zinc-400 leading-relaxed">
+                                                            <p className="text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
                                                                 {rec.message}
                                                             </p>
                                                         </div>
@@ -1016,11 +1018,11 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                         </div>
                                     )}
 
-                                    <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                    <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
                                         <span>Want deeper chart breakdowns?</span>
                                         <Link
                                             href="/analytics"
-                                            className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium transition-colors"
+                                            className="inline-flex items-center gap-1 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white font-medium transition-colors"
                                         >
                                             <span>Open Analytics</span>
                                             <ArrowUpRight className="w-3.5 h-3.5" />
@@ -1030,18 +1032,18 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
 
                                 {/* Triggered Alerts & Top Categories */}
                                 <div className="lg:col-span-5 space-y-6">
-                                    <div className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                                    <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                                         <div className="p-6 pb-4">
-                                            <h3 className="text-sm font-medium text-white">
+                                            <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                                 Triggered Alerts
                                             </h3>
-                                            <p className="text-xs text-zinc-400 mt-1">
+                                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                                 Budgets at or above their configured alert threshold.
                                             </p>
                                         </div>
 
                                         {insights?.budgetAlerts && insights.budgetAlerts.length > 0 ? (
-                                            <div className="divide-y divide-zinc-800/80">
+                                            <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                                                 {insights.budgetAlerts.map((alert, idx) => {
                                                     const pctNum = parseFloat(alert.percentage);
                                                     const isOver = pctNum >= 100;
@@ -1051,7 +1053,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                             className="px-6 py-3.5 flex items-center justify-between gap-3 text-xs"
                                                         >
                                                             <div>
-                                                                <p className="font-medium text-white">
+                                                                <p className="font-medium text-zinc-950 dark:text-white">
                                                                     {alert.category}
                                                                 </p>
                                                                 <p className="text-[11px] text-zinc-500 font-mono tabular-nums mt-0.5">
@@ -1062,8 +1064,8 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                                 className={cn(
                                                                     "px-2 py-0.5 rounded-full text-[11px] font-mono font-medium border tabular-nums",
                                                                     isOver
-                                                                        ? "bg-red-950/60 border-red-800/80 text-red-400"
-                                                                        : "bg-amber-950/60 border-amber-800/80 text-amber-300"
+                                                                        ? "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/60 dark:border-red-800/80 dark:text-red-400"
+                                                                        : "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/60 dark:border-amber-800/80 dark:text-amber-300"
                                                                 )}
                                                             >
                                                                 {alert.percentage}%
@@ -1080,13 +1082,13 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                     </div>
 
                                     {insights?.topCategories && insights.topCategories.length > 0 && (
-                                        <div className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                                             <div className="p-6 pb-4">
-                                                <h3 className="text-sm font-medium text-white">
+                                                <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                                     Top Categories This Month
                                                 </h3>
                                             </div>
-                                            <div className="divide-y divide-zinc-800/80">
+                                            <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                                                 {insights.topCategories.map((cat) => {
                                                     const { icon: Icon, color, bg } = getCategoryStyles(
                                                         cat.category
@@ -1099,14 +1101,14 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                             <div className="flex items-center gap-2.5 min-w-0">
                                                                 <div
                                                                     className={cn(
-                                                                        "w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border border-zinc-800/80",
+                                                                        "w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border border-zinc-200/80 dark:border-zinc-800/80",
                                                                         bg
                                                                     )}
                                                                 >
                                                                     <Icon className={cn("w-3.5 h-3.5", color)} />
                                                                 </div>
                                                                 <div className="min-w-0">
-                                                                    <p className="font-medium text-zinc-200 truncate">
+                                                                    <p className="font-medium text-zinc-900 dark:text-zinc-200 truncate">
                                                                         {cat.category}
                                                                     </p>
                                                                     <p className="text-[11px] text-zinc-500">
@@ -1115,7 +1117,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                                     </p>
                                                                 </div>
                                                             </div>
-                                                            <span className="font-mono font-medium text-white tabular-nums shrink-0">
+                                                            <span className="font-mono font-medium text-zinc-950 dark:text-white tabular-nums shrink-0">
                                                                 {formatINR(cat.amount)}
                                                             </span>
                                                         </div>
@@ -1136,14 +1138,14 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                 open={Boolean(budgetToDelete)}
                 onOpenChange={(open) => !open && setBudgetToDelete(null)}
             >
-                <DialogContent className="rounded-2xl bg-zinc-950 border border-red-900/60 text-zinc-100 max-w-md p-6">
+                <DialogContent className="rounded-2xl bg-white dark:bg-zinc-950 border border-red-200 dark:border-red-900/60 text-zinc-900 dark:text-zinc-100 max-w-md p-6">
                     <DialogHeader>
-                        <DialogTitle className="text-base font-semibold text-white">
+                        <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white">
                             Delete Budget
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                        <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                             Remove the{" "}
-                            <span className="text-white font-medium">
+                            <span className="text-zinc-900 dark:text-white font-medium">
                                 {budgetToDelete?.category}
                             </span>{" "}
                             budget ({formatINR(budgetToDelete?.amount)}) for {monthLabel}? Your logged expenses will not be affected.
@@ -1155,7 +1157,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             type="button"
                             onClick={() => setBudgetToDelete(null)}
                             disabled={isDeleting}
-                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>

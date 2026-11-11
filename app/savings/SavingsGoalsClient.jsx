@@ -289,18 +289,18 @@ export default function SavingsGoalsClient({ initialGoals }) {
         if (daysLeft < 0) {
             return {
                 label: `${Math.abs(daysLeft)}d overdue`,
-                className: "bg-red-950/60 border-red-800/80 text-red-400",
+                className: "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/60 dark:border-red-800/80 dark:text-red-400",
             };
         }
         if (daysLeft <= 30) {
             return {
                 label: `${daysLeft}d left`,
-                className: "bg-amber-950/60 border-amber-800/80 text-amber-300",
+                className: "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-950/60 dark:border-amber-800/80 dark:text-amber-300",
             };
         }
         return {
             label: `${daysLeft}d left`,
-            className: "bg-zinc-900 border-zinc-800 text-zinc-400",
+            className: "bg-zinc-100 border-zinc-200 text-zinc-600 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-400",
         };
     };
 
@@ -319,24 +319,24 @@ export default function SavingsGoalsClient({ initialGoals }) {
     };
 
     return (
-        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-100">
+        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-900 dark:text-zinc-100">
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                             Savings Tracker
                         </span>
-                        <span className="text-zinc-600">•</span>
-                        <span className="font-mono text-zinc-300">
+                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="font-mono text-zinc-600 dark:text-zinc-300">
                             {activeGoals.length} active · {completedGoals.length} completed
                         </span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
                         Savings Goals
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                         Plan targets, log deposits, and monitor funding pace toward your milestones.
                     </p>
                 </div>
@@ -344,7 +344,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                 <div className="flex items-center gap-2 shrink-0">
                     <Link
                         href="/savings/new"
-                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 shadow-xs dark:shadow-none"
                     >
                         <Plus className="w-3.5 h-3.5" />
                         <span>New Goal</span>
@@ -362,17 +362,17 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
                         className={cn(
-                            "p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium border",
+                            "p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium border shadow-sm dark:shadow-none",
                             messageType === "success"
-                                ? "bg-zinc-900 border-zinc-700 text-zinc-200"
-                                : "bg-red-950/40 border-red-800 text-red-200"
+                                ? "bg-white border-zinc-200 text-zinc-800 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200"
+                                : "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-200"
                         )}
                     >
                         <div className="flex items-center gap-2.5">
                             {messageType === "success" ? (
-                                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                             ) : (
-                                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                                <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                             )}
                             <span>{message}</span>
                         </div>
@@ -380,7 +380,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             type="button"
                             onClick={() => setMessage("")}
                             aria-label="Dismiss notification"
-                            className="text-zinc-400 hover:text-white transition-colors p-1 cursor-pointer"
+                            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-1 cursor-pointer"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -390,15 +390,15 @@ export default function SavingsGoalsClient({ initialGoals }) {
 
             {/* Top 4 KPI Summary Strip */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Total Saved</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-emerald-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Total Saved</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
                             <PiggyBank className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(stats.activeSaved)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 tabular-nums">
@@ -407,15 +407,15 @@ export default function SavingsGoalsClient({ initialGoals }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Remaining Gap</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Remaining Gap</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <IndianRupee className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(stats.activeRemaining)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1">
@@ -424,15 +424,15 @@ export default function SavingsGoalsClient({ initialGoals }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Required Pace</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Required Pace</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <TrendingUp className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(stats.totalMonthlyPace)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1">
@@ -441,15 +441,15 @@ export default function SavingsGoalsClient({ initialGoals }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Next Deadline</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Next Deadline</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <Clock className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white truncate">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white truncate">
                             {stats.nearestGoal ? stats.nearestGoal.name : "—"}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1">
@@ -467,7 +467,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
             <div
                 role="tablist"
                 aria-label="Savings views"
-                className="flex border-b border-zinc-800 gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="flex border-b border-zinc-200 dark:border-zinc-800 gap-6 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {tabs.map((tab, idx) => {
                     const isActive = activeTab === tab.id;
@@ -484,8 +484,10 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             onClick={() => setActiveTab(tab.id)}
                             onKeyDown={(e) => handleTabKeyDown(e, idx)}
                             className={cn(
-                                "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-white",
-                                isActive ? "text-white" : "text-zinc-400 hover:text-zinc-200"
+                                "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-zinc-950 dark:focus-visible:text-white",
+                                isActive
+                                    ? "text-zinc-950 dark:text-white"
+                                    : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                             )}
                         >
                             <Icon className="w-4 h-4" />
@@ -494,8 +496,8 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                 className={cn(
                                     "px-1.5 py-0.5 rounded-md text-[10px] font-mono tabular-nums",
                                     isActive
-                                        ? "bg-zinc-800 text-zinc-200"
-                                        : "bg-zinc-900 text-zinc-500"
+                                        ? "bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-200"
+                                        : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500"
                                 )}
                             >
                                 {tab.count}
@@ -503,7 +505,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             {isActive && (
                                 <motion.div
                                     layoutId="savingsTabUnderline"
-                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-white"
+                                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-900 dark:bg-white"
                                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                                 />
                             )}
@@ -537,8 +539,8 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                         className={cn(
                                             "px-2.5 py-1 rounded-md text-xs font-medium border whitespace-nowrap transition-colors cursor-pointer",
                                             categoryFilter === "all"
-                                                ? "bg-zinc-800 border-zinc-600 text-white"
-                                                : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                                                ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                                                : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-950 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                                         )}
                                     >
                                         All
@@ -553,8 +555,8 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 className={cn(
                                                     "px-2.5 py-1 rounded-md text-xs font-medium border whitespace-nowrap transition-colors cursor-pointer",
                                                     active
-                                                        ? "bg-zinc-800 border-zinc-600 text-white"
-                                                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                                                        ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                                                        : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-950 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                                                 )}
                                             >
                                                 {cat}
@@ -563,7 +565,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                     })}
                                 </div>
 
-                                <div className="inline-flex items-center p-1 rounded-lg bg-zinc-900 border border-zinc-800 self-start sm:self-auto shrink-0">
+                                <div className="inline-flex items-center p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 self-start sm:self-auto shrink-0">
                                     {[
                                         { id: "deadline", label: "Soonest" },
                                         { id: "progress", label: "Progress" },
@@ -579,8 +581,8 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 className={cn(
                                                     "px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer",
                                                     isSelected
-                                                        ? "bg-zinc-800 text-white"
-                                                        : "text-zinc-400 hover:text-zinc-200"
+                                                        ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-white"
+                                                        : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                                                 )}
                                             >
                                                 {opt.label}
@@ -592,21 +594,21 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         )}
 
                         {activeGoals.length === 0 ? (
-                            <div className="rounded-2xl bg-zinc-950 border border-zinc-800 p-12 text-center space-y-4">
-                                <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mx-auto">
+                            <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none p-12 text-center space-y-4">
+                                <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mx-auto">
                                     <Target className="w-5 h-5" />
                                 </div>
                                 <div className="space-y-1">
-                                    <h3 className="text-sm font-medium text-white">
+                                    <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                         No active savings goals
                                     </h3>
-                                    <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
                                         Set up your first savings target to track deposits, deadlines, and recommended monthly pace.
                                     </p>
                                 </div>
                                 <Link
                                     href="/savings/new"
-                                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors"
+                                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors"
                                 >
                                     <Plus className="w-3.5 h-3.5" />
                                     <span>Create your first goal</span>
@@ -621,21 +623,21 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                     return (
                                         <div
                                             key={goal._id}
-                                            className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden flex flex-col justify-between"
+                                            className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden flex flex-col justify-between transition-colors"
                                         >
                                             <div className="p-6 space-y-5">
                                                 {/* Goal Card Header */}
                                                 <div className="flex items-start justify-between gap-3">
                                                     <div className="flex items-center gap-3 min-w-0">
-                                                        <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-xl shrink-0">
+                                                        <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-xl shrink-0">
                                                             {goal.icon || "🎯"}
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <h3 className="text-sm sm:text-base font-medium text-white truncate">
+                                                            <h3 className="text-sm sm:text-base font-medium text-zinc-950 dark:text-white truncate">
                                                                 {goal.name}
                                                             </h3>
                                                             <div className="flex flex-wrap items-center gap-2 mt-1">
-                                                                <span className="px-2 py-0.5 rounded-md bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-400">
+                                                                <span className="px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] text-zinc-600 dark:text-zinc-400">
                                                                     {goal.category || "Other"}
                                                                 </span>
                                                                 <span
@@ -656,7 +658,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                         onClick={() => setGoalToDelete(goal)}
                                                         aria-label={`Delete ${goal.name}`}
                                                         title="Delete goal"
-                                                        className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-zinc-900 transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                                                        className="p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:text-zinc-500 dark:hover:text-red-400 dark:hover:bg-zinc-900 transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                                                     >
                                                         <Trash2 className="w-3.5 h-3.5" />
                                                     </button>
@@ -666,20 +668,20 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 <div className="space-y-2.5">
                                                     <div className="flex items-baseline justify-between gap-2">
                                                         <div className="flex items-baseline gap-1.5 font-mono tabular-nums">
-                                                            <span className="text-lg font-semibold text-white">
+                                                            <span className="text-lg font-semibold text-zinc-950 dark:text-white">
                                                                 {formatINR(goal.currentAmount)}
                                                             </span>
                                                             <span className="text-xs text-zinc-500">
                                                                 / {formatINR(goal.targetAmount)}
                                                             </span>
                                                         </div>
-                                                        <span className="text-xs font-mono font-medium text-emerald-400 tabular-nums">
+                                                        <span className="text-xs font-mono font-medium text-emerald-600 dark:text-emerald-400 tabular-nums">
                                                             {goal.progress}%
                                                         </span>
                                                     </div>
 
                                                     <div
-                                                        className="h-2 w-full rounded-full bg-zinc-900 border border-zinc-800/80 overflow-hidden"
+                                                        className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden"
                                                         role="progressbar"
                                                         aria-valuenow={Math.min(100, goal.progress)}
                                                         aria-valuemin={0}
@@ -687,7 +689,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                         aria-label={`${goal.name} progress`}
                                                     >
                                                         <div
-                                                            className="h-full rounded-full bg-white transition-all duration-300"
+                                                            className="h-full rounded-full bg-zinc-900 dark:bg-white transition-all duration-300"
                                                             style={{
                                                                 width: `${Math.min(100, Math.max(0, goal.progress))}%`,
                                                             }}
@@ -706,10 +708,10 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                             </div>
 
                                             {/* Linear / Vercel Footer Strip */}
-                                            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between gap-3">
+                                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-3">
                                                 <span className="text-xs text-zinc-500">
                                                     Due{" "}
-                                                    <span className="text-zinc-300 font-medium">
+                                                    <span className="text-zinc-800 dark:text-zinc-300 font-medium">
                                                         {format(new Date(goal.deadline), "MMM d, yyyy")}
                                                     </span>
                                                 </span>
@@ -717,7 +719,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 <button
                                                     type="button"
                                                     onClick={() => openUpdateDialog(goal)}
-                                                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-zinc-800 hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                                                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-800 bg-zinc-200/80 hover:bg-zinc-200 dark:text-white dark:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                                                 >
                                                     Update Progress
                                                 </button>
@@ -743,17 +745,17 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         transition={{ duration: 0.15 }}
                         className="space-y-6"
                     >
-                        <div className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                             <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                 <div>
-                                    <h3 className="text-sm font-medium text-white">
+                                    <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                         Completed Milestones
                                     </h3>
-                                    <p className="text-xs text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                         Savings goals where you reached 100% of your target amount.
                                     </p>
                                 </div>
-                                <span className="px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-xs text-emerald-400 font-mono tabular-nums self-start sm:self-auto">
+                                <span className="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-emerald-600 dark:text-emerald-400 font-mono tabular-nums self-start sm:self-auto">
                                     {formatINR(
                                         completedGoals.reduce((sum, g) => sum + g.currentAmount, 0)
                                     )}{" "}
@@ -762,23 +764,23 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             </div>
 
                             {completedGoals.length > 0 ? (
-                                <div className="divide-y divide-zinc-800/80">
+                                <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                                     {completedGoals.map((goal) => (
                                         <div
                                             key={goal._id}
-                                            className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-900/30 transition-colors"
+                                            className="px-6 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-zinc-50 dark:hover:bg-zinc-900/30 transition-colors"
                                         >
                                             <div className="flex items-center gap-3.5 min-w-0">
-                                                <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-xl shrink-0">
+                                                <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-xl shrink-0">
                                                     {goal.icon || "🎯"}
                                                 </div>
                                                 <div className="min-w-0">
                                                     <div className="flex items-center gap-2">
-                                                        <h4 className="text-sm font-medium text-white truncate">
+                                                        <h4 className="text-sm font-medium text-zinc-950 dark:text-white truncate">
                                                             {goal.name}
                                                         </h4>
-                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-950/60 border border-emerald-800/80 text-emerald-400 shrink-0">
-                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:border-emerald-800/80 dark:text-emerald-400 border shrink-0">
+                                                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                                                             Completed
                                                         </span>
                                                     </div>
@@ -791,7 +793,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
 
                                             <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
                                                 <div className="text-left sm:text-right font-mono tabular-nums">
-                                                    <p className="text-sm font-semibold text-white">
+                                                    <p className="text-sm font-semibold text-zinc-950 dark:text-white">
                                                         {formatINR(goal.currentAmount)}
                                                     </p>
                                                     <p className="text-[11px] text-zinc-500">
@@ -804,7 +806,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                     onClick={() => setGoalToDelete(goal)}
                                                     aria-label={`Delete ${goal.name}`}
                                                     title="Delete goal"
-                                                    className="p-2 rounded-lg text-zinc-400 hover:text-red-400 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer"
+                                                    className="p-2 rounded-lg text-zinc-500 hover:text-red-600 bg-zinc-100 hover:bg-red-50 border border-zinc-200 dark:text-zinc-400 dark:hover:text-red-400 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5" />
                                                 </button>
@@ -814,7 +816,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                 </div>
                             ) : (
                                 <div className="px-6 py-12 text-center space-y-2">
-                                    <p className="text-xs sm:text-sm font-medium text-zinc-300">
+                                    <p className="text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                         No completed goals yet
                                     </p>
                                     <p className="text-xs text-zinc-500 max-w-sm mx-auto">
@@ -823,11 +825,11 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                 </div>
                             )}
 
-                            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
                                 <span>{completedGoals.length} milestones archived</span>
                                 <Link
                                     href="/savings/new"
-                                    className="inline-flex items-center gap-1 text-zinc-300 hover:text-white font-medium transition-colors"
+                                    className="inline-flex items-center gap-1 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white font-medium transition-colors"
                                 >
                                     <span>Start another goal</span>
                                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -851,31 +853,31 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
                     >
                         {/* Category Allocation */}
-                        <div className="lg:col-span-6 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                        <div className="lg:col-span-6 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                             <div className="p-6 pb-4">
-                                <h3 className="text-sm font-medium text-white">
+                                <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                     Allocation by Category
                                 </h3>
-                                <p className="text-xs text-zinc-400 mt-1">
+                                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                     How your total savings targets are distributed across categories.
                                 </p>
                             </div>
 
                             {allocation.length > 0 ? (
-                                <div className="divide-y divide-zinc-800/80">
+                                <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                                     {allocation.map((cat) => (
                                         <div key={cat.name} className="px-6 py-4 space-y-2.5">
                                             <div className="flex items-center justify-between gap-3 text-xs">
                                                 <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-white">
+                                                    <span className="font-medium text-zinc-950 dark:text-white">
                                                         {cat.name}
                                                     </span>
-                                                    <span className="px-1.5 py-0.5 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-400">
+                                                    <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[10px] font-mono text-zinc-600 dark:text-zinc-400">
                                                         {cat.count} {cat.count === 1 ? "goal" : "goals"}
                                                     </span>
                                                 </div>
                                                 <div className="font-mono tabular-nums text-right">
-                                                    <span className="text-white font-medium">
+                                                    <span className="text-zinc-950 dark:text-white font-medium">
                                                         {formatINR(cat.saved)}
                                                     </span>
                                                     <span className="text-zinc-500">
@@ -884,9 +886,9 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                     </span>
                                                 </div>
                                             </div>
-                                            <div className="h-1.5 w-full rounded-full bg-zinc-900 overflow-hidden">
+                                            <div className="h-1.5 w-full rounded-full bg-zinc-100 dark:bg-zinc-900 overflow-hidden">
                                                 <div
-                                                    className="h-full rounded-full bg-emerald-400 transition-all duration-300"
+                                                    className="h-full rounded-full bg-emerald-500 dark:bg-emerald-400 transition-all duration-300"
                                                     style={{
                                                         width: `${Math.min(100, cat.fundedPct)}%`,
                                                     }}
@@ -907,18 +909,18 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         </div>
 
                         {/* Monthly Funding Plan */}
-                        <div className="lg:col-span-6 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                        <div className="lg:col-span-6 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                             <div className="p-6 pb-4">
-                                <h3 className="text-sm font-medium text-white">
+                                <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                     Monthly Funding Plan
                                 </h3>
-                                <p className="text-xs text-zinc-400 mt-1">
+                                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                     Recommended monthly deposits for each active goal to meet its deadline.
                                 </p>
                             </div>
 
                             {activeGoals.length > 0 ? (
-                                <div className="divide-y divide-zinc-800/80">
+                                <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                                     {activeGoals.map((goal) => {
                                         const monthly = getMonthlyPace(goal.remaining, goal.daysLeft);
                                         return (
@@ -931,7 +933,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                         {goal.icon || "🎯"}
                                                     </span>
                                                     <div className="min-w-0">
-                                                        <p className="font-medium text-zinc-200 truncate">
+                                                        <p className="font-medium text-zinc-900 dark:text-zinc-200 truncate">
                                                             {goal.name}
                                                         </p>
                                                         <p className="text-[11px] text-zinc-500">
@@ -941,7 +943,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <span className="font-mono font-medium text-white tabular-nums shrink-0">
+                                                <span className="font-mono font-medium text-zinc-950 dark:text-white tabular-nums shrink-0">
                                                     {formatINR(monthly)}/mo
                                                 </span>
                                             </div>
@@ -954,9 +956,9 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                 </div>
                             )}
 
-                            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs">
+                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
                                 <span className="text-zinc-500">Combined monthly pace</span>
-                                <span className="font-mono font-semibold text-white tabular-nums">
+                                <span className="font-mono font-semibold text-zinc-950 dark:text-white tabular-nums">
                                     {formatINR(stats.totalMonthlyPace)}/mo
                                 </span>
                             </div>
@@ -967,21 +969,21 @@ export default function SavingsGoalsClient({ initialGoals }) {
 
             {/* UPDATE PROGRESS DIALOG */}
             <Dialog open={isUpdateDialogOpen} onOpenChange={setIsUpdateDialogOpen}>
-                <DialogContent className="rounded-2xl bg-zinc-950 border border-zinc-800 text-zinc-100 max-w-md p-6">
+                <DialogContent className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 max-w-md p-6">
                     <DialogHeader>
-                        <DialogTitle className="text-base font-semibold text-white flex items-center gap-2">
+                        <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white flex items-center gap-2">
                             <span>{selectedGoal?.icon || "🎯"}</span>
                             <span>Update Progress</span>
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-zinc-400 mt-1">
+                        <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                             Add a new deposit or set the total saved balance for{" "}
-                            <span className="text-zinc-200 font-medium">{selectedGoal?.name}</span>.
+                            <span className="text-zinc-800 dark:text-zinc-200 font-medium">{selectedGoal?.name}</span>.
                         </DialogDescription>
                     </DialogHeader>
 
                     <form onSubmit={handleSaveProgress} className="space-y-4 py-2">
                         {/* Mode Toggle */}
-                        <div className="grid grid-cols-2 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
+                        <div className="grid grid-cols-2 p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
                             {[
                                 { id: "deposit", label: "Add Deposit" },
                                 { id: "set", label: "Set Total Balance" },
@@ -1003,8 +1005,8 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                         className={cn(
                                             "py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer",
                                             active
-                                                ? "bg-zinc-800 text-white"
-                                                : "text-zinc-400 hover:text-zinc-200"
+                                                ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-white"
+                                                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                                         )}
                                     >
                                         {mode.label}
@@ -1014,7 +1016,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="savings-amount-input" className="text-xs text-zinc-400">
+                            <Label htmlFor="savings-amount-input" className="text-xs text-zinc-600 dark:text-zinc-400">
                                 {updateMode === "deposit"
                                     ? "Deposit Amount (₹)"
                                     : "Total Saved Amount (₹)"}
@@ -1030,7 +1032,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                     setDialogError("");
                                 }}
                                 placeholder={updateMode === "deposit" ? "e.g. 2500" : "0.00"}
-                                className="w-full h-10 px-3 rounded-lg text-sm font-mono bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                className="w-full h-10 px-3 rounded-lg text-sm font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                             />
 
                             {/* Quick Preset Pills in Deposit Mode */}
@@ -1045,7 +1047,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 setAmountInput((currentVal + preset).toString());
                                                 setDialogError("");
                                             }}
-                                            className="px-2.5 py-1 rounded-md text-[11px] font-mono bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 transition-colors cursor-pointer"
+                                            className="px-2.5 py-1 rounded-md text-[11px] font-mono bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 text-zinc-700 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-300 transition-colors cursor-pointer"
                                         >
                                             +₹{preset.toLocaleString("en-IN")}
                                         </button>
@@ -1057,7 +1059,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 setAmountInput(selectedGoal.remaining.toString());
                                                 setDialogError("");
                                             }}
-                                            className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-emerald-950/50 hover:bg-emerald-950 border border-emerald-800/80 text-emerald-400 transition-colors cursor-pointer"
+                                            className="px-2.5 py-1 rounded-md text-[11px] font-medium bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/50 dark:hover:bg-emerald-950 dark:border-emerald-800/80 dark:text-emerald-400 transition-colors cursor-pointer"
                                         >
                                             Fill remaining ({formatINR(selectedGoal.remaining)})
                                         </button>
@@ -1068,29 +1070,29 @@ export default function SavingsGoalsClient({ initialGoals }) {
 
                         {/* Live Projection Preview */}
                         {selectedGoal && (
-                            <div className="rounded-xl bg-zinc-900/50 border border-zinc-800 p-3.5 space-y-2">
+                            <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-3.5 space-y-2">
                                 <div className="flex items-center justify-between text-xs">
-                                    <span className="text-zinc-400">Projected balance</span>
-                                    <span className="font-mono font-semibold text-white tabular-nums">
+                                    <span className="text-zinc-500 dark:text-zinc-400">Projected balance</span>
+                                    <span className="font-mono font-semibold text-zinc-950 dark:text-white tabular-nums">
                                         {formatINR(projectedBalance)}{" "}
                                         <span className="text-zinc-500 font-normal">
                                             ({projectedProgress.toFixed(1)}%)
                                         </span>
                                     </span>
                                 </div>
-                                <div className="h-1.5 w-full rounded-full bg-zinc-900 overflow-hidden">
+                                <div className="h-1.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-900 overflow-hidden">
                                     <div
                                         className={cn(
                                             "h-full rounded-full transition-all duration-200",
                                             projectedBalance >= selectedGoal.targetAmount
-                                                ? "bg-emerald-400"
-                                                : "bg-white"
+                                                ? "bg-emerald-500 dark:bg-emerald-400"
+                                                : "bg-zinc-900 dark:bg-white"
                                         )}
                                         style={{ width: `${projectedProgress}%` }}
                                     />
                                 </div>
                                 {projectedBalance >= selectedGoal.targetAmount && (
-                                    <p className="text-[11px] text-emerald-400 flex items-center gap-1.5 pt-0.5">
+                                    <p className="text-[11px] text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 pt-0.5">
                                         <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
                                         <span>This update reaches 100% and marks the goal completed.</span>
                                     </p>
@@ -1099,7 +1101,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         )}
 
                         {dialogError && (
-                            <p className="text-xs text-red-400" role="alert">
+                            <p className="text-xs text-red-600 dark:text-red-400" role="alert">
                                 {dialogError}
                             </p>
                         )}
@@ -1108,14 +1110,14 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             <button
                                 type="button"
                                 onClick={() => setIsUpdateDialogOpen(false)}
-                                className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer"
+                                className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
                                 disabled={isSavingProgress}
-                                className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                                className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
                             >
                                 {isSavingProgress && <Loader2 className="w-3 h-3 animate-spin" />}
                                 <span>{isSavingProgress ? "Saving..." : "Save Progress"}</span>
@@ -1130,14 +1132,14 @@ export default function SavingsGoalsClient({ initialGoals }) {
                 open={Boolean(goalToDelete)}
                 onOpenChange={(open) => !open && setGoalToDelete(null)}
             >
-                <DialogContent className="rounded-2xl bg-zinc-950 border border-red-900/60 text-zinc-100 max-w-md p-6">
+                <DialogContent className="rounded-2xl bg-white dark:bg-zinc-950 border border-red-200 dark:border-red-900/60 text-zinc-900 dark:text-zinc-100 max-w-md p-6">
                     <DialogHeader>
-                        <DialogTitle className="text-base font-semibold text-white">
+                        <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white">
                             Delete Savings Goal
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                        <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                             Are you sure you want to remove{" "}
-                            <span className="text-white font-medium">{goalToDelete?.name}</span>?
+                            <span className="text-zinc-900 dark:text-white font-medium">{goalToDelete?.name}</span>?
                             This permanently deletes this savings goal and its progress history.
                         </DialogDescription>
                     </DialogHeader>
@@ -1147,7 +1149,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             type="button"
                             onClick={() => setGoalToDelete(null)}
                             disabled={isDeleting}
-                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>

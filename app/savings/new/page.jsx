@@ -161,32 +161,32 @@ export default function NewSavingsGoalPage() {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto space-y-8 pb-16 text-zinc-100">
+        <div className="w-full max-w-4xl mx-auto space-y-8 pb-16 text-zinc-900 dark:text-zinc-100">
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
+                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
                         <Link
                             href="/savings"
-                            className="inline-flex items-center gap-1 text-zinc-400 hover:text-white transition-colors"
+                            className="inline-flex items-center gap-1 text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors"
                         >
                             <ArrowLeft className="w-3.5 h-3.5" />
                             <span>Savings Goals</span>
                         </Link>
-                        <span className="text-zinc-600">/</span>
-                        <span className="text-zinc-200">New Goal</span>
+                        <span className="text-zinc-400 dark:text-zinc-600">/</span>
+                        <span className="text-zinc-800 dark:text-zinc-200">New Goal</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
                         Create Savings Goal
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                         Define your target amount, starting balance, and deadline to calculate your monthly pace.
                     </p>
                 </div>
 
                 <Link
                     href="/savings"
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors self-start sm:self-auto"
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white hover:bg-zinc-100 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors self-start sm:self-auto shadow-xs dark:shadow-none"
                 >
                     Cancel
                 </Link>
@@ -195,9 +195,9 @@ export default function NewSavingsGoalPage() {
             {error && (
                 <div
                     role="alert"
-                    className="p-3.5 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium bg-red-950/40 border border-red-800 text-red-200"
+                    className="p-3.5 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-200"
                 >
-                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                    <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                     <span>{error}</span>
                 </div>
             )}
@@ -206,19 +206,19 @@ export default function NewSavingsGoalPage() {
                 {/* Main Form Card */}
                 <form
                     onSubmit={handleSubmit}
-                    className="lg:col-span-7 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden"
+                    className="lg:col-span-7 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden"
                 >
                     <div className="p-6 space-y-5">
                         <div>
-                            <h2 className="text-sm font-medium text-white">Goal Details</h2>
-                            <p className="text-xs text-zinc-400 mt-1">
+                            <h2 className="text-sm font-medium text-zinc-950 dark:text-white">Goal Details</h2>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                 Configure the name, category, and financial target for your goal.
                             </p>
                         </div>
 
                         {/* Icon Picker Grid */}
                         <div className="space-y-2">
-                            <Label className="text-xs text-zinc-400">Goal Icon</Label>
+                            <Label className="text-xs text-zinc-600 dark:text-zinc-400">Goal Icon</Label>
                             <div className="flex flex-wrap gap-2">
                                 {ICONS.map((icon) => {
                                     const active = formData.icon === icon.value;
@@ -233,8 +233,8 @@ export default function NewSavingsGoalPage() {
                                             className={cn(
                                                 "w-10 h-10 rounded-xl border text-lg flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
                                                 active
-                                                    ? "bg-zinc-800 border-zinc-400 scale-105"
-                                                    : "bg-zinc-900 border-zinc-800 hover:border-zinc-700"
+                                                    ? "bg-zinc-200 border-zinc-400 dark:bg-zinc-800 dark:border-zinc-400 scale-105"
+                                                    : "bg-zinc-50 border-zinc-200 hover:border-zinc-300 dark:bg-zinc-900 dark:border-zinc-800 dark:hover:border-zinc-700"
                                             )}
                                         >
                                             {icon.value}
@@ -246,7 +246,7 @@ export default function NewSavingsGoalPage() {
 
                         {/* Goal Name */}
                         <div className="space-y-1.5">
-                            <Label htmlFor="goal-name" className="text-xs text-zinc-400">
+                            <Label htmlFor="goal-name" className="text-xs text-zinc-600 dark:text-zinc-400">
                                 Goal Name *
                             </Label>
                             <input
@@ -257,14 +257,14 @@ export default function NewSavingsGoalPage() {
                                 onChange={(e) => handleChange("name", e.target.value)}
                                 placeholder="e.g., Emergency Fund, Japan Trip"
                                 required
-                                className="w-full h-9 px-3 rounded-lg text-sm bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                className="w-full h-9 px-3 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                             />
                         </div>
 
                         {/* Category & Deadline */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-category" className="text-xs text-zinc-400">
+                                <Label htmlFor="goal-category" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Category
                                 </Label>
                                 <Select
@@ -273,11 +273,11 @@ export default function NewSavingsGoalPage() {
                                 >
                                     <SelectTrigger
                                         id="goal-category"
-                                        className="w-full h-9 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-sm"
+                                        className="w-full h-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
                                     >
                                         <SelectValue placeholder="Select category" />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-xl bg-zinc-900 border border-zinc-800 text-white">
+                                    <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                         {CATEGORIES.map((category) => (
                                             <SelectItem key={category} value={category}>
                                                 {category}
@@ -288,7 +288,7 @@ export default function NewSavingsGoalPage() {
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-deadline" className="text-xs text-zinc-400">
+                                <Label htmlFor="goal-deadline" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Target Deadline *
                                 </Label>
                                 <input
@@ -297,7 +297,7 @@ export default function NewSavingsGoalPage() {
                                     value={formData.deadline}
                                     onChange={(e) => handleChange("deadline", e.target.value)}
                                     required
-                                    className="w-full h-9 px-3 rounded-lg text-sm bg-zinc-900 border border-zinc-800 text-white [color-scheme:dark] hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className="w-full h-9 px-3 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark] hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                                 />
                             </div>
                         </div>
@@ -305,7 +305,7 @@ export default function NewSavingsGoalPage() {
                         {/* Target & Current Amounts */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-target" className="text-xs text-zinc-400">
+                                <Label htmlFor="goal-target" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Target Amount (₹) *
                                 </Label>
                                 <input
@@ -317,12 +317,12 @@ export default function NewSavingsGoalPage() {
                                     value={formData.targetAmount}
                                     onChange={(e) => handleChange("targetAmount", e.target.value)}
                                     required
-                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                                 />
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-current" className="text-xs text-zinc-400">
+                                <Label htmlFor="goal-current" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Starting Saved (₹)
                                 </Label>
                                 <input
@@ -333,20 +333,20 @@ export default function NewSavingsGoalPage() {
                                     placeholder="0"
                                     value={formData.currentAmount}
                                     onChange={(e) => handleChange("currentAmount", e.target.value)}
-                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between gap-3">
+                    <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-3">
                         <span className="text-xs text-zinc-500">
                             Max 100 characters for goal title.
                         </span>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                            className="px-4 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
                         >
                             {loading ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -359,23 +359,23 @@ export default function NewSavingsGoalPage() {
                 </form>
 
                 {/* Live Goal Card Preview */}
-                <div className="lg:col-span-5 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                <div className="lg:col-span-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                     <div className="p-6 space-y-5">
                         <div className="flex items-center justify-between">
                             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                                 Live Preview
                             </span>
-                            <span className="px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] text-zinc-400">
+                            <span className="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] text-zinc-600 dark:text-zinc-400">
                                 {formData.category}
                             </span>
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-xl shrink-0">
+                            <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-xl shrink-0">
                                 {formData.icon}
                             </div>
                             <div className="min-w-0">
-                                <h3 className="text-base font-medium text-white truncate">
+                                <h3 className="text-base font-medium text-zinc-950 dark:text-white truncate">
                                     {formData.name.trim() || "Untitled Goal"}
                                 </h3>
                                 <p className="text-xs text-zinc-500 flex items-center gap-1 mt-0.5">
@@ -394,16 +394,16 @@ export default function NewSavingsGoalPage() {
 
                         <div className="space-y-2">
                             <div className="flex items-baseline justify-between font-mono tabular-nums">
-                                <span className="text-base font-semibold text-white">
+                                <span className="text-base font-semibold text-zinc-950 dark:text-white">
                                     {formatINR(preview.current)}
                                 </span>
                                 <span className="text-xs text-zinc-500">
                                     of {formatINR(preview.target)}
                                 </span>
                             </div>
-                            <div className="h-2 w-full rounded-full bg-zinc-900 border border-zinc-800/80 overflow-hidden">
+                            <div className="h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden">
                                 <div
-                                    className="h-full rounded-full bg-white transition-all duration-300"
+                                    className="h-full rounded-full bg-zinc-900 dark:bg-white transition-all duration-300"
                                     style={{ width: `${preview.progress}%` }}
                                 />
                             </div>
@@ -414,9 +414,9 @@ export default function NewSavingsGoalPage() {
                         </div>
                     </div>
 
-                    <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs">
+                    <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
                         <span className="text-zinc-500">Estimated pace</span>
-                        <span className="font-mono text-zinc-300 tabular-nums">
+                        <span className="font-mono text-zinc-700 dark:text-zinc-300 tabular-nums">
                             {preview.monthlyPace !== null
                                 ? `${formatINR(preview.monthlyPace)}/mo`
                                 : "Select deadline"}

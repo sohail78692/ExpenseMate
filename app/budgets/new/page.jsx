@@ -150,32 +150,32 @@ export default function NewBudgetPage() {
     const PreviewIcon = formData.category === "Total" ? Wallet : catStyle.icon;
 
     return (
-        <div className="w-full max-w-4xl mx-auto space-y-8 pb-16 text-zinc-100">
+        <div className="w-full max-w-4xl mx-auto space-y-8 pb-16 text-zinc-900 dark:text-zinc-100">
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
+                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
                         <Link
                             href="/budgets"
-                            className="inline-flex items-center gap-1 text-zinc-400 hover:text-white transition-colors"
+                            className="inline-flex items-center gap-1 text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors"
                         >
                             <ArrowLeft className="w-3.5 h-3.5" />
                             <span>Budgets & Insights</span>
                         </Link>
-                        <span className="text-zinc-600">/</span>
-                        <span className="text-zinc-200">New Budget</span>
+                        <span className="text-zinc-400 dark:text-zinc-600">/</span>
+                        <span className="text-zinc-800 dark:text-zinc-200">New Budget</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
                         Create Monthly Budget
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                         Set a spending cap and early warning threshold for a category or your entire month.
                     </p>
                 </div>
 
                 <Link
                     href="/budgets"
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors self-start sm:self-auto"
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white hover:bg-zinc-100 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors self-start sm:self-auto shadow-xs dark:shadow-none"
                 >
                     Cancel
                 </Link>
@@ -184,9 +184,9 @@ export default function NewBudgetPage() {
             {error && (
                 <div
                     role="alert"
-                    className="p-3.5 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium bg-red-950/40 border border-red-800 text-red-200"
+                    className="p-3.5 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-200"
                 >
-                    <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                    <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                     <span>{error}</span>
                 </div>
             )}
@@ -195,12 +195,12 @@ export default function NewBudgetPage() {
                 {/* Main Form Card */}
                 <form
                     onSubmit={handleSubmit}
-                    className="lg:col-span-7 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden"
+                    className="lg:col-span-7 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden"
                 >
                     <div className="p-6 space-y-5">
                         <div>
-                            <h2 className="text-sm font-medium text-white">Budget Configuration</h2>
-                            <p className="text-xs text-zinc-400 mt-1">
+                            <h2 className="text-sm font-medium text-zinc-950 dark:text-white">Budget Configuration</h2>
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                                 One budget is allowed per category for a given month and year.
                             </p>
                         </div>
@@ -208,7 +208,7 @@ export default function NewBudgetPage() {
                         {/* Category & Amount */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="budget-category" className="text-xs text-zinc-400">
+                                <Label htmlFor="budget-category" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Category *
                                 </Label>
                                 <Select
@@ -217,11 +217,11 @@ export default function NewBudgetPage() {
                                 >
                                     <SelectTrigger
                                         id="budget-category"
-                                        className="w-full h-9 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-sm"
+                                        className="w-full h-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
                                     >
                                         <SelectValue placeholder="Select category" />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-xl bg-zinc-900 border border-zinc-800 text-white">
+                                    <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                         {CATEGORIES.map((category) => (
                                             <SelectItem key={category} value={category}>
                                                 {category === "Total"
@@ -234,7 +234,7 @@ export default function NewBudgetPage() {
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="budget-amount" className="text-xs text-zinc-400">
+                                <Label htmlFor="budget-amount" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Monthly Limit (₹) *
                                 </Label>
                                 <input
@@ -246,7 +246,7 @@ export default function NewBudgetPage() {
                                     value={formData.amount}
                                     onChange={(e) => handleChange("amount", e.target.value)}
                                     required
-                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                                 />
                             </div>
                         </div>
@@ -254,7 +254,7 @@ export default function NewBudgetPage() {
                         {/* Month & Year */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="budget-month" className="text-xs text-zinc-400">
+                                <Label htmlFor="budget-month" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Month *
                                 </Label>
                                 <Select
@@ -263,11 +263,11 @@ export default function NewBudgetPage() {
                                 >
                                     <SelectTrigger
                                         id="budget-month"
-                                        className="w-full h-9 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-sm"
+                                        className="w-full h-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
                                     >
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-xl bg-zinc-900 border border-zinc-800 text-white">
+                                    <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                         {MONTHS.map((month) => (
                                             <SelectItem key={month.value} value={month.value.toString()}>
                                                 {month.label}
@@ -278,7 +278,7 @@ export default function NewBudgetPage() {
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="budget-year" className="text-xs text-zinc-400">
+                                <Label htmlFor="budget-year" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Year *
                                 </Label>
                                 <Select
@@ -287,11 +287,11 @@ export default function NewBudgetPage() {
                                 >
                                     <SelectTrigger
                                         id="budget-year"
-                                        className="w-full h-9 rounded-lg bg-zinc-900 border border-zinc-800 text-white text-sm"
+                                        className="w-full h-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
                                     >
                                         <SelectValue />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-xl bg-zinc-900 border border-zinc-800 text-white">
+                                    <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                         {years.map((year) => (
                                             <SelectItem key={year} value={year.toString()}>
                                                 {year}
@@ -305,7 +305,7 @@ export default function NewBudgetPage() {
                         {/* Alert Threshold */}
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
-                                <Label htmlFor="budget-threshold" className="text-xs text-zinc-400">
+                                <Label htmlFor="budget-threshold" className="text-xs text-zinc-600 dark:text-zinc-400">
                                     Alert Threshold (%) *
                                 </Label>
                                 <div className="flex items-center gap-1.5">
@@ -319,8 +319,8 @@ export default function NewBudgetPage() {
                                                 className={cn(
                                                     "px-2 py-0.5 rounded text-[11px] font-mono border transition-colors cursor-pointer",
                                                     active
-                                                        ? "bg-zinc-800 border-zinc-500 text-white"
-                                                        : "bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                                                        ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-800 dark:border-zinc-500 dark:text-white"
+                                                        : "bg-zinc-100 border-zinc-200 text-zinc-600 hover:text-zinc-950 dark:bg-zinc-900 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                                                 )}
                                             >
                                                 {preset}%
@@ -338,24 +338,24 @@ export default function NewBudgetPage() {
                                 value={formData.alertThreshold}
                                 onChange={(e) => handleChange("alertThreshold", e.target.value)}
                                 required
-                                className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                             />
                             <p className="text-[11px] text-zinc-500">
                                 Triggers a warning badge and insight alert once spending reaches{" "}
-                                <span className="text-zinc-300 font-mono">{preview.thresholdNum}%</span>{" "}
+                                <span className="text-zinc-800 dark:text-zinc-300 font-mono">{preview.thresholdNum}%</span>{" "}
                                 of your limit.
                             </p>
                         </div>
                     </div>
 
-                    <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between gap-3">
+                    <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-3">
                         <span className="text-xs text-zinc-500">
                             Applies to {preview.selectedMonthLabel} {formData.year}
                         </span>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                            className="px-4 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
                         >
                             {loading ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -368,13 +368,13 @@ export default function NewBudgetPage() {
                 </form>
 
                 {/* Live Guardrail Preview Card */}
-                <div className="lg:col-span-5 rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+                <div className="lg:col-span-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
                     <div className="p-6 space-y-5">
                         <div className="flex items-center justify-between">
                             <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                                 Guardrail Preview
                             </span>
-                            <span className="px-2 py-0.5 rounded-full bg-emerald-950/60 border border-emerald-800/80 text-emerald-400 text-[11px] font-medium">
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:border-emerald-800/80 dark:text-emerald-400 border text-[11px] font-medium">
                                 On track
                             </span>
                         </div>
@@ -382,19 +382,19 @@ export default function NewBudgetPage() {
                         <div className="flex items-center gap-3">
                             <div
                                 className={cn(
-                                    "w-10 h-10 rounded-xl border border-zinc-800/80 flex items-center justify-center shrink-0",
-                                    formData.category === "Total" ? "bg-zinc-900" : catStyle.bg
+                                    "w-10 h-10 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center shrink-0",
+                                    formData.category === "Total" ? "bg-zinc-100 dark:bg-zinc-900" : catStyle.bg
                                 )}
                             >
                                 <PreviewIcon
                                     className={cn(
                                         "w-4 h-4",
-                                        formData.category === "Total" ? "text-white" : catStyle.color
+                                        formData.category === "Total" ? "text-zinc-800 dark:text-white" : catStyle.color
                                     )}
                                 />
                             </div>
                             <div className="min-w-0">
-                                <h3 className="text-base font-medium text-white truncate">
+                                <h3 className="text-base font-medium text-zinc-950 dark:text-white truncate">
                                     {formData.category === "Total"
                                         ? "Overall Monthly Budget"
                                         : formData.category}
@@ -407,14 +407,14 @@ export default function NewBudgetPage() {
 
                         <div className="space-y-2">
                             <div className="flex items-baseline justify-between font-mono tabular-nums">
-                                <span className="text-base font-semibold text-white">
+                                <span className="text-base font-semibold text-zinc-950 dark:text-white">
                                     ₹0.00
                                 </span>
                                 <span className="text-xs text-zinc-500">
                                     of {formatINR(preview.amountNum)}
                                 </span>
                             </div>
-                            <div className="relative h-2 w-full rounded-full bg-zinc-900 border border-zinc-800/80 overflow-hidden">
+                            <div className="relative h-2 w-full rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800/80 overflow-hidden">
                                 {preview.thresholdNum > 0 && preview.thresholdNum < 100 && (
                                     <div
                                         className="absolute top-0 bottom-0 w-0.5 bg-zinc-400/80"
@@ -426,9 +426,9 @@ export default function NewBudgetPage() {
                         </div>
                     </div>
 
-                    <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs">
+                    <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs">
                         <span className="text-zinc-500">Alert triggers at</span>
-                        <span className="font-mono text-zinc-300 tabular-nums">
+                        <span className="font-mono text-zinc-700 dark:text-zinc-300 tabular-nums">
                             {preview.thresholdNum}% ({formatINR(preview.alertAtAmount)})
                         </span>
                     </div>

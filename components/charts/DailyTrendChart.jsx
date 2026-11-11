@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTheme } from "next-themes";
 import {
     ResponsiveContainer,
     AreaChart,
@@ -41,22 +42,22 @@ function CustomTrendTooltip({ active, payload, label, mode }) {
     const value = payload[0]?.value ?? 0;
 
     return (
-        <div className="rounded-xl bg-zinc-950/95 border border-zinc-800 px-3.5 py-2.5 shadow-2xl backdrop-blur-md">
-            <p className="text-[11px] font-medium text-zinc-400 mb-1">
+        <div className="rounded-xl bg-white/95 dark:bg-zinc-950/95 border border-zinc-200 dark:border-zinc-800 px-3.5 py-2.5 shadow-2xl backdrop-blur-md">
+            <p className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
                 {formattedDate}
             </p>
             <div className="flex items-center justify-between gap-4">
-                <span className="text-xs text-zinc-300">
+                <span className="text-xs text-zinc-600 dark:text-zinc-300">
                     {mode === "cumulative" ? "Cumulative" : "Daily Spend"}
                 </span>
-                <span className="text-xs sm:text-sm font-semibold text-white font-mono tabular-nums">
+                <span className="text-xs sm:text-sm font-semibold text-zinc-950 dark:text-white font-mono tabular-nums">
                     {formatINR(value)}
                 </span>
             </div>
             {mode === "cumulative" && point && typeof point.amount === "number" && (
-                <div className="flex items-center justify-between gap-4 mt-1 pt-1 border-t border-zinc-800/80">
+                <div className="flex items-center justify-between gap-4 mt-1 pt-1 border-t border-zinc-200/80 dark:border-zinc-800/80">
                     <span className="text-[11px] text-zinc-500">Day spend</span>
-                    <span className="text-[11px] text-zinc-300 font-mono tabular-nums">
+                    <span className="text-[11px] text-zinc-700 dark:text-zinc-300 font-mono tabular-nums">
                         {formatINR(point.amount)}
                     </span>
                 </div>
@@ -72,6 +73,17 @@ export default function DailyTrendChart({
     className,
 }) {
     const [mode, setMode] = useState("daily");
+    const { resolvedTheme } = useTheme();
+    const isLight = resolvedTheme === "light";
+
+    const chartColors = {
+        stroke: isLight ? "#18181b" : "#fafafa",
+        fill: isLight ? "#18181b" : "#fafafa",
+        grid: isLight ? "#e4e4e7" : "#27272a",
+        axis: isLight ? "#71717a" : "#71717a",
+        cursor: isLight ? "#a1a1aa" : "#52525b",
+        dotStroke: isLight ? "#ffffff" : "#09090b",
+    };
 
     const chartData = useMemo(() => {
         return data.reduce((acc, item) => {
@@ -98,16 +110,16 @@ export default function DailyTrendChart({
     return (
         <div
             className={cn(
-                "rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden flex flex-col",
+                "rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden flex flex-col transition-colors",
                 className
             )}
         >
             <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                    <h3 className="text-sm font-medium text-white">
+                    <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                         Daily Spending Trend
                     </h3>
-                    <p className="text-xs text-zinc-400 mt-1">
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
                         {mode === "cumulative"
                             ? `Cumulative spend curve across ${monthLabel}.`
                             : `Day-by-day spending velocity for ${monthLabel}.`}
@@ -117,7 +129,7 @@ export default function DailyTrendChart({
                 <div
                     role="group"
                     aria-label="Chart view mode"
-                    className="inline-flex items-center p-1 rounded-lg bg-zinc-900 border border-zinc-800 self-start sm:self-auto"
+                    className="inline-flex items-center p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 self-start sm:self-auto"
                 >
                     {[
                         { id: "daily", label: "Daily" },
@@ -133,8 +145,8 @@ export default function DailyTrendChart({
                                 className={cn(
                                     "px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
                                     isSelected
-                                        ? "bg-zinc-800 text-white shadow-xs"
-                                        : "text-zinc-400 hover:text-zinc-200"
+                                        ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-white"
+                                        : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                                 )}
                             >
                                 {option.label}
@@ -154,18 +166,18 @@ export default function DailyTrendChart({
                             >
                                 <defs>
                                     <linearGradient id="analyticsTrendFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="#fafafa" stopOpacity={0.18} />
-                                        <stop offset="100%" stopColor="#fafafa" stopOpacity={0.0} />
+                                        <stop offset="0%" stopColor={chartColors.fill} stopOpacity={isLight ? 0.14 : 0.18} />
+                                        <stop offset="100%" stopColor={chartColors.fill} stopOpacity={0.0} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid
                                     vertical={false}
-                                    stroke="#27272a"
+                                    stroke={chartColors.grid}
                                     strokeDasharray="3 3"
                                 />
                                 <XAxis
                                     dataKey="date"
-                                    stroke="#71717a"
+                                    stroke={chartColors.axis}
                                     fontSize={11}
                                     tickLine={false}
                                     axisLine={false}
@@ -179,7 +191,7 @@ export default function DailyTrendChart({
                                     }}
                                 />
                                 <YAxis
-                                    stroke="#71717a"
+                                    stroke={chartColors.axis}
                                     fontSize={11}
                                     tickLine={false}
                                     axisLine={false}
@@ -188,18 +200,18 @@ export default function DailyTrendChart({
                                 />
                                 <Tooltip
                                     content={<CustomTrendTooltip mode={mode} />}
-                                    cursor={{ stroke: "#52525b", strokeWidth: 1, strokeDasharray: "3 3" }}
+                                    cursor={{ stroke: chartColors.cursor, strokeWidth: 1, strokeDasharray: "3 3" }}
                                 />
                                 <Area
                                     type="monotone"
                                     dataKey={dataKey}
-                                    stroke="#fafafa"
+                                    stroke={chartColors.stroke}
                                     strokeWidth={2}
                                     fill="url(#analyticsTrendFill)"
                                     activeDot={{
                                         r: 4,
-                                        fill: "#ffffff",
-                                        stroke: "#09090b",
+                                        fill: chartColors.stroke,
+                                        stroke: chartColors.dotStroke,
                                         strokeWidth: 2,
                                     }}
                                 />
@@ -207,11 +219,11 @@ export default function DailyTrendChart({
                         </ResponsiveContainer>
                     </div>
                 ) : (
-                    <div className="h-[290px] w-full rounded-xl border border-dashed border-zinc-800 bg-zinc-900/20 flex flex-col items-center justify-center text-center px-6">
-                        <div className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mb-3">
+                    <div className="h-[290px] w-full rounded-xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/20 flex flex-col items-center justify-center text-center px-6">
+                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mb-3">
                             <TrendingUp className="w-4 h-4" />
                         </div>
-                        <p className="text-sm font-medium text-zinc-200">
+                        <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
                             No spending recorded for {monthLabel}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 max-w-xs">
@@ -221,13 +233,13 @@ export default function DailyTrendChart({
                 )}
             </div>
 
-            <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
                 <span>
                     {activeDays > 0
                         ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} logged`
                         : "Waiting for transaction activity"}
                 </span>
-                <span className="font-mono text-zinc-400">
+                <span className="font-mono text-zinc-600 dark:text-zinc-400">
                     {mode === "cumulative" ? "Running total" : "Daily total"}
                 </span>
             </div>

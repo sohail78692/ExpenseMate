@@ -196,7 +196,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-[#0A84FF] selection:text-white font-sans antialiased overflow-x-hidden scroll-smooth">
+    <div className="dark min-h-screen bg-black text-white selection:bg-[#0A84FF] selection:text-white font-sans antialiased overflow-x-hidden scroll-smooth">
       {/* iOS Ambient Lighting Glows (Apple Intelligence spectrum: Cyan, Blue, Indigo) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         <div className="absolute -top-36 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-gradient-to-b from-[#0A84FF]/18 via-[#5E5CE6]/10 to-transparent blur-[130px] rounded-full"></div>

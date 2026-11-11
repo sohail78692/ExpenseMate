@@ -269,24 +269,24 @@ export default function ExpenseList({
     const rangeEnd = Math.min(total, (page - 1) * 10 + expenses.length);
 
     return (
-        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-100">
+        <div className="w-full max-w-5xl mx-auto space-y-8 pb-16 text-zinc-900 dark:text-zinc-100">
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-800/80">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-400 mb-1.5">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 font-medium">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                             Expense Ledger
                         </span>
-                        <span className="text-zinc-600">•</span>
-                        <span className="font-mono text-zinc-300 tabular-nums">
+                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="font-mono text-zinc-600 dark:text-zinc-300 tabular-nums">
                             {total} {total === 1 ? "entry" : "entries"}
                         </span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
                         Expenses
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-400 mt-1">
+                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
                         Log daily spending, search transactions, and maintain an accurate financial ledger.
                     </p>
                 </div>
@@ -295,7 +295,7 @@ export default function ExpenseList({
                     <a
                         href="/api/export"
                         download
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white hover:bg-zinc-100 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 shadow-xs dark:shadow-none"
                     >
                         <Download className="w-3.5 h-3.5" />
                         <span>Export CSV</span>
@@ -304,7 +304,7 @@ export default function ExpenseList({
                     <button
                         type="button"
                         onClick={openAddModal}
-                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                        className="px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors cursor-pointer inline-flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400 shadow-xs dark:shadow-none"
                     >
                         <Plus className="w-3.5 h-3.5" />
                         <span>Add Expense</span>
@@ -322,17 +322,17 @@ export default function ExpenseList({
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -6 }}
                         className={cn(
-                            "p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium border",
+                            "p-3.5 rounded-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-medium border shadow-sm dark:shadow-none",
                             messageType === "success"
-                                ? "bg-zinc-900 border-zinc-700 text-zinc-200"
-                                : "bg-red-950/40 border-red-800 text-red-200"
+                                ? "bg-white border-zinc-200 text-zinc-800 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-200"
+                                : "bg-red-50 border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-200"
                         )}
                     >
                         <div className="flex items-center gap-2.5">
                             {messageType === "success" ? (
-                                <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                                <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                             ) : (
-                                <AlertTriangle className="w-4 h-4 text-red-400 shrink-0" />
+                                <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
                             )}
                             <span>{message}</span>
                         </div>
@@ -340,7 +340,7 @@ export default function ExpenseList({
                             type="button"
                             onClick={() => setMessage("")}
                             aria-label="Dismiss notification"
-                            className="text-zinc-400 hover:text-white transition-colors p-1 cursor-pointer"
+                            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-1 cursor-pointer"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -350,17 +350,17 @@ export default function ExpenseList({
 
             {/* Top 4 KPI Summary Strip */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                             {hasActiveFilters ? "Filtered Total" : "Total Logged"}
                         </span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <IndianRupee className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(totalAmount)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 tabular-nums">
@@ -369,15 +369,15 @@ export default function ExpenseList({
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Current Page</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Current Page</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <Receipt className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(viewStats.pageSum)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 tabular-nums">
@@ -386,15 +386,15 @@ export default function ExpenseList({
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Average Entry</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Average Entry</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <TrendingUp className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white font-mono tabular-nums">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(viewStats.avgEntry)}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 truncate tabular-nums">
@@ -405,15 +405,15 @@ export default function ExpenseList({
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-zinc-950 border border-zinc-800 flex flex-col justify-between gap-3">
+                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-400">Top Category</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Top Category</span>
+                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
                             <Layers className="w-3.5 h-3.5" />
                         </div>
                     </div>
                     <div>
-                        <p className="text-2xl font-semibold tracking-tight text-white truncate">
+                        <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white truncate">
                             {viewStats.topCategory ? viewStats.topCategory.name : "—"}
                         </p>
                         <p className="text-xs text-zinc-500 mt-1 tabular-nums">
@@ -429,21 +429,21 @@ export default function ExpenseList({
             <div className="space-y-3">
                 <div className="flex flex-col sm:flex-row gap-3 justify-between">
                     <div className="relative flex-1 max-w-md">
-                        <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <Search className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                             type="text"
                             value={searchInput}
                             onChange={(e) => setSearchInput(e.target.value)}
                             placeholder="Search expense title or notes..."
                             aria-label="Search expenses"
-                            className="w-full h-9 pl-8 pr-8 rounded-lg text-sm bg-zinc-950 border border-zinc-800 text-white placeholder:text-zinc-600 hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                            className="w-full h-9 pl-8 pr-8 rounded-lg text-sm bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors shadow-xs dark:shadow-none"
                         />
                         {searchInput && (
                             <button
                                 type="button"
                                 onClick={() => setSearchInput("")}
                                 aria-label="Clear search"
-                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-200 cursor-pointer"
+                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-900 dark:text-zinc-500 dark:hover:text-zinc-200 cursor-pointer"
                             >
                                 <X className="w-3.5 h-3.5" />
                             </button>
@@ -460,11 +460,11 @@ export default function ExpenseList({
                         >
                             <SelectTrigger
                                 aria-label="Sort expenses"
-                                className="h-9 w-full sm:w-[170px] rounded-lg bg-zinc-950 border border-zinc-800 text-zinc-200 text-xs"
+                                className="h-9 w-full sm:w-[170px] rounded-lg bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 text-xs shadow-xs dark:shadow-none"
                             >
                                 <SelectValue placeholder="Sort by" />
                             </SelectTrigger>
-                            <SelectContent className="rounded-xl bg-zinc-900 border border-zinc-800 text-white">
+                            <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                 <SelectItem value="date_desc">Newest First</SelectItem>
                                 <SelectItem value="date_asc">Oldest First</SelectItem>
                                 <SelectItem value="amount_desc">Highest Amount</SelectItem>
@@ -481,7 +481,7 @@ export default function ExpenseList({
                                     setCategoryFilter("all");
                                     setPage(1);
                                 }}
-                                className="h-9 px-3 rounded-lg text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 hover:border-zinc-700 transition-colors cursor-pointer shrink-0"
+                                className="h-9 px-3 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-950 bg-white border border-zinc-200 hover:border-zinc-300 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-900 dark:border-zinc-800 dark:hover:border-zinc-700 transition-colors cursor-pointer shrink-0 shadow-xs dark:shadow-none"
                             >
                                 Reset
                             </button>
@@ -500,8 +500,8 @@ export default function ExpenseList({
                         className={cn(
                             "px-2.5 py-1 rounded-md text-xs font-medium border whitespace-nowrap transition-colors cursor-pointer",
                             categoryFilter === "all"
-                                ? "bg-zinc-800 border-zinc-600 text-white"
-                                : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                                ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                                : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-950 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                         )}
                     >
                         All Categories
@@ -519,8 +519,8 @@ export default function ExpenseList({
                                 className={cn(
                                     "px-2.5 py-1 rounded-md text-xs font-medium border whitespace-nowrap transition-colors cursor-pointer",
                                     active
-                                        ? "bg-zinc-800 border-zinc-600 text-white"
-                                        : "bg-zinc-950 border-zinc-800 text-zinc-400 hover:text-zinc-200"
+                                        ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-800 dark:border-zinc-600 dark:text-white"
+                                        : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-950 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                                 )}
                             >
                                 {cat}
@@ -531,22 +531,22 @@ export default function ExpenseList({
             </div>
 
             {/* Expenses Ledger Card */}
-            <div className="rounded-2xl bg-zinc-950 border border-zinc-800 overflow-hidden">
+            <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden transition-colors">
                 {loading ? (
-                    <div className="py-16 flex flex-col items-center justify-center gap-3 text-xs text-zinc-400">
-                        <Loader2 className="w-5 h-5 animate-spin text-zinc-300" />
+                    <div className="py-16 flex flex-col items-center justify-center gap-3 text-xs text-zinc-500 dark:text-zinc-400">
+                        <Loader2 className="w-5 h-5 animate-spin text-zinc-600 dark:text-zinc-300" />
                         <span>Loading expenses...</span>
                     </div>
                 ) : !expenses || expenses.length === 0 ? (
                     <div className="py-16 px-6 text-center space-y-4">
-                        <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mx-auto">
+                        <div className="w-11 h-11 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mx-auto">
                             <Receipt className="w-5 h-5" />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="text-sm font-medium text-white">
+                            <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                 {hasActiveFilters ? "No matching expenses" : "No expenses logged yet"}
                             </h3>
-                            <p className="text-xs text-zinc-400 max-w-sm mx-auto">
+                            <p className="text-xs text-zinc-500 dark:text-zinc-400 max-w-sm mx-auto">
                                 {hasActiveFilters
                                     ? "Try adjusting your search query or selecting a different category."
                                     : "Start tracking your spending by recording your first expense."}
@@ -561,7 +561,7 @@ export default function ExpenseList({
                                     setCategoryFilter("all");
                                     setPage(1);
                                 }}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-800 text-white hover:bg-zinc-700 transition-colors cursor-pointer"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-800 dark:text-white dark:hover:bg-zinc-700 transition-colors cursor-pointer"
                             >
                                 Clear filters
                             </button>
@@ -569,7 +569,7 @@ export default function ExpenseList({
                             <button
                                 type="button"
                                 onClick={openAddModal}
-                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors cursor-pointer"
                             >
                                 <Plus className="w-3.5 h-3.5" />
                                 <span>Add your first expense</span>
@@ -582,7 +582,7 @@ export default function ExpenseList({
                         <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
-                                    <tr className="border-b border-zinc-800/80 bg-zinc-900/30 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+                                    <tr className="border-b border-zinc-200 dark:border-zinc-800/80 bg-zinc-50/80 dark:bg-zinc-900/30 text-[11px] font-medium uppercase tracking-wider text-zinc-500">
                                         <th className="py-3 px-6">Expense</th>
                                         <th className="py-3 px-4">Category</th>
                                         <th className="py-3 px-4">Method</th>
@@ -591,7 +591,7 @@ export default function ExpenseList({
                                         <th className="py-3 px-6 text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-zinc-800/80 text-xs">
+                                <tbody className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80 text-xs">
                                     {expenses.map((expense) => {
                                         const { icon: Icon, color, bg } = getCategoryStyles(
                                             expense.category
@@ -599,20 +599,20 @@ export default function ExpenseList({
                                         return (
                                             <tr
                                                 key={expense._id}
-                                                className="hover:bg-zinc-900/40 transition-colors group"
+                                                className="hover:bg-zinc-50 dark:hover:bg-zinc-900/40 transition-colors group"
                                             >
                                                 <td className="py-3.5 px-6 max-w-[260px]">
                                                     <div className="flex items-center gap-3 min-w-0">
                                                         <div
                                                             className={cn(
-                                                                "w-8 h-8 rounded-lg border border-zinc-800/80 flex items-center justify-center shrink-0",
+                                                                "w-8 h-8 rounded-lg border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center shrink-0",
                                                                 bg
                                                             )}
                                                         >
                                                             <Icon className={cn("w-3.5 h-3.5", color)} />
                                                         </div>
                                                         <div className="min-w-0">
-                                                            <p className="font-medium text-sm text-white truncate">
+                                                            <p className="font-medium text-sm text-zinc-900 dark:text-white truncate">
                                                                 {expense.title}
                                                             </p>
                                                             {expense.note && (
@@ -625,7 +625,7 @@ export default function ExpenseList({
                                                 </td>
 
                                                 <td className="py-3.5 px-4 whitespace-nowrap">
-                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-[11px] font-medium text-zinc-300">
+                                                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] font-medium text-zinc-700 dark:text-zinc-300">
                                                         <span
                                                             className="w-1.5 h-1.5 rounded-full"
                                                             style={{
@@ -638,18 +638,18 @@ export default function ExpenseList({
                                                     </span>
                                                 </td>
 
-                                                <td className="py-3.5 px-4 whitespace-nowrap text-zinc-400">
+                                                <td className="py-3.5 px-4 whitespace-nowrap text-zinc-600 dark:text-zinc-400">
                                                     <span className="inline-flex items-center gap-1.5 text-[11px]">
-                                                        <CreditCard className="w-3 h-3 text-zinc-500" />
+                                                        <CreditCard className="w-3 h-3 text-zinc-400 dark:text-zinc-500" />
                                                         {expense.paymentMethod || "Cash"}
                                                     </span>
                                                 </td>
 
-                                                <td className="py-3.5 px-4 whitespace-nowrap font-mono text-zinc-400">
+                                                <td className="py-3.5 px-4 whitespace-nowrap font-mono text-zinc-600 dark:text-zinc-400">
                                                     {format(new Date(expense.date), "MMM d, yyyy")}
                                                 </td>
 
-                                                <td className="py-3.5 px-4 whitespace-nowrap text-right font-mono font-semibold text-sm text-white tabular-nums">
+                                                <td className="py-3.5 px-4 whitespace-nowrap text-right font-mono font-semibold text-sm text-zinc-950 dark:text-white tabular-nums">
                                                     {formatINR(expense.amount)}
                                                 </td>
 
@@ -660,7 +660,7 @@ export default function ExpenseList({
                                                             onClick={() => openEditModal(expense)}
                                                             aria-label={`Edit ${expense.title}`}
                                                             title="Edit expense"
-                                                            className="p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                                                            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 dark:text-zinc-500 dark:hover:text-white dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                                                         >
                                                             <Pencil className="w-3.5 h-3.5" />
                                                         </button>
@@ -669,7 +669,7 @@ export default function ExpenseList({
                                                             onClick={() => setExpenseToDelete(expense)}
                                                             aria-label={`Delete ${expense.title}`}
                                                             title="Delete expense"
-                                                            className="p-1.5 rounded-lg text-zinc-500 hover:text-red-400 hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                                                            className="p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 dark:text-zinc-500 dark:hover:text-red-400 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                                                         >
                                                             <Trash2 className="w-3.5 h-3.5" />
                                                         </button>
@@ -683,7 +683,7 @@ export default function ExpenseList({
                         </div>
 
                         {/* Mobile Ledger View */}
-                        <div className="md:hidden divide-y divide-zinc-800/80">
+                        <div className="md:hidden divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
                             {expenses.map((expense) => {
                                 const { icon: Icon, color, bg } = getCategoryStyles(
                                     expense.category
@@ -694,14 +694,14 @@ export default function ExpenseList({
                                             <div className="flex items-start gap-3 min-w-0">
                                                 <div
                                                     className={cn(
-                                                        "w-9 h-9 rounded-xl border border-zinc-800/80 flex items-center justify-center shrink-0 mt-0.5",
+                                                        "w-9 h-9 rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 flex items-center justify-center shrink-0 mt-0.5",
                                                         bg
                                                     )}
                                                 >
                                                     <Icon className={cn("w-4 h-4", color)} />
                                                 </div>
                                                 <div className="min-w-0">
-                                                    <h3 className="text-sm font-medium text-white truncate">
+                                                    <h3 className="text-sm font-medium text-zinc-900 dark:text-white truncate">
                                                         {expense.title}
                                                     </h3>
                                                     <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-500 mt-0.5">
@@ -724,13 +724,13 @@ export default function ExpenseList({
                                                 </div>
                                             </div>
 
-                                            <span className="text-sm font-semibold font-mono text-white tabular-nums shrink-0">
+                                            <span className="text-sm font-semibold font-mono text-zinc-950 dark:text-white tabular-nums shrink-0">
                                                 {formatINR(expense.amount)}
                                             </span>
                                         </div>
 
                                         {expense.note && (
-                                            <p className="text-xs text-zinc-400 bg-zinc-900/50 border border-zinc-800/70 rounded-lg px-3 py-2">
+                                            <p className="text-xs text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/80 dark:border-zinc-800/70 rounded-lg px-3 py-2">
                                                 {expense.note}
                                             </p>
                                         )}
@@ -739,7 +739,7 @@ export default function ExpenseList({
                                             <button
                                                 type="button"
                                                 onClick={() => openEditModal(expense)}
-                                                className="flex-1 py-1.5 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5"
+                                                className="flex-1 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200/80 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5"
                                             >
                                                 <Pencil className="w-3 h-3" />
                                                 <span>Edit</span>
@@ -747,7 +747,7 @@ export default function ExpenseList({
                                             <button
                                                 type="button"
                                                 onClick={() => setExpenseToDelete(expense)}
-                                                className="flex-1 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-red-400 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5"
+                                                className="flex-1 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-red-600 bg-zinc-100 hover:bg-red-50 border border-zinc-200 dark:text-zinc-400 dark:hover:text-red-400 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer inline-flex items-center justify-center gap-1.5"
                                             >
                                                 <Trash2 className="w-3 h-3" />
                                                 <span>Delete</span>
@@ -761,7 +761,7 @@ export default function ExpenseList({
                 )}
 
                 {/* Pagination Footer Strip */}
-                <div className="px-6 py-3 bg-zinc-900/40 border-t border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+                <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
                     <span className="text-zinc-500 tabular-nums">
                         {total > 0
                             ? `Showing ${rangeStart}–${rangeEnd} of ${total} · Page ${page} of ${totalPages}`
@@ -773,7 +773,7 @@ export default function ExpenseList({
                             type="button"
                             onClick={() => setPage((p) => Math.max(1, p - 1))}
                             disabled={page <= 1 || loading}
-                            className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer inline-flex items-center gap-1"
+                            className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white hover:bg-zinc-100 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer inline-flex items-center gap-1"
                         >
                             <ChevronLeft className="w-3.5 h-3.5" />
                             <span>Previous</span>
@@ -782,7 +782,7 @@ export default function ExpenseList({
                             type="button"
                             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                             disabled={page >= totalPages || loading}
-                            className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer inline-flex items-center gap-1"
+                            className="px-2.5 py-1 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white hover:bg-zinc-100 border border-zinc-200 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer inline-flex items-center gap-1"
                         >
                             <span>Next</span>
                             <ChevronRight className="w-3.5 h-3.5" />
@@ -805,14 +805,14 @@ export default function ExpenseList({
                 open={Boolean(expenseToDelete)}
                 onOpenChange={(open) => !open && setExpenseToDelete(null)}
             >
-                <DialogContent className="rounded-2xl bg-zinc-950 border border-red-900/60 text-zinc-100 max-w-md p-6">
+                <DialogContent className="rounded-2xl bg-white dark:bg-zinc-950 border border-red-200 dark:border-red-900/60 text-zinc-900 dark:text-zinc-100 max-w-md p-6">
                     <DialogHeader>
-                        <DialogTitle className="text-base font-semibold text-white">
+                        <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white">
                             Delete Expense
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                        <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
                             Permanently remove{" "}
-                            <span className="text-white font-medium">
+                            <span className="text-zinc-900 dark:text-white font-medium">
                                 {expenseToDelete?.title}
                             </span>{" "}
                             ({formatINR(expenseToDelete?.amount)}) from your expense ledger? This action cannot be undone.
@@ -824,7 +824,7 @@ export default function ExpenseList({
                             type="button"
                             onClick={() => setExpenseToDelete(null)}
                             disabled={isDeleting}
-                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 transition-colors cursor-pointer"
+                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>

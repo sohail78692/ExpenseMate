@@ -230,6 +230,10 @@
 /* Ultra-Minimal Ghost Pill Scrollbar (iOS / Linear style) */
 html {
   scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+html.dark {
   scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
@@ -249,18 +253,30 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.18);
   border-radius: 9999px;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+}
+
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.45);
 }
 
 ::-webkit-scrollbar-thumb:active {
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.dark ::-webkit-scrollbar-thumb:active {
   background: rgba(255, 255, 255, 0.7);
 }
 
@@ -413,9 +429,17 @@ html {
 
 /* Glass Floating Bottom Dock */
 .glass-dock-panel {
-  background: rgba(9, 14, 28, 0.52);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(36px) saturate(200%);
   -webkit-backdrop-filter: blur(36px) saturate(200%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.8),
+    0 16px 40px -10px rgba(0, 0, 0, 0.14);
+}
+
+.dark .glass-dock-panel {
+  background: rgba(9, 14, 28, 0.52);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 
     inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.25),

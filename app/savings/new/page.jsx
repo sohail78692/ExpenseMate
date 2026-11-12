@@ -10,6 +10,7 @@ import {
     AlertTriangle,
     Loader2,
     Check,
+    Sparkles,
 } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import {
@@ -53,6 +54,12 @@ function formatINR(value) {
         maximumFractionDigits: 2,
     })}`;
 }
+
+const GLASS_CARD =
+    "rounded-[24px] bg-white/78 dark:bg-white/[0.04] backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_16px_42px_-12px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.08)]";
+
+const GLASS_INPUT =
+    "w-full h-10 px-3.5 rounded-2xl text-sm bg-slate-50/90 dark:bg-white/[0.06] border border-slate-200/90 dark:border-white/[0.12] text-slate-950 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 hover:border-slate-300 dark:hover:border-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors";
 
 export default function NewSavingsGoalPage() {
     const router = useRouter();
@@ -161,32 +168,42 @@ export default function NewSavingsGoalPage() {
     };
 
     return (
-        <div className="w-full space-y-8 pb-8 text-zinc-900 dark:text-zinc-100">
-            {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
+        <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+            {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
+            <div
+                aria-hidden="true"
+                className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+            >
+                <div className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full bg-emerald-200/30 blur-[135px] dark:bg-emerald-500/10" />
+                <div className="absolute top-12 -right-24 h-[500px] w-[500px] rounded-full bg-sky-300/30 blur-[140px] dark:bg-blue-500/14" />
+                <div className="absolute -bottom-32 -left-24 h-[480px] w-[480px] rounded-full bg-indigo-300/25 blur-[135px] dark:bg-indigo-600/12" />
+            </div>
+
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
+                    <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-zinc-400 mb-1.5">
                         <Link
                             href="/savings"
-                            className="inline-flex items-center gap-1 text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors"
+                            className="inline-flex items-center gap-1.5 text-slate-600 hover:text-blue-600 dark:text-zinc-400 dark:hover:text-sky-400 font-medium transition-colors"
                         >
                             <ArrowLeft className="w-3.5 h-3.5" />
                             <span>Savings Goals</span>
                         </Link>
-                        <span className="text-zinc-500 dark:text-zinc-600">/</span>
-                        <span className="text-zinc-900 dark:text-zinc-200 font-medium">New Goal</span>
+                        <span className="text-slate-400 dark:text-zinc-600">/</span>
+                        <span className="text-slate-950 dark:text-white font-semibold">New Goal</span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
+                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
                         Create Savings Goal
                     </h1>
-                    <p className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 mt-1">
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 mt-1">
                         Define your target amount, starting balance, and deadline to calculate your monthly pace.
                     </p>
                 </div>
 
                 <Link
                     href="/savings"
-                    className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-700 hover:text-zinc-950 bg-white/95 hover:bg-slate-100 border border-slate-200/90 dark:text-zinc-300 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors self-start sm:self-auto shadow-xs dark:shadow-none"
+                    className="px-4 py-2 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 bg-white/80 hover:bg-white border border-white/95 dark:text-zinc-200 dark:hover:text-white dark:bg-white/[0.06] dark:hover:bg-white/[0.11] dark:border-white/[0.12] backdrop-blur-xl transition-all self-start sm:self-auto shadow-xs whitespace-nowrap"
                 >
                     Cancel
                 </Link>
@@ -195,9 +212,9 @@ export default function NewSavingsGoalPage() {
             {error && (
                 <div
                     role="alert"
-                    className="p-3.5 rounded-xl flex items-center gap-2.5 text-xs sm:text-sm font-medium bg-red-50 border border-red-200 text-red-700 dark:bg-red-950/40 dark:border-red-800 dark:text-red-200"
+                    className="p-3.5 rounded-2xl flex items-center gap-2.5 text-xs sm:text-sm font-medium bg-rose-50/95 border border-rose-200 text-rose-700 dark:bg-rose-950/40 dark:border-rose-800 dark:text-rose-200 backdrop-blur-xl"
                 >
-                    <AlertTriangle className="w-4 h-4 text-red-600 dark:text-red-400 shrink-0" />
+                    <AlertTriangle className="w-4 h-4 text-rose-600 dark:text-rose-400 shrink-0" />
                     <span>{error}</span>
                 </div>
             )}
@@ -206,19 +223,19 @@ export default function NewSavingsGoalPage() {
                 {/* Main Form Card */}
                 <form
                     onSubmit={handleSubmit}
-                    className="lg:col-span-7 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden"
+                    className={cn(GLASS_CARD, "lg:col-span-7 overflow-hidden")}
                 >
-                    <div className="p-6 space-y-5">
+                    <div className="p-5 sm:p-6 space-y-5">
                         <div>
-                            <h2 className="text-sm font-medium text-zinc-950 dark:text-white">Goal Details</h2>
-                            <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                            <h2 className="text-base font-semibold text-slate-950 dark:text-white">Goal Details</h2>
+                            <p className="text-xs text-slate-600 dark:text-zinc-400 mt-0.5">
                                 Configure the name, category, and financial target for your goal.
                             </p>
                         </div>
 
                         {/* Icon Picker Grid */}
                         <div className="space-y-2">
-                            <Label className="text-xs text-zinc-700 dark:text-zinc-400">Goal Icon</Label>
+                            <Label className="text-xs font-medium text-slate-700 dark:text-zinc-300">Goal Icon</Label>
                             <div className="flex flex-wrap gap-2">
                                 {ICONS.map((icon) => {
                                     const active = formData.icon === icon.value;
@@ -231,10 +248,10 @@ export default function NewSavingsGoalPage() {
                                             aria-label={icon.label}
                                             aria-pressed={active}
                                             className={cn(
-                                                "w-10 h-10 rounded-xl border text-lg flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
+                                                "w-10 h-10 rounded-2xl border text-lg flex items-center justify-center transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
                                                 active
-                                                    ? "bg-slate-200 border-slate-400 dark:bg-zinc-800 dark:border-zinc-400 scale-105"
-                                                    : "bg-slate-50/80 border-slate-200 hover:border-slate-300 dark:bg-zinc-900 dark:border-zinc-800 dark:hover:border-zinc-700"
+                                                    ? "bg-blue-600/12 border-blue-500/60 dark:bg-sky-500/20 dark:border-sky-400/60 scale-105 shadow-xs"
+                                                    : "bg-slate-50/85 border-slate-200/80 hover:border-slate-300 dark:bg-white/[0.05] dark:border-white/10 dark:hover:border-white/25"
                                             )}
                                         >
                                             {icon.value}
@@ -246,7 +263,7 @@ export default function NewSavingsGoalPage() {
 
                         {/* Goal Name */}
                         <div className="space-y-1.5">
-                            <Label htmlFor="goal-name" className="text-xs text-zinc-700 dark:text-zinc-400">
+                            <Label htmlFor="goal-name" className="text-xs font-medium text-slate-700 dark:text-zinc-300">
                                 Goal Name *
                             </Label>
                             <input
@@ -257,14 +274,14 @@ export default function NewSavingsGoalPage() {
                                 onChange={(e) => handleChange("name", e.target.value)}
                                 placeholder="e.g., Emergency Fund, Japan Trip"
                                 required
-                                className="w-full h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                className={GLASS_INPUT}
                             />
                         </div>
 
                         {/* Category & Deadline */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-category" className="text-xs text-zinc-700 dark:text-zinc-400">
+                                <Label htmlFor="goal-category" className="text-xs font-medium text-slate-700 dark:text-zinc-300">
                                     Category
                                 </Label>
                                 <Select
@@ -273,11 +290,11 @@ export default function NewSavingsGoalPage() {
                                 >
                                     <SelectTrigger
                                         id="goal-category"
-                                        className="w-full h-9 rounded-lg bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
+                                        className="w-full h-10 rounded-2xl bg-slate-50/90 dark:bg-white/[0.06] border border-slate-200/90 dark:border-white/[0.12] text-slate-950 dark:text-white text-sm"
                                     >
                                         <SelectValue placeholder="Select category" />
                                     </SelectTrigger>
-                                    <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
+                                    <SelectContent className="rounded-2xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-slate-200/90 dark:border-white/15 text-slate-950 dark:text-white">
                                         {CATEGORIES.map((category) => (
                                             <SelectItem key={category} value={category}>
                                                 {category}
@@ -288,7 +305,7 @@ export default function NewSavingsGoalPage() {
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-deadline" className="text-xs text-zinc-700 dark:text-zinc-400">
+                                <Label htmlFor="goal-deadline" className="text-xs font-medium text-slate-700 dark:text-zinc-300">
                                     Target Deadline *
                                 </Label>
                                 <input
@@ -297,7 +314,7 @@ export default function NewSavingsGoalPage() {
                                     value={formData.deadline}
                                     onChange={(e) => handleChange("deadline", e.target.value)}
                                     required
-                                    className="w-full h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark] hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className={cn(GLASS_INPUT, "[color-scheme:light] dark:[color-scheme:dark]")}
                                 />
                             </div>
                         </div>
@@ -305,7 +322,7 @@ export default function NewSavingsGoalPage() {
                         {/* Target & Current Amounts */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-target" className="text-xs text-zinc-700 dark:text-zinc-400">
+                                <Label htmlFor="goal-target" className="text-xs font-medium text-slate-700 dark:text-zinc-300">
                                     Target Amount (₹) *
                                 </Label>
                                 <input
@@ -317,12 +334,12 @@ export default function NewSavingsGoalPage() {
                                     value={formData.targetAmount}
                                     onChange={(e) => handleChange("targetAmount", e.target.value)}
                                     required
-                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className={cn(GLASS_INPUT, "font-mono")}
                                 />
                             </div>
 
                             <div className="space-y-1.5">
-                                <Label htmlFor="goal-current" className="text-xs text-zinc-700 dark:text-zinc-400">
+                                <Label htmlFor="goal-current" className="text-xs font-medium text-slate-700 dark:text-zinc-300">
                                     Starting Saved (₹)
                                 </Label>
                                 <input
@@ -333,20 +350,20 @@ export default function NewSavingsGoalPage() {
                                     placeholder="0"
                                     value={formData.currentAmount}
                                     onChange={(e) => handleChange("currentAmount", e.target.value)}
-                                    className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                    className={cn(GLASS_INPUT, "font-mono")}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between gap-3">
-                        <span className="text-xs text-zinc-600 dark:text-zinc-500">
+                    <div className="px-5 sm:px-6 py-3.5 bg-slate-50/70 dark:bg-white/[0.02] border-t border-slate-200/70 dark:border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+                        <span className="text-xs text-slate-500 dark:text-zinc-400">
                             Max 100 characters for goal title.
                         </span>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                            className="px-5 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-[0_8px_20px_rgba(37,99,235,0.3)] disabled:opacity-50 transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap shrink-0"
                         >
                             {loading ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -359,26 +376,27 @@ export default function NewSavingsGoalPage() {
                 </form>
 
                 {/* Live Goal Card Preview */}
-                <div className="lg:col-span-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
-                    <div className="p-6 space-y-5">
-                        <div className="flex items-center justify-between">
-                            <span className="text-[11px] font-medium uppercase tracking-wider text-zinc-600 dark:text-zinc-500">
-                                Live Preview
+                <div className={cn(GLASS_CARD, "lg:col-span-5 overflow-hidden")}>
+                    <div className="p-5 sm:p-6 space-y-5">
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-zinc-400 inline-flex items-center gap-1.5">
+                                <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+                                <span>Live Preview</span>
                             </span>
-                            <span className="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-[11px] text-zinc-700 dark:text-zinc-400">
+                            <span className="px-2.5 py-0.5 rounded-full bg-slate-100/90 dark:bg-white/[0.08] border border-slate-200/75 dark:border-white/10 text-[11px] font-medium text-slate-700 dark:text-zinc-300">
                                 {formData.category}
                             </span>
                         </div>
 
-                        <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-xl shrink-0">
+                        <div className="flex items-center gap-3.5">
+                            <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/95 to-slate-100/90 dark:from-white/12 dark:to-white/[0.04] border border-white/95 dark:border-white/15 shadow-xs flex items-center justify-center text-xl shrink-0">
                                 {formData.icon}
                             </div>
                             <div className="min-w-0">
-                                <h3 className="text-base font-medium text-zinc-950 dark:text-white truncate">
+                                <h3 className="text-base font-semibold tracking-tight text-slate-950 dark:text-white truncate">
                                     {formData.name.trim() || "Untitled Goal"}
                                 </h3>
-                                <p className="text-xs text-zinc-600 dark:text-zinc-500 flex items-center gap-1 mt-0.5">
+                                <p className="text-xs text-slate-600 dark:text-zinc-400 flex items-center gap-1.5 mt-0.5">
                                     <Calendar className="w-3 h-3" />
                                     <span>
                                         {formData.deadline
@@ -392,31 +410,36 @@ export default function NewSavingsGoalPage() {
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <div className="flex items-baseline justify-between font-mono tabular-nums">
-                                <span className="text-base font-semibold text-zinc-950 dark:text-white">
+                        <div className="space-y-2.5">
+                            <div className="flex flex-wrap items-baseline justify-between gap-2 font-mono tabular-nums">
+                                <span className="text-lg font-bold text-slate-950 dark:text-white">
                                     {formatINR(preview.current)}
                                 </span>
-                                <span className="text-xs text-zinc-600 dark:text-zinc-500">
+                                <span className="text-xs text-slate-500 dark:text-zinc-400">
                                     of {formatINR(preview.target)}
                                 </span>
                             </div>
-                            <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-zinc-900 border border-slate-200/80 dark:border-zinc-800/80 overflow-hidden">
+                            <div className="h-2.5 w-full rounded-full bg-slate-200/75 dark:bg-white/[0.08] border border-white/80 dark:border-white/[0.06] overflow-hidden">
                                 <div
-                                    className="h-full rounded-full bg-zinc-900 dark:bg-white transition-all duration-300"
+                                    className={cn(
+                                        "h-full rounded-full transition-all duration-300",
+                                        preview.progress >= 75
+                                            ? "bg-gradient-to-r from-emerald-500 to-teal-400"
+                                            : "bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500"
+                                    )}
                                     style={{ width: `${preview.progress}%` }}
                                 />
                             </div>
-                            <div className="flex items-center justify-between text-[11px] text-zinc-600 dark:text-zinc-500 tabular-nums">
+                            <div className="flex items-center justify-between text-[11px] text-slate-600 dark:text-zinc-400 tabular-nums">
                                 <span>{preview.progress.toFixed(1)}% funded</span>
                                 <span>{formatINR(preview.remaining)} left</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs">
-                        <span className="text-zinc-600 dark:text-zinc-500">Estimated pace</span>
-                        <span className="font-mono text-zinc-800 dark:text-zinc-300 tabular-nums">
+                    <div className="px-5 sm:px-6 py-3.5 bg-slate-50/70 dark:bg-white/[0.02] border-t border-slate-200/70 dark:border-white/[0.08] flex items-center justify-between text-xs">
+                        <span className="text-slate-600 dark:text-zinc-400">Estimated pace</span>
+                        <span className="font-mono font-bold text-slate-950 dark:text-white tabular-nums">
                             {preview.monthlyPace !== null
                                 ? `${formatINR(preview.monthlyPace)}/mo`
                                 : "Select deadline"}

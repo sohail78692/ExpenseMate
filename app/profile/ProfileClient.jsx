@@ -1146,7 +1146,7 @@ export default function ProfileClient({ initialUser }) {
     return (
         <div
             style={{ "--profile-accent-rgb": activeAccent.rgb }}
-            className="relative w-full pb-16 text-zinc-900 dark:text-zinc-100"
+            className="relative w-full pb-32 lg:pb-16 text-zinc-900 dark:text-zinc-100"
         >
             <style>{profileGlassStyles}</style>
 
@@ -2430,7 +2430,7 @@ export default function ProfileClient({ initialUser }) {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 20 }}
-                        className="fixed bottom-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none"
+                        className="fixed bottom-24 lg:bottom-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none"
                     >
                         <div className="pointer-events-auto profile-glass-shell w-fit max-w-full rounded-full px-4 py-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs shadow-2xl">
                             <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-100 pl-1">

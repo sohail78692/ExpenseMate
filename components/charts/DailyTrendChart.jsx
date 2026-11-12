@@ -12,8 +12,24 @@ import {
     Tooltip,
 } from "recharts";
 import { format, parseISO } from "date-fns";
-import { TrendingUp } from "lucide-react";
+import { CalendarDays, Loader2, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+const RANGE_OPTIONS = [
+    { id: "1w", label: "1W" },
+    { id: "1m", label: "1M" },
+    { id: "3m", label: "3M" },
+    { id: "6m", label: "6M" },
+    { id: "1y", label: "1Y" },
+];
+
+const RANGE_DESCRIPTIONS = {
+    "1w": "Recent 7-day spending velocity",
+    "1m": "Day-by-day spending velocity",
+    "3m": "Rolling 3-month spending trajectory",
+    "6m": "Rolling 6-month spending trajectory",
+    "1y": "Rolling 12-month spending trajectory",
+};
 
 function formatCompactINR(value) {
     if (value >= 100000) return `₹${(value / 100000).toFixed(1)}L`;
@@ -33,7 +49,7 @@ function CustomTrendTooltip({ active, payload, label, mode }) {
 
     let formattedDate = label;
     try {
-        formattedDate = format(parseISO(label), "EEE, MMM d, yyyy");
+        formattedDate = format(parseISO(label), "MMM d, yyyy");
     } catch {
         // Keep raw label if non-ISO
     }
@@ -42,22 +58,17 @@ function CustomTrendTooltip({ active, payload, label, mode }) {
     const value = payload[0]?.value ?? 0;
 
     return (
-        <div className="rounded-xl bg-white/95 dark:bg-zinc-950/95 border border-zinc-200 dark:border-zinc-800 px-3.5 py-2.5 shadow-2xl backdrop-blur-md">
-            <p className="text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mb-1">
+        <div className="rounded-2xl bg-white/95 dark:bg-zinc-900/95 border border-indigo-200/75 dark:border-white/15 px-3.5 py-2.5 shadow-[0_12px_32px_rgba(37,99,235,0.16)] dark:shadow-2xl backdrop-blur-xl">
+            <p className="text-[11px] font-medium text-slate-500 dark:text-zinc-400">
                 {formattedDate}
             </p>
-            <div className="flex items-center justify-between gap-4">
-                <span className="text-xs text-zinc-600 dark:text-zinc-300">
-                    {mode === "cumulative" ? "Cumulative" : "Daily Spend"}
-                </span>
-                <span className="text-xs sm:text-sm font-semibold text-zinc-950 dark:text-white font-mono tabular-nums">
-                    {formatINR(value)}
-                </span>
-            </div>
+            <p className="text-sm font-bold text-slate-950 dark:text-white font-mono tabular-nums mt-0.5">
+                {formatINR(value)}
+            </p>
             {mode === "cumulative" && point && typeof point.amount === "number" && (
-                <div className="flex items-center justify-between gap-4 mt-1 pt-1 border-t border-zinc-200/80 dark:border-zinc-800/80">
-                    <span className="text-[11px] text-zinc-500">Day spend</span>
-                    <span className="text-[11px] text-zinc-700 dark:text-zinc-300 font-mono tabular-nums">
+                <div className="flex items-center justify-between gap-3 mt-1 pt-1 border-t border-slate-200/80 dark:border-white/10 text-[11px]">
+                    <span className="text-slate-500 dark:text-zinc-400">Day spend</span>
+                    <span className="text-slate-700 dark:text-zinc-200 font-mono tabular-nums">
                         {formatINR(point.amount)}
                     </span>
                 </div>
@@ -70,6 +81,9 @@ export default function DailyTrendChart({
     data = [],
     monthLabel = "Current month",
     activeDays = 0,
+    range = "1m",
+    onRangeChange,
+    isLoadingRange = false,
     className,
 }) {
     const [mode, setMode] = useState("daily");
@@ -77,12 +91,12 @@ export default function DailyTrendChart({
     const isLight = resolvedTheme === "light";
 
     const chartColors = {
-        stroke: isLight ? "#0066CC" : "#fafafa",
-        fill: isLight ? "#0066CC" : "#fafafa",
-        grid: isLight ? "#e2e8f0" : "#27272a",
-        axis: isLight ? "#475569" : "#71717a",
-        cursor: isLight ? "#94a3b8" : "#52525b",
-        dotStroke: isLight ? "#ffffff" : "#09090b",
+        stroke: isLight ? "#4F6EF7" : "#60A5FA",
+        fill: isLight ? "#4F6EF7" : "#60A5FA",
+        grid: isLight ? "rgba(148, 163, 184, 0.28)" : "rgba(255, 255, 255, 0.08)",
+        axis: isLight ? "#64748b" : "#94a3b8",
+        cursor: isLight ? "rgba(79, 110, 247, 0.45)" : "rgba(96, 165, 250, 0.45)",
+        dotStroke: isLight ? "#ffffff" : "#090d16",
     };
 
     const chartData = useMemo(() => {
@@ -106,68 +120,116 @@ export default function DailyTrendChart({
     );
 
     const dataKey = mode === "cumulative" ? "cumulative" : "amount";
+    const rangeSubtitle = `${RANGE_DESCRIPTIONS[range] || "Day-by-day spending velocity"} (${monthLabel}).`;
 
     return (
         <div
             className={cn(
-                "rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden flex flex-col transition-colors",
+                "rounded-[24px] bg-white/78 dark:bg-white/[0.04] backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_16px_42px_-12px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.08)] overflow-hidden flex flex-col transition-colors",
                 className
             )}
         >
-            <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div>
-                    <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
-                        Daily Spending Trend
-                    </h3>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
-                        {mode === "cumulative"
-                            ? `Cumulative spend curve across ${monthLabel}.`
-                            : `Day-by-day spending velocity for ${monthLabel}.`}
-                    </p>
+            {/* Card Header */}
+            <div className="p-5 sm:p-6 pb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div className="flex items-start sm:items-center gap-3.5 min-w-0">
+                    <div className="w-10 h-10 rounded-xl bg-blue-500/12 dark:bg-blue-500/15 border border-blue-500/20 dark:border-blue-400/25 flex items-center justify-center text-blue-600 dark:text-sky-400 shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-none">
+                        <TrendingUp className="w-4.5 h-4.5" />
+                    </div>
+                    <div className="min-w-0">
+                        <h3 className="text-base font-semibold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                            <span>Daily Spending Trend</span>
+                            {isLoadingRange && (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600 dark:text-sky-400" />
+                            )}
+                        </h3>
+                        <p className="text-xs text-slate-600 dark:text-zinc-400 mt-0.5 truncate">
+                            {mode === "cumulative"
+                                ? `Cumulative spend curve for ${monthLabel}.`
+                                : rangeSubtitle}
+                        </p>
+                    </div>
                 </div>
 
-                <div
-                    role="group"
-                    aria-label="Chart view mode"
-                    className="inline-flex items-center p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 self-start sm:self-auto"
-                >
-                    {[
-                        { id: "daily", label: "Daily" },
-                        { id: "cumulative", label: "Cumulative" },
-                    ].map((option) => {
-                        const isSelected = mode === option.id;
-                        return (
-                            <button
-                                key={option.id}
-                                type="button"
-                                onClick={() => setMode(option.id)}
-                                aria-pressed={isSelected}
-                                className={cn(
-                                    "px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
-                                    isSelected
-                                        ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-white"
-                                        : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                                )}
-                            >
-                                {option.label}
-                            </button>
-                        );
-                    })}
+                {/* Range & Mode Segmented Controls */}
+                <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    {onRangeChange && (
+                        <div
+                            role="group"
+                            aria-label="Timeframe range"
+                            className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1]"
+                        >
+                            {RANGE_OPTIONS.map((opt) => {
+                                const isSelected = range === opt.id;
+                                return (
+                                    <button
+                                        key={opt.id}
+                                        type="button"
+                                        onClick={() => onRangeChange(opt.id)}
+                                        aria-pressed={isSelected}
+                                        className={cn(
+                                            "px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                                            isSelected
+                                                ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.35)] dark:bg-blue-500"
+                                                : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white"
+                                        )}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    )}
+
+                    <div
+                        role="group"
+                        aria-label="Chart view mode"
+                        className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1]"
+                    >
+                        {[
+                            { id: "daily", label: "Daily" },
+                            { id: "cumulative", label: "Cumulative" },
+                        ].map((option) => {
+                            const isSelected = mode === option.id;
+                            return (
+                                <button
+                                    key={option.id}
+                                    type="button"
+                                    onClick={() => setMode(option.id)}
+                                    aria-pressed={isSelected}
+                                    className={cn(
+                                        "px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                                        isSelected
+                                            ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.35)] dark:bg-blue-500"
+                                            : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white"
+                                    )}
+                                >
+                                    {option.label}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
 
-            <div className="px-4 sm:px-6 pb-4 flex-1">
+            {/* Chart Body */}
+            <div className={cn("px-3 sm:px-6 pb-4 flex-1 transition-opacity duration-200", isLoadingRange && "opacity-60")}>
                 {hasSpending ? (
-                    <div className="h-[290px] w-full">
-                        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+                    <div className="h-[270px] sm:h-[290px] w-full min-w-0">
+                        <ResponsiveContainer
+                            width="100%"
+                            height="100%"
+                            minWidth={0}
+                            minHeight={0}
+                            initialDimension={{ width: 640, height: 290 }}
+                        >
                             <AreaChart
                                 data={chartData}
-                                margin={{ top: 10, right: 10, left: -12, bottom: 0 }}
+                                margin={{ top: 14, right: 12, left: -8, bottom: 0 }}
                             >
                                 <defs>
                                     <linearGradient id="analyticsTrendFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor={chartColors.fill} stopOpacity={isLight ? 0.22 : 0.18} />
-                                        <stop offset="100%" stopColor={chartColors.fill} stopOpacity={0.0} />
+                                        <stop offset="0%" stopColor={chartColors.fill} stopOpacity={isLight ? 0.28 : 0.25} />
+                                        <stop offset="100%" stopColor={chartColors.fill} stopOpacity={0.01} />
                                     </linearGradient>
                                 </defs>
                                 <CartesianGrid
@@ -181,10 +243,13 @@ export default function DailyTrendChart({
                                     fontSize={11}
                                     tickLine={false}
                                     axisLine={false}
-                                    minTickGap={26}
+                                    minTickGap={range === "6m" || range === "1y" ? 42 : 28}
                                     tickFormatter={(val) => {
                                         try {
-                                            return format(parseISO(val), "MMM d");
+                                            return format(
+                                                parseISO(val),
+                                                range === "6m" || range === "1y" ? "MMM yy" : "MMM d"
+                                            );
                                         } catch {
                                             return val;
                                         }
@@ -195,51 +260,55 @@ export default function DailyTrendChart({
                                     fontSize={11}
                                     tickLine={false}
                                     axisLine={false}
-                                    width={56}
+                                    width={54}
                                     tickFormatter={formatCompactINR}
                                 />
                                 <Tooltip
                                     content={<CustomTrendTooltip mode={mode} />}
-                                    cursor={{ stroke: chartColors.cursor, strokeWidth: 1, strokeDasharray: "3 3" }}
+                                    cursor={{ stroke: chartColors.cursor, strokeWidth: 1.5, strokeDasharray: "4 4" }}
                                 />
                                 <Area
                                     type="monotone"
                                     dataKey={dataKey}
                                     stroke={chartColors.stroke}
-                                    strokeWidth={2}
+                                    strokeWidth={2.5}
                                     fill="url(#analyticsTrendFill)"
                                     activeDot={{
-                                        r: 4,
+                                        r: 5,
                                         fill: chartColors.stroke,
                                         stroke: chartColors.dotStroke,
-                                        strokeWidth: 2,
+                                        strokeWidth: 2.5,
                                     }}
                                 />
                             </AreaChart>
                         </ResponsiveContainer>
                     </div>
                 ) : (
-                    <div className="h-[290px] w-full rounded-xl border border-dashed border-zinc-200 dark:border-zinc-800 bg-zinc-50/70 dark:bg-zinc-900/20 flex flex-col items-center justify-center text-center px-6">
-                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mb-3">
+                    <div className="h-[270px] sm:h-[290px] w-full rounded-2xl border border-dashed border-slate-200 dark:border-white/10 bg-slate-50/60 dark:bg-white/[0.02] flex flex-col items-center justify-center text-center px-6">
+                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-white/[0.06] border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-zinc-400 mb-3">
                             <TrendingUp className="w-4 h-4" />
                         </div>
-                        <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                        <p className="text-sm font-medium text-slate-800 dark:text-zinc-200">
                             No spending recorded for {monthLabel}
                         </p>
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 max-w-xs">
+                        <p className="text-xs text-slate-600 dark:text-zinc-400 mt-1 max-w-xs">
                             Log expenses during this period to visualize your daily and cumulative spend curve.
                         </p>
                     </div>
                 )}
             </div>
 
-            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
-                <span>
-                    {activeDays > 0
-                        ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} logged`
-                        : "Waiting for transaction activity"}
+            {/* Footer */}
+            <div className="px-5 sm:px-6 py-3 bg-slate-50/65 dark:bg-white/[0.02] border-t border-slate-200/70 dark:border-white/[0.08] flex items-center justify-between text-xs text-slate-600 dark:text-zinc-400">
+                <span className="inline-flex items-center gap-2">
+                    <CalendarDays className="w-3.5 h-3.5 text-slate-500 dark:text-zinc-400" />
+                    <span>
+                        {activeDays > 0
+                            ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} logged`
+                            : "Waiting for transaction activity"}
+                    </span>
                 </span>
-                <span className="font-mono text-zinc-600 dark:text-zinc-400">
+                <span className="font-medium text-slate-600 dark:text-zinc-400">
                     {mode === "cumulative" ? "Running total" : "Daily total"}
                 </span>
             </div>

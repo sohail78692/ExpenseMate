@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
-import dbConnect from "@/lib/mongodb";
-import Expense from "@/models/Expense";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { startOfMonth, endOfMonth, startOfDay, endOfDay } from "date-fns";
-import mongoose from 'mongoose';
+import { fetchUserAnalyticsData } from "@/lib/data";
 
 export async function GET(request) {
     try {
@@ -13,122 +10,16 @@ export async function GET(request) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        await dbConnect();
-
         const { searchParams } = new URL(request.url);
         const dateParam = searchParams.get("date");
-        const targetDate = dateParam ? new Date(dateParam) : new Date();
+        const rangeParam = searchParams.get("range") || "1m";
+        const parsedDate = dateParam ? new Date(dateParam) : new Date();
+        const targetDate = Number.isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
 
-        // Expand the date range to account for timezone differences
-        // This ensures we capture expenses from users in any timezone
-        // We'll filter/group by local date on the client side
-        const start = startOfMonth(targetDate);
-        start.setDate(start.getDate() - 1); // Go back 1 day to catch early timezone entries
+        const payload = await fetchUserAnalyticsData(session.user.id, targetDate, rangeParam);
 
-        const end = endOfMonth(targetDate);
-        end.setDate(end.getDate() + 1); // Go forward 1 day to catch late timezone entries
-
-        // Run independent aggregations in parallel for better performance
-        const [
-            totalSpentResult,
-            todaySpentResult,
-            categoryStats,
-            dailyTrend,
-            rawExpenses
-        ] = await Promise.all([
-            // 1. Total Spent this Month
-            Expense.aggregate([
-                {
-                    $match: {
-                        user: new mongoose.Types.ObjectId(session.user.id),
-                        date: { $gte: start, $lte: end },
-                    },
-                },
-                {
-                    $group: {
-                        _id: null,
-                        total: { $sum: "$amount" },
-                    },
-                },
-            ]),
-            // 2. Spent Today
-            Expense.aggregate([
-                {
-                    $match: {
-                        user: new mongoose.Types.ObjectId(session.user.id),
-                        date: { $gte: startOfDay(new Date()), $lte: endOfDay(new Date()) },
-                    },
-                },
-                {
-                    $group: {
-                        _id: null,
-                        total: { $sum: "$amount" },
-                    },
-                },
-            ]),
-            // 3. Highest Category
-            Expense.aggregate([
-                {
-                    $match: {
-                        user: new mongoose.Types.ObjectId(session.user.id),
-                        date: { $gte: start, $lte: end },
-                    },
-                },
-                {
-                    $group: {
-                        _id: "$category",
-                        total: { $sum: "$amount" },
-                    },
-                },
-                { $sort: { total: -1 } },
-            ]),
-            // 4. Daily Trend (for Line Chart)
-            Expense.aggregate([
-                {
-                    $match: {
-                        user: new mongoose.Types.ObjectId(session.user.id),
-                        date: { $gte: start, $lte: end },
-                    },
-                },
-                {
-                    $group: {
-                        _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-                        amount: { $sum: "$amount" },
-                    },
-                },
-                { $sort: { _id: 1 } },
-            ]),
-            // 5. Raw Expenses
-            Expense.find({
-                user: new mongoose.Types.ObjectId(session.user.id),
-                date: { $gte: start, $lte: end },
-            }).select("date amount title category").sort({ date: 1 })
-        ]);
-
-        const totalSpent = totalSpentResult.length > 0 ? totalSpentResult[0].total : 0;
-        const todaySpent = todaySpentResult.length > 0 ? todaySpentResult[0].total : 0;
-        const highestCategory = categoryStats.length > 0 ? categoryStats[0] : null;
-        const formattedDailyTrend = dailyTrend.map(item => ({ date: item._id, amount: item.amount }));
-        const categoryBreakdown = categoryStats.map(item => ({ name: item._id, value: item.total }));
-
-        // Convert rawExpenses to plain objects with ISO date strings
-        const serializedRawExpenses = rawExpenses.map(expense => ({
-            date: expense.date.toISOString(),
-            amount: expense.amount,
-            title: expense.title,
-            category: expense.category
-        }));
-
-        return NextResponse.json({
-            totalSpent,
-            todaySpent,
-            highestCategory,
-            dailyTrend: formattedDailyTrend,
-            categoryBreakdown,
-            heatmapData: formattedDailyTrend, // Keep for backward compat if needed, but we'll use rawExpenses
-            rawExpenses: serializedRawExpenses,
-        }, {
-            headers: { "Content-Type": "application/json; charset=utf-8" }
+        return NextResponse.json(payload, {
+            headers: { "Content-Type": "application/json; charset=utf-8" },
         });
     } catch (error) {
         console.error("Analytics Error:", error);

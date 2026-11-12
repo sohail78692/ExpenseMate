@@ -150,7 +150,7 @@ export default function NewBudgetPage() {
     const PreviewIcon = formData.category === "Total" ? Wallet : catStyle.icon;
 
     return (
-        <div className="w-full max-w-4xl mx-auto space-y-8 pb-16 text-zinc-900 dark:text-zinc-100">
+        <div className="w-full space-y-8 pb-8 text-zinc-900 dark:text-zinc-100">
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>

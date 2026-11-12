@@ -34,7 +34,7 @@ export default function LayoutContent({ children }: { children: React.ReactNode 
 
             <div className={`relative z-10 min-h-screen ${isAuthPage ? "w-full" : "flex flex-col"}`}>
                 {!isAuthPage && <Navbar />}
-                <main className={`flex-1 min-w-0 ${!isAuthPage ? "pt-24 sm:pt-28 lg:pt-34 pb-32 sm:pb-24 lg:pb-12 p-3.5 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full" : "w-full min-h-screen"}`}>
+                <main className={`flex-1 min-w-0 ${!isAuthPage ? "pt-22 sm:pt-24 lg:pt-24 pb-28 sm:pb-24 lg:pb-10 px-3.5 sm:px-6 lg:px-8 xl:px-10 w-full" : "w-full min-h-screen"}`}>
                     {children}
                 </main>
             </div>

@@ -120,8 +120,8 @@ export default function Navbar() {
     return (
         <>
             {/* FLOATING TOP NAVBAR ISLAND */}
-            <header className="fixed top-2.5 sm:top-4 inset-x-0 z-50 flex justify-center px-3 sm:px-6 pointer-events-none transition-all">
-                <div className="w-full max-w-6xl rounded-2xl sm:rounded-full px-3.5 sm:px-5 h-[52px] sm:h-[58px] flex items-center justify-between pointer-events-auto transition-all duration-300
+            <header className="fixed top-2.5 sm:top-4 inset-x-0 z-50 flex justify-center px-3.5 sm:px-6 lg:px-8 xl:px-10 pointer-events-none transition-all">
+                <div className="w-full rounded-2xl sm:rounded-full px-3 sm:px-5 h-[52px] sm:h-[58px] flex items-center justify-between gap-2 pointer-events-auto transition-all duration-300
                     shadow-[0_12px_32px_-10px_rgba(0,0,0,0.12),inset_0_1px_1.5px_0_rgba(255,255,255,0.9)] dark:shadow-[0_16px_40px_-10px_rgba(0,0,0,0.7),inset_0_1px_1.5px_0_rgba(255,255,255,0.25)]
                     border border-zinc-200/80 dark:border-white/[0.12]
                     bg-white/85 dark:bg-[#070c18]/75
@@ -129,7 +129,7 @@ export default function Navbar() {
                     {/* Brand Identity */}
                     <Link
                         href="/dashboard"
-                        className="flex items-center gap-2 sm:gap-2.5 shrink-0 group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A84FF] rounded-full"
+                        className="flex items-center gap-2 sm:gap-2.5 shrink-0 whitespace-nowrap group focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0A84FF] rounded-full"
                     >
                         <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-[#0A84FF] via-[#0071E3] to-[#64D2FF] border border-white/35 flex items-center justify-center text-white shadow-md shadow-[#0A84FF]/30 group-hover:scale-105 transition-transform">
                             <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
@@ -140,7 +140,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Navigation Links (Visible on Laptop & Desktop >= 1024px) */}
-                    <nav className="hidden lg:flex items-center gap-1 p-1 rounded-full bg-zinc-100/60 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] backdrop-blur-md shrink-0">
+                    <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1 p-1 rounded-full bg-zinc-100/60 dark:bg-white/[0.03] border border-zinc-200/60 dark:border-white/[0.06] backdrop-blur-md shrink-0">
                         {navItems.map((item) => {
                             const Icon = item.icon;
                             const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
@@ -150,7 +150,7 @@ export default function Navbar() {
                                     key={item.href}
                                     href={item.href}
                                     className={cn(
-                                        "relative flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs xl:text-[13px] font-medium transition-all duration-200 active:scale-95 shrink-0",
+                                        "relative flex items-center gap-1.5 px-2 xl:px-3 py-1.5 rounded-full text-xs xl:text-[13px] font-medium whitespace-nowrap transition-all duration-200 active:scale-95 shrink-0",
                                         isActive
                                             ? "bg-gradient-to-r from-[#0A84FF]/20 via-[#0A84FF]/15 to-[#0A84FF]/25 dark:from-[#0A84FF]/30 dark:via-[#0A84FF]/20 dark:to-[#0A84FF]/35 text-[#0A84FF] dark:text-white border border-[#0A84FF]/40 dark:border-[#0A84FF]/60 shadow-[0_0_18px_rgba(10,132,255,0.2)] dark:shadow-[0_0_18px_rgba(10,132,255,0.4),inset_0_1px_1.5px_rgba(255,255,255,0.5)] font-semibold"
                                             : "text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-200/60 dark:hover:bg-white/[0.07] border border-transparent"
@@ -158,7 +158,7 @@ export default function Navbar() {
                                 >
                                     <Icon
                                         className={cn(
-                                            "w-3.5 h-3.5 transition-colors",
+                                            "w-3.5 h-3.5 transition-colors shrink-0",
                                             isActive ? "text-[#0A84FF] dark:text-[#64D2FF]" : "text-zinc-500 dark:text-zinc-400"
                                         )}
                                     />
@@ -179,7 +179,7 @@ export default function Navbar() {
                                 type="button"
                                 onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                                 className={cn(
-                                    "flex items-center gap-1.5 sm:gap-2 pl-1.5 pr-2.5 sm:pr-3 py-1 sm:py-1.5 rounded-full transition-all cursor-pointer group focus:outline-none backdrop-blur-md min-w-0 max-w-[92px] xs:max-w-[125px] sm:max-w-[170px] md:max-w-[220px]",
+                                    "flex items-center gap-1.5 sm:gap-2 pl-1.5 pr-1.5 min-[360px]:pr-2 sm:pr-3 py-1 sm:py-1.5 rounded-full transition-all cursor-pointer group focus:outline-none backdrop-blur-md min-w-0 max-w-[78px] xs:max-w-[125px] sm:max-w-[170px] md:max-w-[200px] lg:max-w-[120px] xl:max-w-[220px]",
                                     profileMenuOpen
                                         ? "bg-[#0A84FF]/10 dark:bg-white/[0.12] border border-[#0A84FF]/40 dark:border-[#0A84FF]/60 shadow-[0_0_18px_rgba(10,132,255,0.2)] dark:shadow-[0_0_18px_rgba(10,132,255,0.45),inset_0_1px_1.5px_rgba(255,255,255,0.4)]"
                                         : "bg-zinc-100/80 dark:bg-white/[0.04] hover:bg-zinc-200/80 dark:hover:bg-white/[0.09] border border-zinc-200/80 dark:border-white/[0.12] hover:border-zinc-300 dark:hover:border-white/30 shadow-sm dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.18),0_4px_16px_rgba(0,0,0,0.3)] hover:scale-[1.02] active:scale-95"
@@ -194,7 +194,7 @@ export default function Navbar() {
                                         userInitials
                                     )}
                                 </div>
-                                <span className="text-xs sm:text-[13px] font-semibold text-zinc-800 dark:text-white tracking-tight group-hover:text-zinc-600 dark:group-hover:text-zinc-100 truncate min-w-0">
+                                <span className="hidden min-[360px]:inline text-xs sm:text-[13px] font-semibold text-zinc-800 dark:text-white tracking-tight group-hover:text-zinc-600 dark:group-hover:text-zinc-100 truncate min-w-0">
                                     {userName}
                                 </span>
                             </button>
@@ -268,7 +268,7 @@ export default function Navbar() {
             </header>
 
             {/* Mobile / Tablet Bottom Floating Glass Dock (Visible on screens < 1024px) */}
-            <nav className="glass-dock-panel lg:hidden fixed bottom-2.5 sm:bottom-4 inset-x-2.5 sm:inset-x-4 z-50 rounded-2xl sm:rounded-3xl px-1 sm:px-2 py-1 max-w-md mx-auto transition-colors duration-300">
+            <nav className="glass-dock-panel lg:hidden fixed bottom-2.5 sm:bottom-4 inset-x-2.5 sm:inset-x-4 z-50 rounded-2xl sm:rounded-3xl px-1 sm:px-2 py-1 max-w-md sm:max-w-lg mx-auto transition-colors duration-300">
                 <div className="grid grid-cols-6 items-center w-full">
                     {navItems.map((item) => {
                         const Icon = item.icon;

@@ -173,6 +173,9 @@ export default function Navbar() {
 
                     {/* Right Action Cluster */}
                     <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 min-w-0">
+                        {/* Theme Toggle (Dark/Light Mode Switch — positioned left of profile name) */}
+                        {status !== "unauthenticated" && <ThemeToggle />}
+
                         {/* Pure Liquid Glass Profile Capsule showing Full Name */}
                         <div className="relative min-w-0 shrink" ref={profileRef}>
                             <button
@@ -249,9 +252,6 @@ export default function Navbar() {
                                 </div>
                             )}
                         </div>
-
-                        {/* Theme Toggle (Dark/Light Mode Switch — visible when authenticated) */}
-                        {status !== "unauthenticated" && <ThemeToggle />}
 
                         {/* Sign Out Quick Button (Always visible across all devices) */}
                         <button

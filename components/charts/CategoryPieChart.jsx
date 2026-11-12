@@ -63,13 +63,13 @@ export default function CategoryPieChart({ data = [], className }) {
     return (
         <div
             className={cn(
-                "rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden flex flex-col transition-colors",
+                "rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden flex flex-col transition-colors",
                 className
             )}
         >
             <div className="p-6 pb-2">
                 <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Spending by Category</h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                     Distribution across your active expense categories.
                 </p>
             </div>
@@ -113,13 +113,13 @@ export default function CategoryPieChart({ data = [], className }) {
 
                             {/* Centered Donut Readout */}
                             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                                <span className="text-[11px] text-zinc-500 dark:text-zinc-400 truncate max-w-[110px]">
+                                <span className="text-[11px] text-zinc-600 dark:text-zinc-400 truncate max-w-[110px]">
                                     {activeSlice ? activeSlice.name : "Total Spend"}
                                 </span>
                                 <span className="text-sm sm:text-base font-semibold text-zinc-950 dark:text-white font-mono tabular-nums mt-0.5">
                                     {formatINR(activeSlice ? activeSlice.value : total)}
                                 </span>
-                                <span className="text-[10px] text-zinc-500 mt-0.5">
+                                <span className="text-[10px] text-zinc-600 dark:text-zinc-400 mt-0.5">
                                     {activePercent
                                         ? `${activePercent}% share`
                                         : `${data.length} ${data.length === 1 ? "category" : "categories"}`}
@@ -128,7 +128,7 @@ export default function CategoryPieChart({ data = [], className }) {
                         </div>
 
                         {/* Clean Monochromatic Legend List */}
-                        <div className="space-y-2 pt-2 border-t border-zinc-200/80 dark:border-zinc-800/80 max-h-[132px] overflow-y-auto pr-1">
+                        <div className="space-y-2 pt-2 border-t border-slate-200/80 dark:border-zinc-800/80 max-h-[132px] overflow-y-auto pr-1">
                             {data.slice(0, 6).map((entry, index) => {
                                 const { hex } = getCategoryStyles(entry.name);
                                 const pct = total > 0 ? ((entry.value / total) * 100).toFixed(0) : "0";
@@ -141,8 +141,8 @@ export default function CategoryPieChart({ data = [], className }) {
                                         className={cn(
                                             "flex items-center justify-between text-xs py-1 px-2 rounded-lg transition-colors cursor-default",
                                             isActive
-                                                ? "bg-zinc-100 text-zinc-950 dark:bg-zinc-900 dark:text-white"
-                                                : "text-zinc-600 dark:text-zinc-300"
+                                                ? "bg-slate-100 text-zinc-950 dark:bg-zinc-900 dark:text-white"
+                                                : "text-zinc-700 dark:text-zinc-300"
                                         )}
                                     >
                                         <div className="flex items-center gap-2 min-w-0">
@@ -153,8 +153,8 @@ export default function CategoryPieChart({ data = [], className }) {
                                             <span className="truncate">{entry.name}</span>
                                         </div>
                                         <div className="flex items-center gap-2.5 shrink-0 font-mono tabular-nums">
-                                            <span className="text-zinc-500 text-[11px]">{pct}%</span>
-                                            <span className="text-zinc-800 dark:text-zinc-200">{formatINR(entry.value)}</span>
+                                            <span className="text-zinc-600 dark:text-zinc-400 text-[11px]">{pct}%</span>
+                                            <span className="text-zinc-900 dark:text-zinc-200 font-medium dark:font-normal">{formatINR(entry.value)}</span>
                                         </div>
                                     </div>
                                 );

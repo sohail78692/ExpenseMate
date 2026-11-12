@@ -330,8 +330,8 @@ export default function AnalyticsClient({ initialData }) {
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
+                    <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400 mb-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
                             <span
                                 className={cn(
                                     "w-1.5 h-1.5 rounded-full",
@@ -340,7 +340,7 @@ export default function AnalyticsClient({ initialData }) {
                             />
                             {isCurrentMonth ? "Live Month" : "Archive"}
                         </span>
-                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="text-zinc-600 dark:text-zinc-600">•</span>
                         <span className="font-mono text-zinc-600 dark:text-zinc-300">{monthLabel}</span>
                     </div>
                     <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
@@ -354,7 +354,7 @@ export default function AnalyticsClient({ initialData }) {
                 <div className="flex flex-wrap items-center gap-2 shrink-0">
                     {/* Month Switcher */}
                     <div
-                        className="inline-flex items-center rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-0.5"
+                        className="inline-flex items-center rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 p-0.5"
                         role="group"
                         aria-label="Month navigation"
                     >
@@ -363,7 +363,7 @@ export default function AnalyticsClient({ initialData }) {
                             onClick={() => handleMonthChange(subMonths(selectedMonth, 1))}
                             disabled={isLoadingMonth}
                             aria-label="Previous month"
-                            className="p-1.5 rounded-md text-zinc-500 hover:text-zinc-950 hover:bg-white dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                            className="p-1.5 rounded-md text-zinc-600 hover:text-zinc-950 hover:bg-white dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                         >
                             <ChevronLeft className="w-3.5 h-3.5" />
                         </button>
@@ -380,7 +380,7 @@ export default function AnalyticsClient({ initialData }) {
                                     : "text-zinc-700 hover:text-zinc-950 dark:text-zinc-200 dark:hover:text-white cursor-pointer"
                             )}
                         >
-                            {isLoadingMonth && <Loader2 className="w-3 h-3 animate-spin text-zinc-500 dark:text-zinc-400" />}
+                            {isLoadingMonth && <Loader2 className="w-3 h-3 animate-spin text-zinc-600 dark:text-zinc-400" />}
                             <span>{shortMonthLabel}</span>
                         </button>
 
@@ -389,7 +389,7 @@ export default function AnalyticsClient({ initialData }) {
                             onClick={() => handleMonthChange(addMonths(selectedMonth, 1))}
                             disabled={isCurrentMonth || isLoadingMonth}
                             aria-label="Next month"
-                            className="p-1.5 rounded-md text-zinc-500 hover:text-zinc-950 hover:bg-white dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
+                            className="p-1.5 rounded-md text-zinc-600 hover:text-zinc-950 hover:bg-white dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500"
                         >
                             <ChevronRight className="w-3.5 h-3.5" />
                         </button>
@@ -425,7 +425,7 @@ export default function AnalyticsClient({ initialData }) {
                             type="button"
                             onClick={() => setErrorMessage("")}
                             aria-label="Dismiss error"
-                            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-1 cursor-pointer"
+                            className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors p-1 cursor-pointer"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -440,10 +440,10 @@ export default function AnalyticsClient({ initialData }) {
                     isLoadingMonth && "opacity-60 pointer-events-none"
                 )}
             >
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Monthly Total</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Monthly Total</span>
+                        <div className="w-7 h-7 rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
                             <IndianRupee className="w-3.5 h-3.5" />
                         </div>
                     </div>
@@ -451,7 +451,7 @@ export default function AnalyticsClient({ initialData }) {
                         <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(analytics.totalSpent)}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1">
                             {analytics.monthExpenses.length}{" "}
                             {analytics.monthExpenses.length === 1 ? "transaction" : "transactions"} in{" "}
                             {shortMonthLabel}
@@ -459,10 +459,10 @@ export default function AnalyticsClient({ initialData }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Daily Average</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Daily Average</span>
+                        <div className="w-7 h-7 rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
                             <TrendingUp className="w-3.5 h-3.5" />
                         </div>
                     </div>
@@ -470,16 +470,16 @@ export default function AnalyticsClient({ initialData }) {
                         <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(analytics.avgPerActiveDay)}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 tabular-nums">
                             Per active day · {formatINR(analytics.avgPerElapsedDay)} overall
                         </p>
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Peak Spending Day</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Peak Spending Day</span>
+                        <div className="w-7 h-7 rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
                             <Flame className="w-3.5 h-3.5" />
                         </div>
                     </div>
@@ -487,7 +487,7 @@ export default function AnalyticsClient({ initialData }) {
                         <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {analytics.highestDay ? formatINR(analytics.highestDay.amount) : "₹0.00"}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1">
                             {analytics.highestDay
                                 ? format(parseISO(analytics.highestDay.date), "EEE, MMM d, yyyy")
                                 : "No activity recorded"}
@@ -495,10 +495,10 @@ export default function AnalyticsClient({ initialData }) {
                     </div>
                 </div>
 
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Top Category</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Top Category</span>
+                        <div className="w-7 h-7 rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
                             <Layers className="w-3.5 h-3.5" />
                         </div>
                     </div>
@@ -506,7 +506,7 @@ export default function AnalyticsClient({ initialData }) {
                         <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white truncate">
                             {analytics.topCategory ? analytics.topCategory.name : "—"}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 tabular-nums">
                             {analytics.topCategory && topCategoryShare
                                 ? `${topCategoryShare}% share · ${formatINR(analytics.topCategory.value)}`
                                 : "No categories active"}
@@ -539,7 +539,7 @@ export default function AnalyticsClient({ initialData }) {
                                 "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-zinc-950 dark:focus-visible:text-white",
                                 isActive
                                     ? "text-zinc-950 dark:text-white"
-                                    : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                    : "text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                             )}
                         >
                             <Icon className="w-4 h-4" />
@@ -550,7 +550,7 @@ export default function AnalyticsClient({ initialData }) {
                                         "px-1.5 py-0.5 rounded-md text-[10px] font-mono tabular-nums",
                                         isActive
                                             ? "bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-200"
-                                            : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500"
+                                            : "bg-zinc-100 text-zinc-600 dark:bg-zinc-900 dark:text-zinc-500"
                                     )}
                                 >
                                     {tab.count}
@@ -613,12 +613,12 @@ export default function AnalyticsClient({ initialData }) {
                                 />
 
                                 {/* Spending Insights Card */}
-                                <div className="lg:col-span-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                                <div className="lg:col-span-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                                     <div className="p-6 pb-4">
                                         <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                             Spending Insights
                                         </h3>
-                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                             Automated highlights derived from your {shortMonthLabel} ledger.
                                         </p>
                                     </div>
@@ -629,7 +629,7 @@ export default function AnalyticsClient({ initialData }) {
                                                 <p className="font-medium text-zinc-900 dark:text-zinc-200">
                                                     Dominant Category
                                                 </p>
-                                                <p className="text-zinc-500 text-[11px] mt-0.5">
+                                                <p className="text-zinc-600 dark:text-zinc-500 text-[11px] mt-0.5">
                                                     {analytics.topCategory
                                                         ? `${analytics.topCategory.name} drives ${topCategoryShare}% of monthly spend`
                                                         : "No category expenses logged yet"}
@@ -648,7 +648,7 @@ export default function AnalyticsClient({ initialData }) {
                                                     <p className="font-medium text-zinc-900 dark:text-zinc-200">
                                                         Today vs. Daily Avg
                                                     </p>
-                                                    <p className="text-zinc-500 text-[11px] mt-0.5">
+                                                    <p className="text-zinc-600 dark:text-zinc-500 text-[11px] mt-0.5">
                                                         {analytics.avgPerActiveDay > 0
                                                             ? todaySpent > analytics.avgPerActiveDay
                                                                 ? `${((todaySpent / analytics.avgPerActiveDay - 1) * 100).toFixed(0)}% above your active-day avg`
@@ -675,7 +675,7 @@ export default function AnalyticsClient({ initialData }) {
                                                 <p className="font-medium text-zinc-900 dark:text-zinc-200">
                                                     Heaviest Weekday
                                                 </p>
-                                                <p className="text-zinc-500 text-[11px] mt-0.5">
+                                                <p className="text-zinc-600 dark:text-zinc-500 text-[11px] mt-0.5">
                                                     {analytics.highestWeekday
                                                         ? `${analytics.highestWeekday.day}s account for the highest volume (${analytics.highestWeekday.count} txns)`
                                                         : "No weekday pattern yet"}
@@ -693,7 +693,7 @@ export default function AnalyticsClient({ initialData }) {
                                                 <p className="font-medium text-zinc-900 dark:text-zinc-200">
                                                     Tracking Coverage
                                                 </p>
-                                                <p className="text-zinc-500 text-[11px] mt-0.5">
+                                                <p className="text-zinc-600 dark:text-zinc-500 text-[11px] mt-0.5">
                                                     {analytics.activeDaysTrend.length} of{" "}
                                                     {analytics.elapsedDays} elapsed days had logged spend
                                                 </p>
@@ -704,7 +704,7 @@ export default function AnalyticsClient({ initialData }) {
                                         </div>
                                     </div>
 
-                                    <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                    <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                         <span>Need to log a missed expense?</span>
                                         <Link
                                             href="/expenses"
@@ -732,17 +732,17 @@ export default function AnalyticsClient({ initialData }) {
                             transition={{ duration: 0.15 }}
                             className="space-y-6"
                         >
-                            <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                            <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                                 <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                                     <div>
                                         <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                             Category Breakdown
                                         </h3>
-                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                             Ranked spending share across all categories for {monthLabel}. Select a category to inspect its transactions.
                                         </p>
                                     </div>
-                                    <span className="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 font-mono tabular-nums self-start sm:self-auto">
+                                    <span className="px-2.5 py-1 rounded-md bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 font-mono tabular-nums self-start sm:self-auto">
                                         {formatINR(analytics.totalSpent)}
                                     </span>
                                 </div>
@@ -786,11 +786,11 @@ export default function AnalyticsClient({ initialData }) {
                                                                     <span className="text-sm font-medium text-zinc-950 dark:text-white truncate">
                                                                         {category.name}
                                                                     </span>
-                                                                    <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 px-1.5 py-0.5 rounded">
+                                                                    <span className="text-[11px] font-mono text-zinc-600 dark:text-zinc-400 bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 px-1.5 py-0.5 rounded">
                                                                         {share.toFixed(1)}%
                                                                     </span>
                                                                 </div>
-                                                                <p className="text-[11px] text-zinc-500 mt-0.5 tabular-nums">
+                                                                <p className="text-[11px] text-zinc-600 dark:text-zinc-500 mt-0.5 tabular-nums">
                                                                     {category.count > 0
                                                                         ? `${category.count} ${category.count === 1 ? "expense" : "expenses"} · avg ${formatINR(avgTxn)}`
                                                                         : "Aggregated category total"}
@@ -802,7 +802,7 @@ export default function AnalyticsClient({ initialData }) {
                                                             <span className="text-sm font-semibold font-mono text-zinc-950 dark:text-white tabular-nums">
                                                                 {formatINR(category.value)}
                                                             </span>
-                                                            <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400 group-hover:text-zinc-700 dark:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" />
+                                                            <ArrowUpRight className="w-3.5 h-3.5 text-zinc-600 group-hover:text-zinc-950 dark:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors" />
                                                         </div>
                                                     </div>
 
@@ -820,12 +820,12 @@ export default function AnalyticsClient({ initialData }) {
                                         })}
                                     </div>
                                 ) : (
-                                    <div className="p-10 text-center text-xs text-zinc-500">
+                                    <div className="p-10 text-center text-xs text-zinc-600 dark:text-zinc-500">
                                         No category data recorded for {monthLabel}.
                                     </div>
                                 )}
 
-                                <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                     <span>Click any category row to filter its transactions</span>
                                     <span className="font-mono text-zinc-600 dark:text-zinc-400">
                                         {analytics.categoryBreakdown.length} categories
@@ -849,12 +849,12 @@ export default function AnalyticsClient({ initialData }) {
                             className="space-y-6"
                         >
                             {/* Weekday Spend Distribution */}
-                            <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                            <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                                 <div className="p-6 pb-4">
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                         Weekday Spend Distribution
                                     </h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Compare how your spending distributes across days of the week in {monthLabel}.
                                     </p>
                                 </div>
@@ -877,7 +877,7 @@ export default function AnalyticsClient({ initialData }) {
                                                             key={w.day}
                                                             className="flex flex-col items-center gap-2"
                                                         >
-                                                            <span className="text-[10px] font-mono text-zinc-500 dark:text-zinc-400 tabular-nums truncate max-w-full">
+                                                            <span className="text-[10px] font-mono text-zinc-600 dark:text-zinc-400 tabular-nums truncate max-w-full">
                                                                 {w.amount > 0
                                                                     ? `₹${w.amount >= 1000 ? `${(w.amount / 1000).toFixed(1)}k` : Math.round(w.amount)}`
                                                                     : "—"}
@@ -903,7 +903,7 @@ export default function AnalyticsClient({ initialData }) {
                                                                     "text-[11px] font-medium",
                                                                     isPeak
                                                                         ? "text-zinc-950 dark:text-white"
-                                                                        : "text-zinc-500"
+                                                                        : "text-zinc-600 dark:text-zinc-500"
                                                                 )}
                                                             >
                                                                 {w.day}
@@ -918,20 +918,20 @@ export default function AnalyticsClient({ initialData }) {
                             </div>
 
                             {/* Monthly Transactions Ledger */}
-                            <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                            <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                                 <div className="p-6 pb-4 space-y-4">
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         <div>
                                             <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                                                 Monthly Expense Ledger
                                             </h3>
-                                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                            <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                                 Filter and rank every transaction included in {monthLabel}.
                                             </p>
                                         </div>
 
                                         {/* Sort Toggle */}
-                                        <div className="inline-flex items-center p-1 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 self-start sm:self-auto">
+                                        <div className="inline-flex items-center p-1 rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 self-start sm:self-auto">
                                             {[
                                                 { id: "amount", label: "Highest" },
                                                 { id: "recent", label: "Recent" },
@@ -947,7 +947,7 @@ export default function AnalyticsClient({ initialData }) {
                                                             "px-2.5 py-1 rounded-md text-xs font-medium transition-colors cursor-pointer",
                                                             active
                                                                 ? "bg-white text-zinc-950 shadow-xs dark:bg-zinc-800 dark:text-white"
-                                                                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                                                : "text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
                                                         )}
                                                     >
                                                         {opt.label}
@@ -960,14 +960,14 @@ export default function AnalyticsClient({ initialData }) {
                                     {/* Search & Category Filter Row */}
                                     <div className="flex flex-col sm:flex-row gap-3">
                                         <div className="relative flex-1 max-w-sm">
-                                            <Search className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                            <Search className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                                             <input
                                                 type="text"
                                                 value={searchQuery}
                                                 onChange={(e) => setSearchQuery(e.target.value)}
                                                 placeholder="Search title or category..."
                                                 aria-label="Search monthly transactions"
-                                                className="w-full h-9 pl-8 pr-3 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                                className="w-full h-9 pl-8 pr-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
                                             />
                                         </div>
 
@@ -1035,7 +1035,7 @@ export default function AnalyticsClient({ initialData }) {
                                                             <p className="text-xs sm:text-sm font-medium text-zinc-900 dark:text-white truncate">
                                                                 {expense.title}
                                                             </p>
-                                                            <div className="flex items-center gap-2 text-[11px] text-zinc-500 mt-0.5">
+                                                            <div className="flex items-center gap-2 text-[11px] text-zinc-600 dark:text-zinc-500 mt-0.5">
                                                                 <span>{expense.category}</span>
                                                                 <span>•</span>
                                                                 <span className="inline-flex items-center gap-1">
@@ -1061,7 +1061,7 @@ export default function AnalyticsClient({ initialData }) {
                                         <p className="text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-300">
                                             No matching transactions
                                         </p>
-                                        <p className="text-xs text-zinc-500">
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-500">
                                             {analytics.monthExpenses.length === 0
                                                 ? `No expenses logged in ${monthLabel}.`
                                                 : "Try clearing your search or category filter."}
@@ -1069,7 +1069,7 @@ export default function AnalyticsClient({ initialData }) {
                                     </div>
                                 )}
 
-                                <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                     <span>
                                         Showing {filteredExpenses.length} of{" "}
                                         {analytics.monthExpenses.length} transactions

@@ -233,12 +233,12 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1.5">
-                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
+                    <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400 mb-1.5">
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 font-medium">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                             Live Workspace
                         </span>
-                        <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                        <span className="text-zinc-600 dark:text-zinc-600">•</span>
                         <span className="font-mono text-zinc-600 dark:text-zinc-300" suppressHydrationWarning>
                             {format(now, "EEE, MMM d, yyyy")}
                         </span>
@@ -290,7 +290,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                             type="button"
                             onClick={() => setToastMessage("")}
                             aria-label="Dismiss notification"
-                            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-1 cursor-pointer"
+                            className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors p-1 cursor-pointer"
                         >
                             <X className="w-4 h-4" />
                         </button>
@@ -301,9 +301,9 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
             {/* Top 4 KPI Summary Strip */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* 1. Month Spend */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
                             {currentMonthName} Spend
                         </span>
                         {comparison && comparison.last > 0 ? (
@@ -323,7 +323,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 {comparisonNum > 0 ? `+${comparisonNum}%` : `${comparisonNum}%`}
                             </span>
                         ) : (
-                            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400">
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400">
                                 Active
                             </span>
                         )}
@@ -332,16 +332,16 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                         <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(totalSpent)}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 tabular-nums">
                             Today: {formatINR(todaySpent)}
                         </p>
                     </div>
                 </div>
 
                 {/* 2. Budget Remaining */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Budget Status</span>
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Budget Status</span>
                         {budgetPct !== null ? (
                             <span
                                 className={cn(
@@ -377,7 +377,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                         >
                             {totalBudget > 0 ? formatINR(remainingBudget) : "₹0.00"}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 tabular-nums">
                             {totalBudget > 0
                                 ? `Remaining of ${formatINR(totalBudget)} cap`
                                 : "No monthly budget limit set"}
@@ -386,9 +386,9 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                 </div>
 
                 {/* 3. Primary Savings Goal / Top Category */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
                             {primaryGoal ? "Primary Goal" : "Top Category"}
                         </span>
                         {primaryGoal ? (
@@ -396,11 +396,11 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 {primaryGoal.progress}%
                             </span>
                         ) : highestCategory ? (
-                            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
+                            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300">
                                 Leading
                             </span>
                         ) : (
-                            <span className="text-[11px] text-zinc-500">—</span>
+                            <span className="text-[11px] text-zinc-600 dark:text-zinc-500">—</span>
                         )}
                     </div>
                     <div>
@@ -411,7 +411,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 ? highestCategory._id
                                 : "No Activity"}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 tabular-nums truncate">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 tabular-nums truncate">
                             {primaryGoal
                                 ? `${formatINR(primaryGoal.currentAmount)} of ${formatINR(primaryGoal.targetAmount)}`
                                 : highestCategory
@@ -422,10 +422,10 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                 </div>
 
                 {/* 4. Daily Velocity */}
-                <div className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
+                <div className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col justify-between gap-3 transition-colors">
                     <div className="flex items-center justify-between gap-2">
-                        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Daily Pace</span>
-                        <div className="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400">
+                        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Daily Pace</span>
+                        <div className="w-7 h-7 rounded-lg bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400">
                             <Gauge className="w-3.5 h-3.5" />
                         </div>
                     </div>
@@ -433,7 +433,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                         <p className="text-2xl font-semibold tracking-tight text-zinc-950 dark:text-white font-mono tabular-nums">
                             {formatINR(Number(insights?.averagePerDay || 0))}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 tabular-nums">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-500 mt-1 tabular-nums">
                             {insights?.totalTransactions || 0}{" "}
                             {(insights?.totalTransactions || 0) === 1
                                 ? "transaction"
@@ -452,7 +452,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                         return (
                             <div
                                 key={`${rec.type}-${index}`}
-                                className="p-4 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex items-start gap-3.5 transition-colors"
+                                className="p-4 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex items-start gap-3.5 transition-colors"
                             >
                                 <div
                                     className={cn(
@@ -501,7 +501,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                     "relative pb-3 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:text-zinc-950 dark:focus-visible:text-white",
                                     isActive
                                         ? "text-zinc-950 dark:text-white"
-                                        : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                        : "text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                                 )}
                             >
                                 <Icon className="w-4 h-4" />
@@ -512,7 +512,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                             "px-1.5 py-0.5 rounded-md text-[10px] font-mono tabular-nums",
                                             isActive
                                                 ? "bg-zinc-200 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-200"
-                                                : "bg-zinc-100 text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500"
+                                                : "bg-zinc-100 text-zinc-600 dark:bg-zinc-900 dark:text-zinc-500"
                                         )}
                                     >
                                         {tab.count}
@@ -542,14 +542,14 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -6 }}
                             transition={{ duration: 0.15 }}
-                            className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden"
+                            className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden"
                         >
                             <div className="p-6 pb-4 flex items-center justify-between gap-3">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-900 dark:text-white">
                                         Recent Transactions
                                     </h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Your latest 5 entries logged in ExpenseMate.
                                     </p>
                                 </div>
@@ -584,7 +584,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                                         <p className="text-xs sm:text-sm font-medium text-zinc-900 dark:text-white truncate">
                                                             {expense.title}
                                                         </p>
-                                                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-500 mt-0.5">
+                                                        <div className="flex flex-wrap items-center gap-2 text-[11px] text-zinc-600 dark:text-zinc-500 mt-0.5">
                                                             <span className="inline-flex items-center gap-1">
                                                                 <span
                                                                     className="w-1.5 h-1.5 rounded-full"
@@ -612,14 +612,14 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                             ) : (
                                 <div className="px-6 py-12 text-center space-y-3">
-                                    <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mx-auto">
+                                    <div className="w-10 h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400 mx-auto">
                                         <CreditCard className="w-4 h-4" />
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-200">
                                             No transactions recorded yet
                                         </p>
-                                        <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-500 max-w-sm mx-auto">
                                             Add your first expense to populate your feed, budgets, and activity heatmap.
                                         </p>
                                     </div>
@@ -634,7 +634,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                             )}
 
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                 <span>Showing latest {recentExpenses.length} transactions</span>
                                 <Link
                                     href="/expenses"
@@ -658,14 +658,14 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -6 }}
                             transition={{ duration: 0.15 }}
-                            className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden"
+                            className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden"
                         >
                             <div className="p-6 pb-4 flex items-center justify-between gap-3">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-900 dark:text-white">
                                         Monthly Budget Guardrails
                                     </h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Live progress against your configured {currentMonthName} limits.
                                     </p>
                                 </div>
@@ -726,7 +726,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                                         )}
                                                     </div>
 
-                                                    <span className="font-mono text-zinc-500 dark:text-zinc-400 tabular-nums shrink-0">
+                                                    <span className="font-mono text-zinc-600 dark:text-zinc-400 tabular-nums shrink-0">
                                                         <span className="text-zinc-900 dark:text-white font-semibold">
                                                             {formatINR(b.spent)}
                                                         </span>{" "}
@@ -761,14 +761,14 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                             ) : (
                                 <div className="px-6 py-12 text-center space-y-3">
-                                    <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-500 dark:text-zinc-400 mx-auto">
+                                    <div className="w-10 h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-400 mx-auto">
                                         <Wallet className="w-4 h-4" />
                                     </div>
                                     <div className="space-y-1">
                                         <p className="text-sm font-medium text-zinc-900 dark:text-zinc-200">
                                             No monthly budgets configured
                                         </p>
-                                        <p className="text-xs text-zinc-500 max-w-sm mx-auto">
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-500 max-w-sm mx-auto">
                                             Set spending caps for categories like Food, Transport, or Overall Monthly Total.
                                         </p>
                                     </div>
@@ -782,7 +782,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                             )}
 
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                 <span>{budgets.length} active budget rules</span>
                                 <Link
                                     href="/budgets"
@@ -806,19 +806,19 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -6 }}
                             transition={{ duration: 0.15 }}
-                            className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden"
+                            className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden"
                         >
                             <div className="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-900 dark:text-white">
                                         Daily Spending Intensity
                                     </h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         {currentMonthName} {currentYear} heatmap scaled relative to your peak spending day.
                                     </p>
                                 </div>
 
-                                <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 shrink-0">
+                                <div className="flex items-center gap-1.5 text-[11px] text-zinc-600 dark:text-zinc-500 shrink-0">
                                     <span>Low</span>
                                     <span className="w-3 h-3 rounded bg-zinc-100 border border-zinc-200 dark:bg-zinc-900/80 dark:border-zinc-800" />
                                     <span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 dark:bg-emerald-950/70 dark:border-emerald-800/70" />
@@ -830,7 +830,7 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                             </div>
 
                             <div className="px-6 pb-6 space-y-2">
-                                <div className="grid grid-cols-7 gap-1.5 sm:gap-2 text-center text-[11px] text-zinc-500 font-medium">
+                                <div className="grid grid-cols-7 gap-1.5 sm:gap-2 text-center text-[11px] text-zinc-600 dark:text-zinc-500 font-medium">
                                     {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                                         <div key={day} className="pb-1">
                                             {day}
@@ -847,22 +847,22 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                         const dayNum = i + 1;
                                         const spentOnDay = spendingMap[dayNum] || 0;
                                         let tileClass =
-                                            "bg-zinc-100/80 border-zinc-200/90 text-zinc-500 dark:bg-zinc-900/60 dark:border-zinc-800/70 dark:text-zinc-500";
+                                            "bg-slate-100/90 border-slate-200/90 text-slate-700 dark:bg-zinc-900/60 dark:border-zinc-800/70 dark:text-zinc-500";
 
                                         if (spentOnDay > 0 && maxDailySpend > 0) {
                                             const ratio = spentOnDay / maxDailySpend;
                                             if (ratio <= 0.25) {
                                                 tileClass =
-                                                    "bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-950/60 dark:border-emerald-800/60 dark:text-emerald-300";
+                                                    "bg-emerald-100/85 border-emerald-300/90 text-emerald-900 dark:bg-emerald-950/60 dark:border-emerald-800/60 dark:text-emerald-300";
                                             } else if (ratio <= 0.5) {
                                                 tileClass =
-                                                    "bg-amber-50 border-amber-200 text-amber-800 dark:bg-amber-950/60 dark:border-amber-800/60 dark:text-amber-300";
+                                                    "bg-amber-100/85 border-amber-300/90 text-amber-900 dark:bg-amber-950/60 dark:border-amber-800/60 dark:text-amber-300";
                                             } else if (ratio <= 0.75) {
                                                 tileClass =
-                                                    "bg-orange-50 border-orange-200 text-orange-800 dark:bg-orange-950/70 dark:border-orange-700/70 dark:text-orange-300";
+                                                    "bg-orange-100/85 border-orange-300/90 text-orange-900 dark:bg-orange-950/70 dark:border-orange-700/70 dark:text-orange-300";
                                             } else {
                                                 tileClass =
-                                                    "bg-red-50 border-red-200 text-red-800 dark:bg-red-950/80 dark:border-red-700/80 dark:text-red-200";
+                                                    "bg-red-100/90 border-red-300/90 text-red-900 dark:bg-red-950/80 dark:border-red-700/80 dark:text-red-200";
                                             }
                                         }
 
@@ -887,16 +887,16 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                             </div>
 
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                 <span>
                                     Peak day:{" "}
-                                    <span className="font-mono text-zinc-800 dark:text-zinc-300 tabular-nums">
+                                    <span className="font-mono text-zinc-900 dark:text-zinc-300 tabular-nums">
                                         {formatINR(maxDailySpend)}
                                     </span>
                                 </span>
                                 <Link
                                     href="/analytics"
-                                    className="inline-flex items-center gap-1 text-zinc-700 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white font-medium transition-colors"
+                                    className="inline-flex items-center gap-1 text-zinc-800 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white font-medium transition-colors"
                                 >
                                     <span>Open interactive analytics</span>
                                     <ArrowUpRight className="w-3.5 h-3.5" />
@@ -911,13 +911,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Link
                     href="/analytics"
-                    className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs dark:shadow-none transition-colors group"
+                    className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none transition-all group"
                 >
                     <div className="flex items-center justify-between mb-3">
-                        <div className="w-9 h-9 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
                             <PieChart className="w-4 h-4" />
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-600 dark:text-zinc-500 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors" />
                     </div>
                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Visual Analytics</h3>
                     <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 leading-relaxed">
@@ -927,13 +927,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
 
                 <Link
                     href="/budgets"
-                    className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs dark:shadow-none transition-colors group"
+                    className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none transition-all group"
                 >
                     <div className="flex items-center justify-between mb-3">
-                        <div className="w-9 h-9 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
                             <Wallet className="w-4 h-4" />
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-600 dark:text-zinc-500 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors" />
                     </div>
                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Budget Guardrails</h3>
                     <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 leading-relaxed">
@@ -943,13 +943,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
 
                 <Link
                     href="/savings"
-                    className="p-5 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 shadow-xs dark:shadow-none transition-colors group"
+                    className="p-5 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none transition-all group"
                 >
                     <div className="flex items-center justify-between mb-3">
-                        <div className="w-9 h-9 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-600 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors">
                             <Target className="w-4 h-4" />
                         </div>
-                        <ArrowUpRight className="w-4 h-4 text-zinc-400 dark:text-zinc-500 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors" />
+                        <ArrowUpRight className="w-4 h-4 text-zinc-600 dark:text-zinc-500 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors" />
                     </div>
                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Savings Goals</h3>
                     <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 leading-relaxed">

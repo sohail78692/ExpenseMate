@@ -469,7 +469,7 @@ export default function ProfileClient({ initialUser }) {
             {/* Header: Linear / Vercel Monochromatic Minimalist Style */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-zinc-200 dark:border-zinc-800/80">
                 <div>
-                    <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                    <div className="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400 mb-1">
                         <span>Settings</span>
                         <span>/</span>
                         <span className="text-zinc-800 dark:text-zinc-200">Account</span>
@@ -524,7 +524,7 @@ export default function ProfileClient({ initialUser }) {
                         </div>
                         <button
                             onClick={() => setMessage("")}
-                            className="text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors p-1 cursor-pointer"
+                            className="text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors p-1 cursor-pointer"
                             aria-label="Dismiss alert"
                         >
                             <X className="w-4 h-4" />
@@ -534,11 +534,11 @@ export default function ProfileClient({ initialUser }) {
             </AnimatePresence>
 
             {/* Profile Overview Card (Minimalist Identity Strip) */}
-            <div className="p-6 rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 transition-colors">
+            <div className="p-6 rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 transition-colors">
                 <div className="flex items-center gap-4">
                     {/* Clean Avatar with Camera Hover Overlay */}
                     <div className="relative group shrink-0">
-                        <div className="w-16 h-16 rounded-full overflow-hidden bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center text-zinc-800 dark:text-white font-medium text-xl relative">
+                        <div className="w-16 h-16 rounded-full overflow-hidden bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-zinc-800 dark:text-white font-medium text-xl relative">
                             {profileImage ? (
                                 <img
                                     src={profileImage}
@@ -596,23 +596,23 @@ export default function ProfileClient({ initialUser }) {
                             )}
                         </div>
 
-                        <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                        <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                             <button
                                 type="button"
                                 onClick={copyEmailToClipboard}
                                 className="inline-flex items-center gap-1.5 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors cursor-pointer group"
                                 title="Click to copy email"
                             >
-                                <Mail className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
+                                <Mail className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-500" />
                                 <span>{email || session?.user?.email}</span>
                                 {copiedEmail ? (
                                     <Check className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                                 ) : (
-                                    <Copy className="w-3 h-3 text-zinc-400 dark:text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <Copy className="w-3 h-3 text-zinc-600 dark:text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 )}
                             </button>
 
-                            <span className="text-zinc-400 dark:text-zinc-600">•</span>
+                            <span className="text-zinc-600 dark:text-zinc-600">•</span>
                             <span>Member since {memberSince}</span>
                         </div>
                     </div>
@@ -629,10 +629,10 @@ export default function ProfileClient({ initialUser }) {
                             Remove photo
                         </button>
                     )}
-                    <span className="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 font-mono">
+                    <span className="px-2.5 py-1 rounded-md bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-300 font-mono">
                         {currency}
                     </span>
-                    <span className="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+                    <span className="px-2.5 py-1 rounded-md bg-slate-100/90 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
                         {language.toUpperCase()}
                     </span>
                 </div>
@@ -654,7 +654,7 @@ export default function ProfileClient({ initialUser }) {
                                     ? tab.danger
                                         ? "text-red-600 dark:text-red-400"
                                         : "text-zinc-950 dark:text-white"
-                                    : "text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                    : "text-zinc-600 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200"
                             )}
                         >
                             <Icon className="w-4 h-4" />
@@ -687,11 +687,11 @@ export default function ProfileClient({ initialUser }) {
                         className="space-y-6"
                     >
                         {/* Display Name Card */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <div className="p-6 space-y-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Your Name</h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Please enter your full name or a display name for this workspace.
                                     </p>
                                 </div>
@@ -700,10 +700,10 @@ export default function ProfileClient({ initialUser }) {
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
                                     placeholder="Enter your name"
-                                    className="w-full max-w-md h-9 px-3 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
+                                    className="w-full max-w-md h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
                                 />
                             </div>
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                 <span>Please use 32 characters at maximum.</span>
                                 <button
                                     type="button"
@@ -717,11 +717,11 @@ export default function ProfileClient({ initialUser }) {
                         </div>
 
                         {/* Email Address Card */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <div className="p-6 space-y-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Email Address</h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         The email address used to log into ExpenseMate and receive financial reports.
                                     </p>
                                 </div>
@@ -730,22 +730,22 @@ export default function ProfileClient({ initialUser }) {
                                         type="email"
                                         value={email || session?.user?.email || ""}
                                         disabled
-                                        className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-500 dark:text-zinc-400 cursor-not-allowed select-all"
+                                        className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 cursor-not-allowed select-all"
                                     />
-                                    <Lock className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500 absolute right-3 top-1/2 -translate-y-1/2" />
+                                    <Lock className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-500 absolute right-3 top-1/2 -translate-y-1/2" />
                                 </div>
                             </div>
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-500">
                                 Contact workspace support if you need to migrate your primary email address.
                             </div>
                         </div>
 
                         {/* Phone Number Card */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <div className="p-6 space-y-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Phone Number</h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Used for account recovery and optional SMS notifications.
                                     </p>
                                 </div>
@@ -754,10 +754,10 @@ export default function ProfileClient({ initialUser }) {
                                     value={phone}
                                     onChange={(e) => setPhone(e.target.value)}
                                     placeholder="+1 (555) 000-0000"
-                                    className="w-full max-w-md h-9 px-3 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
+                                    className="w-full max-w-md h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
                                 />
                             </div>
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                 <span>Standard international format recommended.</span>
                                 <button
                                     type="button"
@@ -771,11 +771,11 @@ export default function ProfileClient({ initialUser }) {
                         </div>
 
                         {/* Data Export Card (Real CSV Export) */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <div className="p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Export Financial Data</h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Download a complete CSV archive of all your logged expenses, tags, and category notes.
                                     </p>
                                 </div>
@@ -803,10 +803,10 @@ export default function ProfileClient({ initialUser }) {
                         className="space-y-6"
                     >
                         {/* Theme Card with Vercel-style UI Wireframe Previews */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none p-6 space-y-4">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none p-6 space-y-4">
                             <div>
                                 <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Appearance</h3>
-                                <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                     Customize how ExpenseMate looks on your screen.
                                 </p>
                             </div>
@@ -880,7 +880,7 @@ export default function ProfileClient({ initialUser }) {
                                                     isSelected ? "bg-zinc-950 dark:bg-white" : "bg-transparent border border-zinc-400 dark:border-zinc-700"
                                                 )} />
                                             </div>
-                                            <p className="text-[11px] text-zinc-500">{t.desc}</p>
+                                            <p className="text-[11px] text-zinc-600 dark:text-zinc-500">{t.desc}</p>
                                         </button>
                                     );
                                 })}
@@ -888,11 +888,11 @@ export default function ProfileClient({ initialUser }) {
                         </div>
 
                         {/* Currency Card */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <div className="p-6 space-y-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Default Currency</h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Sets the primary currency used for displaying charts, expenses, and budget balances.
                                     </p>
                                 </div>
@@ -910,10 +910,10 @@ export default function ProfileClient({ initialUser }) {
                                             router.refresh();
                                         });
                                     }}>
-                                        <SelectTrigger className="w-full h-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm">
+                                        <SelectTrigger className="w-full h-9 rounded-lg bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm">
                                             <SelectValue placeholder="Select currency" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
+                                        <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                             <SelectItem value="INR">INR (₹) — Indian Rupee</SelectItem>
                                             <SelectItem value="USD">USD ($) — US Dollar</SelectItem>
                                             <SelectItem value="EUR">EUR (€) — Euro</SelectItem>
@@ -925,17 +925,17 @@ export default function ProfileClient({ initialUser }) {
                                     </Select>
                                 </div>
                             </div>
-                            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 text-xs text-zinc-500">
+                            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-500">
                                 Existing transactions preserve their historical exchange values.
                             </div>
                         </div>
 
                         {/* Language Card */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <div className="p-6 space-y-4">
                                 <div>
                                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Language</h3>
-                                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                         Select your preferred language for dates, numbers, and navigation.
                                     </p>
                                 </div>
@@ -953,10 +953,10 @@ export default function ProfileClient({ initialUser }) {
                                             router.refresh();
                                         });
                                     }}>
-                                        <SelectTrigger className="w-full h-9 rounded-lg bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm">
+                                        <SelectTrigger className="w-full h-9 rounded-lg bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm">
                                             <SelectValue placeholder="Select Language" />
                                         </SelectTrigger>
-                                        <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
+                                        <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
                                             <SelectItem value="en">English (US)</SelectItem>
                                             <SelectItem value="hi">Hindi (हिन्दी)</SelectItem>
                                             <SelectItem value="es">Spanish (Español)</SelectItem>
@@ -981,12 +981,12 @@ export default function ProfileClient({ initialUser }) {
                         className="space-y-6"
                     >
                         {/* Change Password Card with Password Strength Meter */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden">
                             <form onSubmit={handleChangePassword}>
                                 <div className="p-6 space-y-4">
                                     <div>
                                         <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Change Password</h3>
-                                        <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                                             Ensure your account is protected with a secure, unique password.
                                         </p>
                                     </div>
@@ -1000,12 +1000,12 @@ export default function ProfileClient({ initialUser }) {
                                                     value={currentPassword}
                                                     onChange={(e) => setCurrentPassword(e.target.value)}
                                                     placeholder="Enter current password"
-                                                    className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
+                                                    className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
                                                 />
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-950 dark:text-zinc-500 dark:hover:text-zinc-300"
                                                 >
                                                     {showCurrentPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                                 </button>
@@ -1020,12 +1020,12 @@ export default function ProfileClient({ initialUser }) {
                                                     value={newPassword}
                                                     onChange={(e) => setNewPassword(e.target.value)}
                                                     placeholder="At least 6 characters"
-                                                    className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
+                                                    className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
                                                 />
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowNewPassword(!showNewPassword)}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-950 dark:text-zinc-500 dark:hover:text-zinc-300"
                                                 >
                                                     {showNewPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                                 </button>
@@ -1049,7 +1049,7 @@ export default function ProfileClient({ initialUser }) {
                                                             />
                                                         ))}
                                                     </div>
-                                                    <span className="text-[10px] text-zinc-500">
+                                                    <span className="text-[10px] text-zinc-600 dark:text-zinc-500">
                                                         {passwordStrength <= 1
                                                             ? "Weak — add symbols or uppercase letters"
                                                             : passwordStrength <= 3
@@ -1068,12 +1068,12 @@ export default function ProfileClient({ initialUser }) {
                                                     value={confirmPassword}
                                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                                     placeholder="Repeat new password"
-                                                    className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
+                                                    className="w-full h-9 px-3 pr-9 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-zinc-300 dark:hover:border-zinc-700 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 transition-colors"
                                                 />
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 dark:text-zinc-500 dark:hover:text-zinc-300"
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-600 hover:text-zinc-950 dark:text-zinc-500 dark:hover:text-zinc-300"
                                                 >
                                                     {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                                                 </button>
@@ -1082,7 +1082,7 @@ export default function ProfileClient({ initialUser }) {
                                     </div>
                                 </div>
 
-                                <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+                                <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                                     <span>Must contain at least 6 characters.</span>
                                     <button
                                         type="submit"
@@ -1096,9 +1096,9 @@ export default function ProfileClient({ initialUser }) {
                         </div>
 
                         {/* Connected Devices & Active Session */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none p-6 space-y-4">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none p-6 space-y-4">
                             <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Active Sessions</h3>
-                            <div className="flex items-center justify-between p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800/80">
+                            <div className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50/90 dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800/80">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-lg bg-zinc-200/70 dark:bg-zinc-800 flex items-center justify-center text-zinc-700 dark:text-zinc-300">
                                         <Laptop className="w-4 h-4" />
@@ -1108,7 +1108,7 @@ export default function ProfileClient({ initialUser }) {
                                             Current Device
                                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                                         </p>
-                                        <p className="text-[11px] text-zinc-500">
+                                        <p className="text-[11px] text-zinc-600 dark:text-zinc-500">
                                             Active workspace session • NextAuth JWT cookie
                                         </p>
                                     </div>
@@ -1118,27 +1118,27 @@ export default function ProfileClient({ initialUser }) {
                         </div>
 
                         {/* Security Standards Overview */}
-                        <div className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none p-6 space-y-4">
+                        <div className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none p-6 space-y-4">
                             <h3 className="text-sm font-medium text-zinc-950 dark:text-white">Security Infrastructure</h3>
                             <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80 text-xs">
                                 <div className="py-3 flex items-center justify-between">
                                     <div>
                                         <p className="font-medium text-zinc-800 dark:text-zinc-200">Password Hashing</p>
-                                        <p className="text-zinc-500 text-[11px]">Bcrypt cryptographic algorithm with 12 salt rounds</p>
+                                        <p className="text-zinc-600 dark:text-zinc-500 text-[11px]">Bcrypt cryptographic algorithm with 12 salt rounds</p>
                                     </div>
                                     <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">Active</span>
                                 </div>
                                 <div className="py-3 flex items-center justify-between">
                                     <div>
                                         <p className="font-medium text-zinc-800 dark:text-zinc-200">Transport Layer Security</p>
-                                        <p className="text-zinc-500 text-[11px]">TLS 1.3 encryption across all API requests</p>
+                                        <p className="text-zinc-600 dark:text-zinc-500 text-[11px]">TLS 1.3 encryption across all API requests</p>
                                     </div>
                                     <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">Enforced</span>
                                 </div>
                                 <div className="py-3 flex items-center justify-between">
                                     <div>
                                         <p className="font-medium text-zinc-800 dark:text-zinc-200">Session Guard</p>
-                                        <p className="text-zinc-500 text-[11px]">Encrypted HttpOnly cookies via NextAuth</p>
+                                        <p className="text-zinc-600 dark:text-zinc-500 text-[11px]">Encrypted HttpOnly cookies via NextAuth</p>
                                     </div>
                                     <span className="text-emerald-600 dark:text-emerald-400 font-mono text-[11px]">Protected</span>
                                 </div>
@@ -1205,7 +1205,7 @@ export default function ProfileClient({ initialUser }) {
                                     setName(initialUser?.name || "");
                                     setPhone(initialUser?.phone || "");
                                 }}
-                                className="px-2.5 py-1 text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
+                                className="px-2.5 py-1 text-zinc-600 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
                             >
                                 Reset
                             </button>
@@ -1225,12 +1225,12 @@ export default function ProfileClient({ initialUser }) {
 
             {/* DELETE ACCOUNT CONFIRMATION DIALOG */}
             <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-                <DialogContent className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 max-w-md p-6">
+                <DialogContent className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-2xl dark:shadow-none text-zinc-900 dark:text-zinc-100 max-w-md p-6">
                     <DialogHeader>
                         <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white">
                             Are you absolutely sure?
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed">
+                        <DialogDescription className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 leading-relaxed">
                             This action cannot be undone. To confirm, please type{" "}
                             <span className="font-mono font-semibold text-red-600 dark:text-red-400">DELETE MY ACCOUNT</span> below.
                         </DialogDescription>
@@ -1242,7 +1242,7 @@ export default function ProfileClient({ initialUser }) {
                             value={deleteConfirmationText}
                             onChange={(e) => setDeleteConfirmationText(e.target.value)}
                             placeholder="Type DELETE MY ACCOUNT"
-                            className="w-full h-9 px-3 rounded-lg text-sm bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:border-red-500 font-mono"
+                            className="w-full h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus:outline-none focus:border-red-500 font-mono"
                         />
                     </div>
 
@@ -1269,12 +1269,12 @@ export default function ProfileClient({ initialUser }) {
 
             {/* FEEDBACK DIALOG */}
             <Dialog open={isFeedbackOpen} onOpenChange={setIsFeedbackOpen}>
-                <DialogContent className="rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 max-w-lg p-6">
+                <DialogContent className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-2xl dark:shadow-none text-zinc-900 dark:text-zinc-100 max-w-lg p-6">
                     <DialogHeader>
                         <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white">
                             Share Feedback
                         </DialogTitle>
-                        <DialogDescription className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                        <DialogDescription className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                             Let us know what you think about ExpenseMate or report any issue.
                         </DialogDescription>
                     </DialogHeader>
@@ -1292,7 +1292,7 @@ export default function ProfileClient({ initialUser }) {
                                     "flex-1 flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium cursor-pointer transition-colors",
                                     feedbackType === "feedback"
                                         ? "bg-zinc-100 border-zinc-400 text-zinc-950 dark:bg-zinc-900 dark:border-zinc-500 dark:text-white"
-                                        : "bg-white border-zinc-200 text-zinc-500 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400"
+                                        : "bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400"
                                 )}
                             >
                                 <RadioGroupItem value="feedback" id="feedback" className="border-zinc-400 dark:border-zinc-600 text-zinc-950 dark:text-white" />
@@ -1305,7 +1305,7 @@ export default function ProfileClient({ initialUser }) {
                                     "flex-1 flex items-center gap-2 p-2.5 rounded-xl border text-xs font-medium cursor-pointer transition-colors",
                                     feedbackType === "issue"
                                         ? "bg-zinc-100 border-zinc-400 text-zinc-950 dark:bg-zinc-900 dark:border-zinc-500 dark:text-white"
-                                        : "bg-white border-zinc-200 text-zinc-500 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400"
+                                        : "bg-white border-zinc-200 text-zinc-600 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400"
                                 )}
                             >
                                 <RadioGroupItem value="issue" id="issue" className="border-zinc-400 dark:border-zinc-600 text-zinc-950 dark:text-white" />
@@ -1318,7 +1318,7 @@ export default function ProfileClient({ initialUser }) {
                             onChange={(e) => setFeedbackMessage(e.target.value)}
                             placeholder="Write your note here..."
                             rows={4}
-                            className="w-full rounded-xl bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-400 dark:placeholder:text-zinc-600 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 text-xs sm:text-sm"
+                            className="w-full rounded-xl bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-500 text-xs sm:text-sm"
                         />
 
                         <DialogFooter className="flex items-center gap-2 pt-2">

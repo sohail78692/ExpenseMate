@@ -77,11 +77,11 @@ export default function DailyTrendChart({
     const isLight = resolvedTheme === "light";
 
     const chartColors = {
-        stroke: isLight ? "#18181b" : "#fafafa",
-        fill: isLight ? "#18181b" : "#fafafa",
-        grid: isLight ? "#e4e4e7" : "#27272a",
-        axis: isLight ? "#71717a" : "#71717a",
-        cursor: isLight ? "#a1a1aa" : "#52525b",
+        stroke: isLight ? "#0066CC" : "#fafafa",
+        fill: isLight ? "#0066CC" : "#fafafa",
+        grid: isLight ? "#e2e8f0" : "#27272a",
+        axis: isLight ? "#475569" : "#71717a",
+        cursor: isLight ? "#94a3b8" : "#52525b",
         dotStroke: isLight ? "#ffffff" : "#09090b",
     };
 
@@ -110,7 +110,7 @@ export default function DailyTrendChart({
     return (
         <div
             className={cn(
-                "rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden flex flex-col transition-colors",
+                "rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden flex flex-col transition-colors",
                 className
             )}
         >
@@ -119,7 +119,7 @@ export default function DailyTrendChart({
                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                         Daily Spending Trend
                     </h3>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                         {mode === "cumulative"
                             ? `Cumulative spend curve across ${monthLabel}.`
                             : `Day-by-day spending velocity for ${monthLabel}.`}
@@ -166,7 +166,7 @@ export default function DailyTrendChart({
                             >
                                 <defs>
                                     <linearGradient id="analyticsTrendFill" x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor={chartColors.fill} stopOpacity={isLight ? 0.14 : 0.18} />
+                                        <stop offset="0%" stopColor={chartColors.fill} stopOpacity={isLight ? 0.22 : 0.18} />
                                         <stop offset="100%" stopColor={chartColors.fill} stopOpacity={0.0} />
                                     </linearGradient>
                                 </defs>
@@ -226,14 +226,14 @@ export default function DailyTrendChart({
                         <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
                             No spending recorded for {monthLabel}
                         </p>
-                        <p className="text-xs text-zinc-500 mt-1 max-w-xs">
+                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1 max-w-xs">
                             Log expenses during this period to visualize your daily and cumulative spend curve.
                         </p>
                     </div>
                 )}
             </div>
 
-            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
                 <span>
                     {activeDays > 0
                         ? `${activeDays} active ${activeDays === 1 ? "day" : "days"} logged`

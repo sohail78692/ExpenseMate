@@ -86,19 +86,19 @@ export default function CalendarHeatmap({
 
     const getCellStyle = (amount) => {
         if (!amount || amount <= 0 || maxAmount === 0) {
-            return "bg-zinc-100/80 border-zinc-200/90 text-zinc-500 hover:border-zinc-300 dark:bg-zinc-900/60 dark:border-zinc-800/70 dark:text-zinc-500 dark:hover:border-zinc-700";
+            return "bg-slate-100/90 border-slate-200/90 text-slate-700 hover:border-slate-300 dark:bg-zinc-900/60 dark:border-zinc-800/70 dark:text-zinc-500 dark:hover:border-zinc-700";
         }
         const ratio = amount / maxAmount;
         if (ratio <= 0.25) {
-            return "bg-emerald-50 border-emerald-200 text-emerald-800 hover:border-emerald-400 dark:bg-emerald-950/60 dark:border-emerald-800/60 dark:text-emerald-300 dark:hover:border-emerald-600";
+            return "bg-emerald-100/85 border-emerald-300/90 text-emerald-900 hover:border-emerald-500 dark:bg-emerald-950/60 dark:border-emerald-800/60 dark:text-emerald-300 dark:hover:border-emerald-600";
         }
         if (ratio <= 0.5) {
-            return "bg-amber-50 border-amber-200 text-amber-800 hover:border-amber-400 dark:bg-amber-950/60 dark:border-amber-800/60 dark:text-amber-300 dark:hover:border-amber-600";
+            return "bg-amber-100/85 border-amber-300/90 text-amber-900 hover:border-amber-500 dark:bg-amber-950/60 dark:border-amber-800/60 dark:text-amber-300 dark:hover:border-amber-600";
         }
         if (ratio <= 0.75) {
-            return "bg-orange-50 border-orange-200 text-orange-800 hover:border-orange-400 dark:bg-orange-950/70 dark:border-orange-700/70 dark:text-orange-300 dark:hover:border-orange-500";
+            return "bg-orange-100/85 border-orange-300/90 text-orange-900 hover:border-orange-500 dark:bg-orange-950/70 dark:border-orange-700/70 dark:text-orange-300 dark:hover:border-orange-500";
         }
-        return "bg-red-50 border-red-200 text-red-800 hover:border-red-400 dark:bg-red-950/80 dark:border-red-700/80 dark:text-red-200 dark:hover:border-red-500";
+        return "bg-red-100/90 border-red-300/90 text-red-900 hover:border-red-500 dark:bg-red-950/80 dark:border-red-700/80 dark:text-red-200 dark:hover:border-red-500";
     };
 
     const startDay = getDay(startOfMonth(currentMonth));
@@ -110,7 +110,7 @@ export default function CalendarHeatmap({
     return (
         <div
             className={cn(
-                "rounded-2xl bg-white dark:bg-zinc-950 border border-zinc-200/90 dark:border-zinc-800 shadow-xs dark:shadow-none overflow-hidden transition-colors",
+                "rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 shadow-[0_1px_3px_rgba(15,23,42,0.05),0_8px_24px_-14px_rgba(15,23,42,0.08)] dark:shadow-none overflow-hidden transition-colors",
                 className
             )}
         >
@@ -119,19 +119,19 @@ export default function CalendarHeatmap({
                     <h3 className="text-sm font-medium text-zinc-950 dark:text-white">
                         Monthly Spending Heatmap
                     </h3>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
                         Daily spend intensity for {format(currentMonth, "MMMM yyyy")}. Click any day to inspect transactions.
                     </p>
                 </div>
 
                 {/* Intensity Scale Legend */}
-                <div className="flex items-center gap-1.5 text-[11px] text-zinc-500 shrink-0">
+                <div className="flex items-center gap-1.5 text-[11px] text-zinc-600 dark:text-zinc-500 shrink-0">
                     <span>Low</span>
-                    <span className="w-3 h-3 rounded bg-zinc-100 border border-zinc-200 dark:bg-zinc-900/80 dark:border-zinc-800" title="No spend" />
-                    <span className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300 dark:bg-emerald-950/70 dark:border-emerald-800/70" title="Up to 25% of peak" />
-                    <span className="w-3 h-3 rounded bg-amber-100 border border-amber-300 dark:bg-amber-950/70 dark:border-amber-800/70" title="26% – 50% of peak" />
-                    <span className="w-3 h-3 rounded bg-orange-100 border border-orange-300 dark:bg-orange-950/80 dark:border-orange-700/80" title="51% – 75% of peak" />
-                    <span className="w-3 h-3 rounded bg-red-100 border border-red-300 dark:bg-red-950/90 dark:border-red-700/90" title="76% – 100% of peak" />
+                    <span className="w-3 h-3 rounded bg-slate-100 border border-slate-200 dark:bg-zinc-900/80 dark:border-zinc-800" title="No spend" />
+                    <span className="w-3 h-3 rounded bg-emerald-200/90 border border-emerald-400/80 dark:bg-emerald-950/70 dark:border-emerald-800/70" title="Up to 25% of peak" />
+                    <span className="w-3 h-3 rounded bg-amber-200/90 border border-amber-400/80 dark:bg-amber-950/70 dark:border-amber-800/70" title="26% – 50% of peak" />
+                    <span className="w-3 h-3 rounded bg-orange-200/90 border border-orange-400/80 dark:bg-orange-950/80 dark:border-orange-700/80" title="51% – 75% of peak" />
+                    <span className="w-3 h-3 rounded bg-red-200/90 border border-red-400/80 dark:bg-red-950/90 dark:border-red-700/90" title="76% – 100% of peak" />
                     <span>Peak</span>
                 </div>
             </div>
@@ -142,7 +142,7 @@ export default function CalendarHeatmap({
                         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                             <div
                                 key={day}
-                                className="text-center text-[11px] font-medium text-zinc-500 pb-1"
+                                className="text-center text-[11px] font-medium text-zinc-600 dark:text-zinc-500 pb-1"
                             >
                                 {day}
                             </div>
@@ -184,15 +184,15 @@ export default function CalendarHeatmap({
                                             )}
                                         </button>
                                     </TooltipTrigger>
-                                    <TooltipContent className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 px-3 py-2 rounded-xl shadow-xl">
-                                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400">
+                                    <TooltipContent className="bg-popover border border-slate-200/90 dark:border-zinc-800 text-popover-foreground px-3 py-2 rounded-xl shadow-xl">
+                                        <p className="text-[11px] text-zinc-600 dark:text-zinc-400">
                                             {format(day, "EEE, MMM d, yyyy")}
                                         </p>
                                         <p className="text-xs font-semibold font-mono text-zinc-950 dark:text-white mt-0.5 tabular-nums">
                                             {formatINR(amount)}
                                         </p>
                                         {txCount > 0 && (
-                                            <p className="text-[10px] text-zinc-500 mt-0.5">
+                                            <p className="text-[10px] text-zinc-600 dark:text-zinc-500 mt-0.5">
                                                 {txCount} {txCount === 1 ? "expense" : "expenses"}
                                             </p>
                                         )}
@@ -205,14 +205,14 @@ export default function CalendarHeatmap({
 
                 {/* Interactive Selected-Day Breakdown Drawer */}
                 {selectedDateStr && (
-                    <div className="rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-4 space-y-3">
+                    <div className="rounded-xl bg-slate-50/90 dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 p-4 space-y-3">
                         <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
-                                <CalendarIcon className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
+                                <CalendarIcon className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
                                 <span className="text-xs font-medium text-zinc-950 dark:text-white">
                                     {format(parseISO(selectedDateStr), "EEEE, MMMM d, yyyy")}
                                 </span>
-                                <span className="px-2 py-0.5 rounded-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-[11px] font-mono text-zinc-700 dark:text-zinc-300 tabular-nums">
+                                <span className="px-2 py-0.5 rounded-md bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-[11px] font-mono text-zinc-800 dark:text-zinc-300 tabular-nums">
                                     {formatINR(selectedDayTotal)}
                                 </span>
                             </div>
@@ -220,14 +220,14 @@ export default function CalendarHeatmap({
                                 type="button"
                                 onClick={() => setSelectedDateStr(null)}
                                 aria-label="Close selected day details"
-                                className="text-zinc-400 hover:text-zinc-950 dark:hover:text-white p-1 rounded-md hover:bg-zinc-200/70 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                                className="text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-white p-1 rounded-md hover:bg-slate-200/70 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
                             >
                                 <X className="w-3.5 h-3.5" />
                             </button>
                         </div>
 
                         {selectedDayExpenses.length > 0 ? (
-                            <div className="divide-y divide-zinc-200/80 dark:divide-zinc-800/80">
+                            <div className="divide-y divide-slate-200/80 dark:divide-zinc-800/80">
                                 {selectedDayExpenses.map((expense, idx) => {
                                     const { icon: Icon, color, bg } = getCategoryStyles(expense.category);
                                     return (
@@ -248,7 +248,7 @@ export default function CalendarHeatmap({
                                                     <p className="font-medium text-zinc-900 dark:text-zinc-200 truncate">
                                                         {expense.title}
                                                     </p>
-                                                    <p className="text-[11px] text-zinc-500">
+                                                    <p className="text-[11px] text-zinc-600 dark:text-zinc-500">
                                                         {expense.category}
                                                     </p>
                                                 </div>
@@ -261,7 +261,7 @@ export default function CalendarHeatmap({
                                 })}
                             </div>
                         ) : (
-                            <p className="text-xs text-zinc-500">
+                            <p className="text-xs text-zinc-600 dark:text-zinc-500">
                                 No transactions logged on this day.
                             </p>
                         )}
@@ -269,11 +269,11 @@ export default function CalendarHeatmap({
                 )}
             </div>
 
-            <div className="px-6 py-3 bg-zinc-50/80 dark:bg-zinc-900/40 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-500">
+            <div className="px-6 py-3 bg-slate-50/90 dark:bg-zinc-900/40 border-t border-slate-200/90 dark:border-zinc-800 flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-500">
                 <span>
                     {activeDaysCount} of {days.length} days with spending
                 </span>
-                <span className="font-mono text-zinc-600 dark:text-zinc-400 tabular-nums">
+                <span className="font-mono text-zinc-700 dark:text-zinc-400 tabular-nums">
                     {maxAmount > 0 ? `Peak: ${formatINR(maxAmount)}` : "Peak: ₹0.00"}
                 </span>
             </div>

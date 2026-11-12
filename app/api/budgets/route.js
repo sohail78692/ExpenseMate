@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/mongodb";
 import Budget from "@/models/Budget";
-import Expense from "@/models/Expense";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { startOfMonth, endOfMonth } from "date-fns";
-import mongoose from "mongoose";
+import { fetchBudgetsAndInsightsForMonth } from "@/lib/data";
 
-// GET - Get all budgets for current month
+// GET - Get all budgets and insights for selected month
 export async function GET(request) {
     try {
         const session = await getServerSession(authOptions);
@@ -15,56 +13,13 @@ export async function GET(request) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        await dbConnect();
-
         const { searchParams } = new URL(request.url);
         const month = parseInt(searchParams.get("month")) || new Date().getMonth() + 1;
         const year = parseInt(searchParams.get("year")) || new Date().getFullYear();
 
-        const budgets = await Budget.find({
-            user: session.user.id,
-            month,
-            year
-        }).sort({ category: 1 });
+        const data = await fetchBudgetsAndInsightsForMonth(session.user.id, month, year);
 
-        // Get actual spending for each category
-        const start = startOfMonth(new Date(year, month - 1));
-        const end = endOfMonth(new Date(year, month - 1));
-
-        const spending = await Expense.aggregate([
-            {
-                $match: {
-                    user: new mongoose.Types.ObjectId(session.user.id),
-                    date: { $gte: start, $lte: end },
-                },
-            },
-            {
-                $group: {
-                    _id: "$category",
-                    total: { $sum: "$amount" },
-                },
-            },
-        ]);
-
-
-        const spendingMap = {};
-        let totalSpending = 0;
-        spending.forEach(item => {
-            spendingMap[item._id] = item.total;
-            totalSpending += item.total;
-        });
-
-        const budgetsWithSpending = budgets.map(budget => {
-            const spent = budget.category === 'Total' ? totalSpending : (spendingMap[budget.category] || 0);
-            return {
-                ...budget.toObject(),
-                spent: spent,
-                remaining: budget.amount - spent,
-                percentage: parseFloat(((spent / budget.amount) * 100).toFixed(1)),
-            };
-        });
-
-        return NextResponse.json({ budgets: budgetsWithSpending }, {
+        return NextResponse.json(data, {
             headers: { "Content-Type": "application/json; charset=utf-8" }
         });
     } catch (error) {

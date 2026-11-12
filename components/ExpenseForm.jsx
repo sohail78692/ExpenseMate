@@ -159,12 +159,12 @@ export default function ExpenseForm({
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent className="rounded-2xl bg-white/95 dark:bg-zinc-950 border border-slate-200/90 dark:border-zinc-800 text-zinc-900 dark:text-zinc-100 shadow-2xl max-w-lg p-6">
+            <DialogContent className="rounded-3xl bg-white/92 dark:bg-[#0b1022]/94 backdrop-blur-2xl border border-white/95 dark:border-white/[0.14] shadow-[0_24px_64px_rgba(15,23,42,0.18),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_24px_64px_rgba(0,0,0,0.78),inset_0_1px_1px_rgba(255,255,255,0.08)] text-slate-900 dark:text-zinc-100 max-w-lg p-6 max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-base font-semibold text-zinc-950 dark:text-white">
+                    <DialogTitle className="text-base font-semibold text-slate-950 dark:text-white">
                         {expenseToEdit ? "Edit Expense" : "Add Expense"}
                     </DialogTitle>
-                    <DialogDescription className="text-xs text-zinc-600 dark:text-zinc-400 mt-1">
+                    <DialogDescription className="text-xs text-slate-600 dark:text-zinc-400 mt-1">
                         {expenseToEdit
                             ? "Update the transaction details and save changes to your ledger."
                             : "Record a new transaction in your ExpenseMate ledger."}
@@ -183,7 +183,7 @@ export default function ExpenseForm({
                     )}
 
                     <div className="space-y-1.5">
-                        <Label htmlFor="expense-title" className="text-xs text-zinc-700 dark:text-zinc-400">
+                        <Label htmlFor="expense-title" className="text-xs text-slate-700 dark:text-zinc-300">
                             Title *
                         </Label>
                         <input
@@ -194,13 +194,13 @@ export default function ExpenseForm({
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="e.g., Groceries, Metro Card, Coffee"
                             required
-                            className="w-full h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                            className="w-full h-10 px-3.5 rounded-xl text-sm bg-slate-100/75 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 hover:border-slate-300 dark:hover:border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 transition-colors"
                         />
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                            <Label htmlFor="expense-amount" className="text-xs text-zinc-700 dark:text-zinc-400">
+                            <Label htmlFor="expense-amount" className="text-xs text-slate-700 dark:text-zinc-300">
                                 Amount (₹) *
                             </Label>
                             <input
@@ -212,12 +212,12 @@ export default function ExpenseForm({
                                 onChange={(e) => setAmount(e.target.value)}
                                 placeholder="0.00"
                                 required
-                                className="w-full h-9 px-3 rounded-lg text-sm font-mono bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                className="w-full h-10 px-3.5 rounded-xl text-sm font-mono bg-slate-100/75 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 hover:border-slate-300 dark:hover:border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 transition-colors"
                             />
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="expense-date" className="text-xs text-zinc-700 dark:text-zinc-400">
+                            <Label htmlFor="expense-date" className="text-xs text-slate-700 dark:text-zinc-300">
                                 Date *
                             </Label>
                             <input
@@ -226,24 +226,24 @@ export default function ExpenseForm({
                                 value={dateStr}
                                 onChange={(e) => setDateStr(e.target.value)}
                                 required
-                                className="w-full h-9 px-3 rounded-lg text-sm bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark] hover:border-slate-300 dark:hover:border-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 transition-colors"
+                                className="w-full h-10 px-3.5 rounded-xl text-sm bg-slate-100/75 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white [color-scheme:light] dark:[color-scheme:dark] hover:border-slate-300 dark:hover:border-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 transition-colors"
                             />
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                            <Label htmlFor="expense-category" className="text-xs text-zinc-700 dark:text-zinc-400">
+                            <Label htmlFor="expense-category" className="text-xs text-slate-700 dark:text-zinc-300">
                                 Category *
                             </Label>
                             <Select value={category} onValueChange={setCategory}>
                                 <SelectTrigger
                                     id="expense-category"
-                                    className="w-full h-9 rounded-lg bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
+                                    className="w-full h-10 rounded-xl bg-slate-100/75 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white text-sm"
                                 >
                                     <SelectValue placeholder="Select category" />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
+                                <SelectContent className="rounded-xl bg-white/95 dark:bg-[#0d1326]/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white shadow-2xl">
                                     {CATEGORIES.map((cat) => (
                                         <SelectItem key={cat} value={cat}>
                                             {cat}
@@ -254,17 +254,17 @@ export default function ExpenseForm({
                         </div>
 
                         <div className="space-y-1.5">
-                            <Label htmlFor="expense-payment" className="text-xs text-zinc-700 dark:text-zinc-400">
+                            <Label htmlFor="expense-payment" className="text-xs text-slate-700 dark:text-zinc-300">
                                 Payment Method
                             </Label>
                             <Select value={paymentMethod} onValueChange={setPaymentMethod}>
                                 <SelectTrigger
                                     id="expense-payment"
-                                    className="w-full h-9 rounded-lg bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white text-sm"
+                                    className="w-full h-10 rounded-xl bg-slate-100/75 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white text-sm"
                                 >
                                     <SelectValue placeholder="Select method" />
                                 </SelectTrigger>
-                                <SelectContent className="rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white">
+                                <SelectContent className="rounded-xl bg-white/95 dark:bg-[#0d1326]/95 backdrop-blur-2xl border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white shadow-2xl">
                                     {PAYMENT_METHODS.map((method) => (
                                         <SelectItem key={method} value={method}>
                                             {method}
@@ -276,8 +276,8 @@ export default function ExpenseForm({
                     </div>
 
                     <div className="space-y-1.5">
-                        <Label htmlFor="expense-note" className="text-xs text-zinc-700 dark:text-zinc-400">
-                            Note <span className="text-zinc-500 dark:text-zinc-600">(optional)</span>
+                        <Label htmlFor="expense-note" className="text-xs text-slate-700 dark:text-zinc-300">
+                            Note <span className="text-slate-400 dark:text-zinc-500">(optional)</span>
                         </Label>
                         <Textarea
                             id="expense-note"
@@ -286,7 +286,7 @@ export default function ExpenseForm({
                             maxLength={500}
                             rows={3}
                             placeholder="Add context, merchant details, or tags..."
-                            className="w-full rounded-xl bg-slate-50/80 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-zinc-900 dark:text-white placeholder:text-zinc-500 dark:placeholder:text-zinc-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 text-xs sm:text-sm"
+                            className="w-full rounded-xl bg-slate-100/75 dark:bg-white/[0.06] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 text-xs sm:text-sm"
                         />
                     </div>
 
@@ -295,14 +295,14 @@ export default function ExpenseForm({
                             type="button"
                             onClick={() => setIsOpen(false)}
                             disabled={loading}
-                            className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-600 hover:text-zinc-950 bg-zinc-100 hover:bg-zinc-200 border border-zinc-200 dark:text-zinc-400 dark:hover:text-white dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 transition-colors cursor-pointer"
+                            className="px-4 py-2 rounded-full text-xs font-medium text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:text-zinc-200 dark:hover:text-white dark:bg-white/[0.06] dark:hover:bg-white/[0.1] dark:border-white/[0.12] transition-colors cursor-pointer"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 disabled:opacity-50 transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                            className="px-4.5 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 hover:brightness-110 text-white shadow-[0_8px_22px_-4px_rgba(124,58,237,0.5)] disabled:opacity-50 transition-all cursor-pointer inline-flex items-center gap-1.5"
                         >
                             {loading ? (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin" />

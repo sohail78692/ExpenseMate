@@ -93,7 +93,7 @@ export const authOptions = {
             },
         },
     },
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET || "gscYMgMImiGIBmJTKU0iew3Kt4TFeMKfleu4fKelvc4",
 };
 
 const handler = NextAuth(authOptions);

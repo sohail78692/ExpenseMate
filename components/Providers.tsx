@@ -6,7 +6,7 @@ import React from "react";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
-        <SessionProvider>
+        <SessionProvider refetchOnWindowFocus={false}>
             <ThemeProvider
                 attribute="class"
                 defaultTheme="dark"

@@ -1146,11 +1146,11 @@ export default function ProfileClient({ initialUser }) {
     return (
         <div
             style={{ "--profile-accent-rgb": activeAccent.rgb }}
-            className="relative w-full pb-32 lg:pb-16 text-zinc-900 dark:text-zinc-100"
+            className="relative w-full text-zinc-900 dark:text-zinc-100"
         >
             <style>{profileGlassStyles}</style>
 
-            {/* Seamless Full-Viewport Liquid-Glass Ambient Aura (matches Auth dark atmospheric depth & airy daylight glass) */}
+            {/* Seamless Liquid-Glass Ambient Accent Aura */}
             <div
                 aria-hidden="true"
                 className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
@@ -1159,9 +1159,6 @@ export default function ProfileClient({ initialUser }) {
                     className="absolute -top-36 left-1/4 h-[520px] w-[520px] rounded-full blur-[130px] opacity-55 dark:opacity-35 transition-colors duration-500"
                     style={{ background: `rgba(${activeAccent.rgb}, 0.38)` }}
                 />
-                <div className="absolute top-20 -right-24 h-[500px] w-[500px] rounded-full bg-sky-400/30 blur-[135px] dark:bg-[#0A84FF]/22" />
-                <div className="absolute -bottom-28 -left-20 h-[460px] w-[460px] rounded-full bg-violet-400/28 blur-[130px] dark:bg-indigo-600/20" />
-                <div className="absolute bottom-10 right-1/3 h-[340px] w-[340px] rounded-full bg-cyan-300/25 blur-[110px] dark:bg-sky-500/12" />
             </div>
 
             {/* Notification Toast Pill (Liquid Glass Dynamic Pill matching floating bottom bar) */}

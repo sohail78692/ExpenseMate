@@ -944,20 +944,9 @@ export default function AnalyticsClient({ initialData }) {
     const isAvgUp = analytics.avgMomChangePct !== null && analytics.avgMomChangePct > 0;
 
     return (
-        <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+        <div className="relative w-full space-y-6 text-slate-900 dark:text-zinc-100">
             {/* Scoped Liquid-Glass CSS Shader */}
             <style dangerouslySetInnerHTML={{ __html: analyticsGlassStyles }} />
-
-            {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
-            <div
-                aria-hidden="true"
-                className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-            >
-                <div className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full bg-indigo-300/25 blur-[140px] dark:bg-indigo-600/16" />
-                <div className="absolute top-12 -right-24 h-[500px] w-[500px] rounded-full bg-violet-300/25 blur-[140px] dark:bg-violet-600/16" />
-                <div className="absolute -bottom-32 -left-24 h-[480px] w-[480px] rounded-full bg-sky-300/25 blur-[135px] dark:bg-blue-600/14" />
-                <div className="absolute bottom-8 right-1/3 h-[340px] w-[340px] rounded-full bg-emerald-200/20 blur-[120px] dark:bg-emerald-500/10" />
-            </div>
 
             {/* Hero Header with Action Bar + 3D Purple Analytics Chart Illustration */}
             <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">

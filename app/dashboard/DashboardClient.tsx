@@ -777,20 +777,9 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
     };
 
     return (
-        <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+        <div className="relative w-full space-y-6 text-slate-900 dark:text-zinc-100">
             {/* Liquid-Glass Keyframes & Specular Sheen Styles */}
             <style dangerouslySetInnerHTML={{ __html: dashboardGlassStyles }} />
-
-            {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
-            <div
-                aria-hidden="true"
-                className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
-            >
-                <div className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full bg-indigo-300/25 blur-[140px] dark:bg-indigo-600/18" />
-                <div className="absolute top-12 -right-24 h-[500px] w-[500px] rounded-full bg-violet-300/25 blur-[140px] dark:bg-violet-600/18" />
-                <div className="absolute -bottom-32 -left-24 h-[480px] w-[480px] rounded-full bg-sky-300/25 blur-[135px] dark:bg-blue-600/14" />
-                <div className="absolute bottom-8 right-1/4 h-[360px] w-[360px] rounded-full bg-fuchsia-200/20 blur-[120px] dark:bg-fuchsia-500/10" />
-            </div>
 
             {/* Centered Floating Liquid-Glass Toast Notification */}
             <AnimatePresence>

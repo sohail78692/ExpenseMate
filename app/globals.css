@@ -478,3 +478,9 @@ html.dark {
     inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5),
     0 16px 40px -10px rgba(0, 0, 0, 0.75);
 }
+
+/* Radix Popper Wrapper (Select, Popover, Dropdown) - ensure pointer events and top layer above modal dialogs */
+[data-radix-popper-content-wrapper] {
+  pointer-events: auto !important;
+  z-index: 200 !important;
+}

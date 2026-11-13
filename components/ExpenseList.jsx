@@ -60,6 +60,250 @@ const CATEGORIES = [
     "Other",
 ];
 
+const expensesGlassStyles = `
+  @property --expenses-angle-1 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -75deg;
+  }
+  @property --expenses-angle-2 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -45deg;
+  }
+
+  .expenses-glass-btn {
+    --anim-time: 380ms;
+    --anim-ease: cubic-bezier(0.25, 1, 0.5, 1);
+    --rim-width: 1.25px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    transition: all var(--anim-time) var(--anim-ease);
+    transform-style: preserve-3d;
+  }
+
+  .expenses-glass-btn::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--rim-width);
+    box-sizing: border-box;
+    pointer-events: none;
+    background:
+      conic-gradient(
+        from var(--expenses-angle-1) at 50% 50%,
+        rgba(15, 23, 42, 0.28) 0%,
+        transparent 6% 40%,
+        rgba(15, 23, 42, 0.28) 50%,
+        transparent 60% 94%,
+        rgba(15, 23, 42, 0.28) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all var(--anim-time) var(--anim-ease), --expenses-angle-1 500ms ease;
+  }
+
+  .dark .expenses-glass-btn::after {
+    background:
+      conic-gradient(
+        from var(--expenses-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.58) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.58) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.58) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  }
+
+  .expenses-glass-btn:hover::after {
+    --expenses-angle-1: -125deg;
+  }
+
+  .expenses-glass-btn:active {
+    transform: scale(0.975);
+  }
+
+  .expenses-glass-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .expenses-glass-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      var(--expenses-angle-2),
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 42% 50%,
+      transparent 58%
+    );
+    background-size: 220% 220%;
+    background-position: 0% 50%;
+    mix-blend-mode: screen;
+    opacity: 0.65;
+    transition:
+      background-position 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      --expenses-angle-2 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      opacity 300ms ease;
+  }
+
+  .expenses-glass-btn:hover .expenses-glass-sheen::after {
+    background-position: 32% 50%;
+    opacity: 0.95;
+  }
+
+  .expenses-glass-btn:active .expenses-glass-sheen::after {
+    background-position: 55% 20%;
+    --expenses-angle-2: -15deg;
+  }
+
+  .expenses-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.55));
+    color: #0f172a;
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.08),
+      0 6px 16px -6px rgba(15, 23, 42, 0.12);
+  }
+  .expenses-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.72));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.1),
+      0 10px 24px -8px rgba(37, 99, 235, 0.18);
+  }
+  .dark .expenses-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.24),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.45),
+      0 8px 20px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  }
+  .dark .expenses-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+    color: #ffffff;
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.36),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.5),
+      0 12px 26px -6px rgba(0, 0, 0, 0.78);
+  }
+
+  .expenses-glass-btn-accent {
+    background: linear-gradient(-75deg, rgba(124, 58, 237, 0.9), rgba(99, 102, 241, 0.98), rgba(124, 58, 237, 0.9));
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.18),
+      0 10px 26px -6px rgba(124, 58, 237, 0.48);
+  }
+  .expenses-glass-btn-accent::after {
+    background:
+      conic-gradient(
+        from var(--expenses-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.9) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.9) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.9) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.2));
+  }
+  .expenses-glass-btn-accent:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(139, 92, 246, 0.96), rgba(167, 139, 250, 1), rgba(139, 92, 246, 0.96));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.75),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2),
+      0 14px 32px -6px rgba(124, 58, 237, 0.62);
+  }
+
+  .expenses-glass-pill-active {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.92) 0%, rgba(99, 102, 241, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.6),
+      0 6px 18px -4px rgba(124, 58, 237, 0.55) !important;
+  }
+
+  .expenses-glass-input {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: inset 0 1.5px 3px rgba(15, 23, 42, 0.04) !important;
+    transition: all 250ms ease !important;
+  }
+  .dark .expenses-glass-input {
+    background: rgba(13, 18, 36, 0.78) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.45) !important;
+  }
+  .expenses-glass-input:focus {
+    background: rgba(255, 255, 255, 0.96) !important;
+    border-color: rgba(139, 92, 246, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+  }
+  .dark .expenses-glass-input:focus {
+    background: rgba(18, 24, 48, 0.88) !important;
+    border-color: rgba(167, 139, 250, 0.55) !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35), inset 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+  }
+`;
+
+function ExpensesGlassButton({
+    variant = "neutral",
+    size = "md",
+    className,
+    children,
+    ...props
+}) {
+    const base = "expenses-glass-btn inline-flex items-center justify-center font-semibold rounded-full select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 disabled:opacity-50 disabled:pointer-events-none";
+    const sizes = {
+        sm: "h-8 px-3 text-xs gap-1.5",
+        md: "h-9 sm:h-10 px-4 py-2 text-xs sm:text-[13px] gap-2",
+        lg: "h-11 px-5 text-sm gap-2.5",
+        icon: "w-8 h-8 rounded-full p-0 flex items-center justify-center",
+    };
+    const variants = {
+        accent: "expenses-glass-btn-accent text-white",
+        neutral: "expenses-glass-btn-neutral text-slate-800 dark:text-zinc-100",
+        "pill-active": "expenses-glass-pill-active text-white",
+    };
+
+    return (
+        <button
+            {...props}
+            className={cn(base, sizes[size] || sizes.md, variants[variant], className)}
+        >
+            <span aria-hidden="true" className="expenses-glass-sheen" />
+            <span className="relative z-10 inline-flex items-center gap-1.5 whitespace-nowrap">
+                {children}
+            </span>
+        </button>
+    );
+}
+
 const GLASS_CARD =
     "rounded-[24px] bg-white/80 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_18px_46px_-12px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.08)]";
 
@@ -409,6 +653,7 @@ export default function ExpenseList({
 
     return (
         <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+            <style dangerouslySetInnerHTML={{ __html: expensesGlassStyles }} />
             {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
             <div
                 aria-hidden="true"
@@ -497,20 +742,23 @@ export default function ExpenseList({
                     <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
                         <a
                             href="/api/export"
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-[13px] font-medium bg-white/85 hover:bg-white text-slate-700 hover:text-slate-950 border border-white/95 dark:bg-[#131831]/80 dark:hover:bg-[#192040] dark:text-zinc-200 dark:hover:text-white dark:border-white/[0.12] backdrop-blur-xl shadow-[0_6px_18px_rgba(15,23,42,0.06)] dark:shadow-[0_10px_24px_rgba(0,0,0,0.4)] transition-all cursor-pointer"
+                            className="expenses-glass-btn expenses-glass-btn-neutral px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold text-slate-700 dark:text-zinc-200 transition-all cursor-pointer inline-flex items-center gap-2"
                         >
-                            <Download className="w-3.5 h-3.5" />
-                            <span>Export CSV</span>
+                            <span aria-hidden="true" className="expenses-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-2">
+                                <Download className="w-3.5 h-3.5" />
+                                <span>Export CSV</span>
+                            </span>
                         </a>
 
-                        <button
-                            type="button"
+                        <ExpensesGlassButton
+                            variant="accent"
                             onClick={openAddModal}
-                            className="inline-flex items-center gap-1.5 px-4.5 py-2 rounded-full text-xs sm:text-[13px] font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 hover:brightness-110 text-white shadow-[0_8px_24px_-4px_rgba(124,58,237,0.55)] hover:shadow-[0_12px_28px_-4px_rgba(124,58,237,0.7)] transition-all cursor-pointer"
+                            className="px-5 py-2 text-xs sm:text-[13px] shadow-[0_8px_24px_rgba(124,58,237,0.45)]"
                         >
-                            <Plus className="w-4 h-4 stroke-[2.25]" />
+                            <Plus className="w-4 h-4 stroke-[2.5]" />
                             <span>Add Expense</span>
-                        </button>
+                        </ExpensesGlassButton>
                     </div>
                 </div>
 
@@ -697,7 +945,7 @@ export default function ExpenseList({
                             onChange={(e) => handleSearchChange(e.target.value)}
                             placeholder="Search expense title or notes..."
                             aria-label="Search expenses by title or notes"
-                            className="w-full h-11 pl-11 pr-24 rounded-2xl bg-white/80 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_6px_20px_-8px_rgba(30,41,59,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_10px_28px_-10px_rgba(0,0,0,0.55),inset_0_1px_1px_rgba(255,255,255,0.06)] text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 transition-all"
+                            className="expenses-glass-input w-full h-11 pl-11 pr-24 rounded-2xl text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus-visible:outline-none transition-all"
                         />
 
                         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
@@ -771,23 +1019,26 @@ export default function ExpenseList({
                                 type="button"
                                 onClick={() => handleCategoryChange(cat)}
                                 className={cn(
-                                    "shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all cursor-pointer border",
+                                    "expenses-glass-btn shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium transition-all cursor-pointer border",
                                     isActive
-                                        ? "bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white border-transparent shadow-[0_6px_20px_-4px_rgba(124,58,237,0.58)]"
-                                        : "bg-white/75 hover:bg-white text-slate-700 hover:text-slate-950 border-white/95 dark:bg-[#10152b]/78 dark:hover:bg-[#171f3e] dark:text-zinc-300 dark:hover:text-white dark:border-white/[0.1]"
+                                        ? "expenses-glass-pill-active text-white border-transparent shadow-[0_6px_20px_-4px_rgba(124,58,237,0.58)]"
+                                        : "expenses-glass-btn-neutral text-slate-700 dark:text-zinc-300"
                                 )}
                             >
-                                <CatIcon
-                                    className={cn(
-                                        "w-3.5 h-3.5 shrink-0",
-                                        isActive
-                                            ? "text-white"
-                                            : style
-                                            ? style.color
-                                            : "text-slate-500 dark:text-zinc-400"
-                                    )}
-                                />
-                                <span>{cat === "All" ? "All Categories" : cat}</span>
+                                <span aria-hidden="true" className="expenses-glass-sheen" />
+                                <span className="relative z-10 inline-flex items-center gap-2">
+                                    <CatIcon
+                                        className={cn(
+                                            "w-3.5 h-3.5 shrink-0",
+                                            isActive
+                                                ? "text-white"
+                                                : style
+                                                ? style.color
+                                                : "text-slate-500 dark:text-zinc-400"
+                                        )}
+                                    />
+                                    <span>{cat === "All" ? "All Categories" : cat}</span>
+                                </span>
                             </button>
                         );
                     })}
@@ -1066,25 +1317,28 @@ export default function ExpenseList({
                     </p>
 
                     <div className="flex items-center gap-2">
-                        <button
+                        <ExpensesGlassButton
+                            variant="neutral"
+                            size="sm"
                             type="button"
                             onClick={() => setPage((p) => Math.max(1, p - 1))}
                             disabled={page <= 1 || isFetching}
-                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/85 hover:bg-white text-slate-700 border border-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.11] dark:text-zinc-200 dark:border-white/[0.12] disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
                         >
                             <ChevronLeft className="w-3.5 h-3.5" />
                             <span>Previous</span>
-                        </button>
+                        </ExpensesGlassButton>
 
-                        <button
+                        <ExpensesGlassButton
+                            variant="accent"
+                            size="sm"
                             type="button"
                             onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                             disabled={page >= totalPages || isFetching}
-                            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow-[0_6px_18px_-4px_rgba(124,58,237,0.55)] hover:brightness-110 disabled:opacity-40 disabled:pointer-events-none transition-all cursor-pointer"
+                            className="shadow-[0_6px_18px_-4px_rgba(124,58,237,0.55)]"
                         >
                             <span>Next</span>
                             <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
+                        </ExpensesGlassButton>
                     </div>
                 </div>
             </div>
@@ -1142,26 +1396,29 @@ export default function ExpenseList({
                     )}
 
                     <DialogFooter className="flex items-center justify-end gap-2 pt-2">
-                        <button
+                        <ExpensesGlassButton
+                            variant="neutral"
                             type="button"
                             onClick={() => setExpenseToDelete(null)}
                             disabled={Boolean(deletingId)}
-                            className="px-4 py-2 rounded-full text-xs font-medium bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 dark:bg-white/[0.06] dark:hover:bg-white/[0.1] dark:text-zinc-200 dark:border-white/[0.12] transition-colors cursor-pointer"
                         >
                             Cancel
-                        </button>
+                        </ExpensesGlassButton>
                         <button
                             type="button"
                             onClick={handleDeleteConfirmed}
                             disabled={Boolean(deletingId)}
-                            className="px-4.5 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-rose-500 to-red-600 hover:brightness-110 text-white shadow-[0_8px_20px_-4px_rgba(225,29,72,0.5)] disabled:opacity-50 inline-flex items-center gap-1.5 transition-all cursor-pointer"
+                            className="expenses-glass-btn px-4.5 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-rose-500 to-red-600 hover:brightness-110 text-white shadow-[0_8px_20px_-4px_rgba(225,29,72,0.5)] disabled:opacity-50 inline-flex items-center gap-1.5 transition-all cursor-pointer"
                         >
-                            {deletingId ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : (
-                                <Trash2 className="w-3.5 h-3.5" />
-                            )}
-                            <span>{deletingId ? "Deleting..." : "Delete Expense"}</span>
+                            <span aria-hidden="true" className="expenses-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-1.5">
+                                {deletingId ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                ) : (
+                                    <Trash2 className="w-3.5 h-3.5" />
+                                )}
+                                <span>{deletingId ? "Deleting..." : "Delete Expense"}</span>
+                            </span>
                         </button>
                     </DialogFooter>
                 </DialogContent>

@@ -109,17 +109,17 @@ export default function CalendarHeatmap({
     return (
         <div
             className={cn(
-                "rounded-[24px] bg-white/78 dark:bg-white/[0.04] backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_16px_42px_-12px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.08)] overflow-hidden flex flex-col transition-colors",
+                "rounded-[24px] bg-white/80 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_18px_46px_-12px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.08)] overflow-hidden flex flex-col transition-colors",
                 className
             )}
         >
             <div className="p-5 sm:p-6 pb-3 flex flex-col sm:flex-row sm:items-start justify-between gap-3">
                 <div className="flex items-start gap-3.5 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/12 dark:bg-blue-500/15 border border-blue-500/20 dark:border-blue-400/25 flex items-center justify-center text-blue-600 dark:text-sky-400 shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-none">
-                        <CalendarIcon className="w-4.5 h-4.5" />
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-[0_6px_18px_rgba(16,185,129,0.35)] flex items-center justify-center shrink-0">
+                        <CalendarIcon className="w-[18px] h-[18px]" />
                     </div>
                     <div className="min-w-0">
-                        <h3 className="text-base font-semibold tracking-tight text-slate-900 dark:text-white">
+                        <h3 className="text-base font-semibold tracking-tight text-slate-950 dark:text-white">
                             Monthly Spending Heatmap
                         </h3>
                         <p className="text-xs text-slate-600 dark:text-zinc-400 mt-0.5">

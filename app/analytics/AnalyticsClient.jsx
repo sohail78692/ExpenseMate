@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import {
     format,
     startOfMonth,
@@ -61,8 +62,342 @@ function formatINR(value) {
 
 const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+// Optical liquid-glass button, nav pill, card & input styles matching Auth & Profile
+const analyticsGlassStyles = `
+  @property --analytics-angle-1 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -75deg;
+  }
+  @property --analytics-angle-2 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -45deg;
+  }
+
+  .analytics-glass-shell {
+    isolation: isolate;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.42) 100%);
+    backdrop-filter: blur(28px) saturate(195%);
+    -webkit-backdrop-filter: blur(28px) saturate(195%);
+    border: 1px solid rgba(255, 255, 255, 0.88);
+    box-shadow:
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px 0 rgba(15, 23, 42, 0.04),
+      0 24px 52px -20px rgba(37, 99, 235, 0.14),
+      0 8px 24px -10px rgba(15, 23, 42, 0.06);
+  }
+  .dark .analytics-glass-shell {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(5, 8, 20, 0.45) 100%);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.22),
+      inset 0 -1px 1.5px 0 rgba(0, 0, 0, 0.55),
+      0 26px 60px -18px rgba(0, 0, 0, 0.85);
+  }
+
+  .analytics-glass-subcard {
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.62) 0%, rgba(255, 255, 255, 0.4) 100%);
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.9),
+      0 8px 24px -12px rgba(15, 23, 42, 0.08);
+  }
+  .dark .analytics-glass-subcard {
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.045) 0%, rgba(8, 12, 24, 0.32) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+      inset 0 1px 1px 0 rgba(255, 255, 255, 0.14),
+      0 10px 28px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Optical Glass Button (specular rim + light sweep) */
+  .analytics-glass-btn {
+    --anim-time: 380ms;
+    --anim-ease: cubic-bezier(0.25, 1, 0.5, 1);
+    --rim-width: 1.25px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    transition: all var(--anim-time) var(--anim-ease);
+    transform-style: preserve-3d;
+  }
+
+  .analytics-glass-btn::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--rim-width);
+    box-sizing: border-box;
+    pointer-events: none;
+    background:
+      conic-gradient(
+        from var(--analytics-angle-1) at 50% 50%,
+        rgba(15, 23, 42, 0.28) 0%,
+        transparent 6% 40%,
+        rgba(15, 23, 42, 0.28) 50%,
+        transparent 60% 94%,
+        rgba(15, 23, 42, 0.28) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all var(--anim-time) var(--anim-ease), --analytics-angle-1 500ms ease;
+  }
+
+  .dark .analytics-glass-btn::after {
+    background:
+      conic-gradient(
+        from var(--analytics-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.58) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.58) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.58) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  }
+
+  .analytics-glass-btn:hover::after {
+    --analytics-angle-1: -125deg;
+  }
+
+  .analytics-glass-btn:active {
+    transform: scale(0.975);
+  }
+
+  .analytics-glass-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .analytics-glass-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      var(--analytics-angle-2),
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 42% 50%,
+      transparent 58%
+    );
+    background-size: 220% 220%;
+    background-position: 0% 50%;
+    mix-blend-mode: screen;
+    opacity: 0.65;
+    transition:
+      background-position 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      --analytics-angle-2 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      opacity 300ms ease;
+  }
+
+  .analytics-glass-btn:hover .analytics-glass-sheen::after {
+    background-position: 32% 50%;
+    opacity: 0.95;
+  }
+
+  .analytics-glass-btn:active .analytics-glass-sheen::after {
+    background-position: 55% 20%;
+    --analytics-angle-2: -15deg;
+  }
+
+  /* Neutral Glass Button */
+  .analytics-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.52));
+    color: #0f172a;
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.08),
+      0 6px 16px -6px rgba(15, 23, 42, 0.12);
+  }
+  .analytics-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.7));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.1),
+      0 10px 24px -8px rgba(37, 99, 235, 0.18);
+  }
+  .dark .analytics-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.24),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.45),
+      0 8px 20px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  }
+  .dark .analytics-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+    color: #ffffff;
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.36),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.5),
+      0 12px 26px -6px rgba(0, 0, 0, 0.78);
+  }
+
+  /* Accent Liquid-Glass CTA */
+  .analytics-glass-btn-accent {
+    background: linear-gradient(-75deg, rgba(99, 102, 241, 0.88), rgba(139, 92, 246, 0.98), rgba(99, 102, 241, 0.88));
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.18),
+      0 10px 26px -6px rgba(99, 102, 241, 0.48);
+  }
+  .analytics-glass-btn-accent::after {
+    background:
+      conic-gradient(
+        from var(--analytics-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.8) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.8) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.8) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.45), rgba(99, 102, 241, 0.35));
+  }
+  .analytics-glass-btn-accent:hover {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow:
+      inset 0 1.5px 2.5px rgba(255, 255, 255, 0.7),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.22),
+      0 14px 32px -6px rgba(99, 102, 241, 0.62);
+  }
+  .dark .analytics-glass-btn-accent {
+    background: linear-gradient(-75deg, rgba(99, 102, 241, 0.32), rgba(139, 92, 246, 0.58), rgba(99, 102, 241, 0.32));
+    color: #ffffff;
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.48),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.45),
+      0 10px 28px -6px rgba(99, 102, 241, 0.52),
+      0 0 18px 0 rgba(99, 102, 241, 0.26);
+  }
+  .dark .analytics-glass-btn-accent:hover {
+    background: linear-gradient(-75deg, rgba(99, 102, 241, 0.42), rgba(139, 92, 246, 0.7), rgba(99, 102, 241, 0.42));
+    box-shadow:
+      inset 0 1.5px 2.5px rgba(255, 255, 255, 0.62),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.5),
+      0 14px 34px -6px rgba(99, 102, 241, 0.66),
+      0 0 24px 0 rgba(99, 102, 241, 0.36);
+  }
+
+  /* Active Glass Pill (for Range Switchers, Mode Toggle, Category filters, Sub-nav) */
+  .analytics-glass-pill-active {
+    background: linear-gradient(-75deg, rgba(99, 102, 241, 0.88), rgba(124, 58, 237, 0.96), rgba(99, 102, 241, 0.88));
+    color: #ffffff !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.28);
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.65),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.2),
+      0 6px 18px -4px rgba(99, 102, 241, 0.5);
+  }
+  .dark .analytics-glass-pill-active {
+    background: linear-gradient(-75deg, rgba(99, 102, 241, 0.42), rgba(124, 58, 237, 0.68), rgba(99, 102, 241, 0.42));
+    color: #ffffff !important;
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.45),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.45),
+      0 8px 22px -4px rgba(99, 102, 241, 0.6),
+      0 0 14px 0 rgba(99, 102, 241, 0.3);
+  }
+
+  /* Optical Glass Input (for search bar in transactions tab) */
+  .analytics-glass-input {
+    backdrop-filter: blur(14px) saturate(180%);
+    -webkit-backdrop-filter: blur(14px) saturate(180%);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.6));
+    border: 1px solid rgba(15, 23, 42, 0.14);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.95),
+      inset 0 -1px 1px rgba(15, 23, 42, 0.05),
+      0 4px 12px -4px rgba(15, 23, 42, 0.08);
+    transition: all 280ms cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .analytics-glass-input:hover {
+    border-color: rgba(99, 102, 241, 0.45);
+  }
+  .analytics-glass-input:focus,
+  .analytics-glass-input:focus-within {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.82));
+    border-color: rgba(99, 102, 241, 0.65);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 1),
+      0 0 0 3px rgba(99, 102, 241, 0.16),
+      0 8px 20px -6px rgba(99, 102, 241, 0.22);
+  }
+  .dark .analytics-glass-input {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.18),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.45),
+      0 6px 16px -6px rgba(0, 0, 0, 0.55);
+  }
+  .dark .analytics-glass-input:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  .dark .analytics-glass-input:focus,
+  .dark .analytics-glass-input:focus-within {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.05));
+    border-color: rgba(99, 102, 241, 0.75);
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.28),
+      0 0 0 3px rgba(99, 102, 241, 0.22),
+      0 10px 24px -6px rgba(0, 0, 0, 0.7);
+  }
+`;
+
+function AnalyticsGlassButton({
+    as: Component = "button",
+    variant = "neutral",
+    className,
+    children,
+    ...props
+}) {
+    const componentProps =
+        Component === "button" && !props.type ? { type: "button", ...props } : props;
+
+    return (
+        <Component
+            {...componentProps}
+            className={cn(
+                "analytics-glass-btn inline-flex items-center justify-center rounded-full font-semibold cursor-pointer disabled:opacity-50 disabled:pointer-events-none transition-all",
+                variant === "accent" && "analytics-glass-btn-accent",
+                variant === "neutral" && "analytics-glass-btn-neutral",
+                variant === "pill-active" && "analytics-glass-pill-active",
+                className
+            )}
+        >
+            <span aria-hidden="true" className="analytics-glass-sheen" />
+            <span className="relative z-10 inline-flex items-center justify-center gap-1.5">
+                {children}
+            </span>
+        </Component>
+    );
+}
+
 /** Builds a smooth decorative SVG path from normalized numeric values. */
-function buildSparklinePaths(values, width = 88, height = 34) {
+function buildSparklinePaths(values, width = 92, height = 34) {
     const pts = values && values.length >= 2 ? values : [0.15, 0.45, 0.3, 0.72, 0.48, 0.85, 0.62];
     const max = Math.max(...pts, 1);
     const min = Math.min(...pts, 0);
@@ -89,17 +424,17 @@ function buildSparklinePaths(values, width = 88, height = 34) {
     return { line, area };
 }
 
-function MiniSparkline({ id, color, values }) {
-    const { line, area } = useMemo(() => buildSparklinePaths(values), [values]);
+function MiniSparkline({ id, color, values, className }) {
+    const { line, area } = useMemo(() => buildSparklinePaths(values, 92, 34), [values]);
     return (
         <svg
-            viewBox="0 0 88 34"
-            className="w-20 sm:w-[88px] h-[34px] shrink-0 overflow-visible"
+            viewBox="0 0 92 34"
+            className={cn("w-20 sm:w-[92px] h-[34px] shrink-0 overflow-visible", className)}
             aria-hidden="true"
         >
             <defs>
                 <linearGradient id={`spark-${id}`} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={color} stopOpacity="0.32" />
+                    <stop offset="0%" stopColor={color} stopOpacity="0.38" />
                     <stop offset="100%" stopColor={color} stopOpacity="0.0" />
                 </linearGradient>
             </defs>
@@ -147,7 +482,10 @@ function InsightBarsArtwork() {
 }
 
 const GLASS_CARD =
-    "rounded-[24px] bg-white/78 dark:bg-white/[0.04] backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_16px_42px_-12px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.08)]";
+    "rounded-[24px] bg-white/80 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_18px_46px_-12px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.08)]";
+
+const GLASS_MODAL =
+    "rounded-3xl bg-white/90 dark:bg-[#0b1022]/92 backdrop-blur-2xl border border-white/95 dark:border-white/[0.14] shadow-[0_24px_64px_rgba(15,23,42,0.18),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_24px_64px_rgba(0,0,0,0.78),inset_0_1px_1px_rgba(255,255,255,0.08)] text-slate-900 dark:text-zinc-100 max-h-[90vh] overflow-y-auto";
 
 export default function AnalyticsClient({ initialData }) {
     const [data, setData] = useState(initialData);
@@ -607,99 +945,140 @@ export default function AnalyticsClient({ initialData }) {
 
     return (
         <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+            {/* Scoped Liquid-Glass CSS Shader */}
+            <style dangerouslySetInnerHTML={{ __html: analyticsGlassStyles }} />
+
             {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
             <div
                 aria-hidden="true"
                 className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
             >
-                <div className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full bg-sky-300/30 blur-[135px] dark:bg-blue-500/14" />
-                <div className="absolute top-12 -right-24 h-[500px] w-[500px] rounded-full bg-indigo-300/30 blur-[140px] dark:bg-indigo-600/14" />
-                <div className="absolute -bottom-32 -left-24 h-[480px] w-[480px] rounded-full bg-violet-300/25 blur-[135px] dark:bg-violet-600/12" />
-                <div className="absolute bottom-8 right-1/3 h-[360px] w-[360px] rounded-full bg-emerald-200/25 blur-[120px] dark:bg-emerald-500/8" />
+                <div className="absolute -top-32 left-1/4 h-[520px] w-[520px] rounded-full bg-indigo-300/25 blur-[140px] dark:bg-indigo-600/16" />
+                <div className="absolute top-12 -right-24 h-[500px] w-[500px] rounded-full bg-violet-300/25 blur-[140px] dark:bg-violet-600/16" />
+                <div className="absolute -bottom-32 -left-24 h-[480px] w-[480px] rounded-full bg-sky-300/25 blur-[135px] dark:bg-blue-600/14" />
+                <div className="absolute bottom-8 right-1/3 h-[340px] w-[340px] rounded-full bg-emerald-200/20 blur-[120px] dark:bg-emerald-500/10" />
             </div>
 
-            {/* Header Row (Top Navbar remains completely untouched) */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div>
-                    <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-zinc-300 mb-1.5">
-                        <span className="inline-flex items-center gap-1.5">
-                            <span
-                                className={cn(
-                                    "w-2 h-2 rounded-full",
-                                    isCurrentMonth
-                                        ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
-                                        : "bg-slate-400 dark:bg-zinc-500"
-                                )}
-                            />
-                            <span className="text-slate-700 dark:text-zinc-200">
-                                {isCurrentMonth ? "Live Month" : "Archive"}
+            {/* Hero Header with Action Bar + 3D Purple Analytics Chart Illustration */}
+            <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-4 pt-1">
+                <div className="relative z-10 min-w-0 flex-1 space-y-3">
+                    <div>
+                        <div className="flex flex-wrap items-center gap-2 text-xs font-medium text-slate-600 dark:text-zinc-300 mb-1.5">
+                            <span className="inline-flex items-center gap-1.5">
+                                <span
+                                    className={cn(
+                                        "w-2 h-2 rounded-full",
+                                        isCurrentMonth
+                                            ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.7)]"
+                                            : "bg-slate-400 dark:bg-zinc-500"
+                                    )}
+                                />
+                                <span className="text-slate-700 dark:text-zinc-200">
+                                    {isCurrentMonth ? "Live Month" : "Archive"}
+                                </span>
                             </span>
-                        </span>
-                        <span className="text-slate-400 dark:text-zinc-600">•</span>
-                        <span className="text-slate-600 dark:text-zinc-300">{monthLabel}</span>
+                            <span className="text-slate-400 dark:text-zinc-600">•</span>
+                            <span className="text-slate-600 dark:text-zinc-300 tabular-nums">
+                                {monthLabel}
+                            </span>
+                        </div>
+
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-950 dark:text-white">
+                            Spending{" "}
+                            <span className="bg-gradient-to-r from-blue-600 via-indigo-500 to-violet-500 dark:from-sky-400 dark:via-indigo-400 dark:to-violet-400 bg-clip-text text-transparent">
+                                Analytics
+                            </span>
+                        </h1>
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 mt-1 max-w-xl">
+                            Track daily velocity, category distribution, and monthly spending habits.
+                        </p>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-950 dark:text-white">
-                        Spending Analytics
-                    </h1>
-                    <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 mt-1">
-                        Track daily velocity, category distribution, and monthly spending habits.
-                    </p>
+
+                    {/* Controls Bar: Frosted Month Switcher + Export CSV + AI Insights */}
+                    <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
+                        {/* Frosted Month Switcher Pill */}
+                        <div
+                            className="inline-flex items-center rounded-full bg-white/80 dark:bg-white/[0.06] border border-white/95 dark:border-white/[0.12] backdrop-blur-xl p-1 shadow-[0_4px_14px_rgba(15,23,42,0.05)]"
+                            role="group"
+                            aria-label="Month navigation"
+                        >
+                            <button
+                                type="button"
+                                onClick={() => handleMonthChange(subMonths(selectedMonth, 1))}
+                                disabled={isLoadingMonth}
+                                aria-label="Previous month"
+                                className="p-1.5 rounded-full text-slate-600 hover:text-slate-950 hover:bg-slate-100/90 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/10 disabled:opacity-40 transition-colors cursor-pointer"
+                            >
+                                <ChevronLeft className="w-3.5 h-3.5" />
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => !isCurrentMonth && handleMonthChange(currentMonthStart)}
+                                disabled={isCurrentMonth || isLoadingMonth}
+                                title={isCurrentMonth ? "Current month" : "Jump to current month"}
+                                className={cn(
+                                    "px-2.5 py-0.5 text-xs font-semibold min-w-[92px] text-center flex items-center justify-center gap-1.5 transition-colors",
+                                    isCurrentMonth
+                                        ? "text-slate-900 dark:text-white cursor-default"
+                                        : "text-slate-700 hover:text-slate-950 dark:text-zinc-200 dark:hover:text-white cursor-pointer"
+                                )}
+                            >
+                                {isLoadingMonth && (
+                                    <Loader2 className="w-3 h-3 animate-spin text-indigo-500 dark:text-indigo-400" />
+                                )}
+                                <span>{shortMonthLabel}</span>
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={() => handleMonthChange(addMonths(selectedMonth, 1))}
+                                disabled={isCurrentMonth || isLoadingMonth}
+                                aria-label="Next month"
+                                className="p-1.5 rounded-full text-slate-600 hover:text-slate-950 hover:bg-slate-100/90 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                            >
+                                <ChevronRight className="w-3.5 h-3.5" />
+                            </button>
+                        </div>
+
+                        {/* Liquid-Glass Neutral Button: Export CSV */}
+                        <AnalyticsGlassButton
+                            as="a"
+                            href={exportHref}
+                            download
+                            variant="neutral"
+                            className="px-3.5 py-2 text-xs sm:text-[13px] shadow-[0_4px_14px_rgba(15,23,42,0.05)]"
+                        >
+                            <Download className="w-3.5 h-3.5" />
+                            <span>Export CSV</span>
+                        </AnalyticsGlassButton>
+
+                        {/* Liquid-Glass Accent Button: AI Insights */}
+                        <AnalyticsGlassButton
+                            variant="accent"
+                            onClick={handleOpenInsights}
+                            className="px-4 py-2 text-xs sm:text-[13px] shadow-[0_8px_22px_rgba(99,102,241,0.35)]"
+                        >
+                            <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
+                            <span>AI Insights</span>
+                        </AnalyticsGlassButton>
+                    </div>
                 </div>
 
-                {/* Right Controls: Month Switcher & Export CSV */}
-                <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+                {/* Right-Aligned 3D Purple Analytics Chart Wave Illustration */}
+                <div className="relative pointer-events-none select-none shrink-0 flex justify-center md:justify-end">
                     <div
-                        className="inline-flex items-center rounded-full bg-white/80 dark:bg-white/[0.06] backdrop-blur-xl border border-white/95 dark:border-white/[0.12] p-1 shadow-[0_4px_16px_rgba(15,23,42,0.06)] dark:shadow-none"
-                        role="group"
-                        aria-label="Month navigation"
-                    >
-                        <button
-                            type="button"
-                            onClick={() => handleMonthChange(subMonths(selectedMonth, 1))}
-                            disabled={isLoadingMonth}
-                            aria-label="Previous month"
-                            className="p-1.5 rounded-full text-slate-600 hover:text-slate-950 hover:bg-slate-100/90 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/10 disabled:opacity-40 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => !isCurrentMonth && handleMonthChange(currentMonthStart)}
-                            disabled={isCurrentMonth || isLoadingMonth}
-                            title={isCurrentMonth ? "Current month" : "Jump to current month"}
-                            className={cn(
-                                "px-3 py-1 text-xs sm:text-[13px] font-semibold min-w-[96px] text-center flex items-center justify-center gap-1.5 transition-colors",
-                                isCurrentMonth
-                                    ? "text-slate-900 dark:text-white cursor-default"
-                                    : "text-slate-700 hover:text-blue-600 dark:text-zinc-200 dark:hover:text-sky-400 cursor-pointer"
-                            )}
-                        >
-                            {isLoadingMonth && (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600 dark:text-sky-400" />
-                            )}
-                            <span>{shortMonthLabel}</span>
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => handleMonthChange(addMonths(selectedMonth, 1))}
-                            disabled={isCurrentMonth || isLoadingMonth}
-                            aria-label="Next month"
-                            className="p-1.5 rounded-full text-slate-600 hover:text-slate-950 hover:bg-slate-100/90 dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
-                        >
-                            <ChevronRight className="w-4 h-4" />
-                        </button>
-                    </div>
-
-                    <a
-                        href={exportHref}
-                        download
-                        className="px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold text-slate-800 hover:text-slate-950 bg-white/80 hover:bg-white border border-white/95 dark:text-zinc-100 dark:hover:text-white dark:bg-white/[0.06] dark:hover:bg-white/[0.11] dark:border-white/[0.12] backdrop-blur-xl transition-all cursor-pointer inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 shadow-[0_4px_16px_rgba(15,23,42,0.06)] dark:shadow-none"
-                    >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>Export CSV</span>
-                    </a>
+                        aria-hidden="true"
+                        className="absolute inset-x-4 bottom-2 top-4 rounded-full bg-gradient-to-tr from-violet-500/22 via-indigo-400/20 to-sky-400/22 blur-2xl"
+                    />
+                    <Image
+                        src="/images/card-analytics-chart.png"
+                        alt="3D purple analytics chart wave illustration"
+                        width={780}
+                        height={406}
+                        priority
+                        className="relative w-44 sm:w-56 md:w-[240px] lg:w-[270px] h-auto object-contain drop-shadow-[0_14px_26px_rgba(139,92,246,0.32)]"
+                    />
                 </div>
             </div>
 
@@ -737,150 +1116,177 @@ export default function AnalyticsClient({ initialData }) {
                 )}
             >
                 {/* KPI 1: Monthly Total */}
-                <div className={cn(GLASS_CARD, "rounded-[22px] p-5 flex flex-col justify-between gap-3")}>
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-blue-500/12 dark:bg-blue-500/18 border border-blue-500/20 dark:border-blue-400/25 flex items-center justify-center text-blue-600 dark:text-sky-400 shrink-0">
-                            <Wallet className="w-4 h-4" />
+                <div
+                    className={cn(
+                        GLASS_CARD,
+                        "relative overflow-hidden rounded-[22px] p-5 flex flex-col justify-between gap-2.5 bg-gradient-to-br from-blue-50/85 via-white/80 to-indigo-50/40 dark:from-blue-500/[0.12] dark:via-[#0d1224]/85 dark:to-indigo-500/[0.06]"
+                    )}
+                >
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -bottom-8 -right-8 w-32 h-24 rounded-full bg-blue-400/20 dark:bg-blue-500/16 blur-2xl"
+                    />
+                    <div className="flex items-center justify-between gap-2 relative z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-blue-500/15 dark:bg-blue-500/22 border border-blue-500/25 dark:border-blue-400/30 flex items-center justify-center text-blue-600 dark:text-sky-300 shrink-0">
+                                <Wallet className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs sm:text-[13px] font-medium text-slate-600 dark:text-zinc-300">
+                                Monthly Total
+                            </span>
                         </div>
-                        <span className="text-xs sm:text-[13px] font-medium text-slate-600 dark:text-zinc-300">
-                            Monthly Total
-                        </span>
-                    </div>
-                    <div className="flex items-end justify-between gap-2">
-                        <div className="min-w-0">
-                            <p className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white font-mono tabular-nums truncate">
-                                {formatINR(analytics.totalSpent)}
-                            </p>
-                            <p className="text-xs mt-1.5 flex items-center gap-1 truncate">
-                                {hasPrevComparison ? (
-                                    <>
-                                        <span
-                                            className={cn(
-                                                "font-semibold inline-flex items-center gap-0.5",
-                                                isSpendingUp
-                                                    ? "text-rose-600 dark:text-rose-400"
-                                                    : "text-emerald-600 dark:text-emerald-400"
-                                            )}
-                                        >
-                                            {isSpendingUp ? "↑" : "↓"} {isSpendingUp ? "+" : "-"}
-                                            {momAbs}%
-                                        </span>
-                                        <span className="text-slate-500 dark:text-zinc-400 truncate">
-                                            vs {prevShortMonthLabel}
-                                        </span>
-                                    </>
-                                ) : (
-                                    <span className="text-slate-500 dark:text-zinc-400">
-                                        {analytics.monthExpenses.length}{" "}
-                                        {analytics.monthExpenses.length === 1 ? "transaction" : "transactions"}
-                                    </span>
+                        {hasPrevComparison ? (
+                            <span
+                                className={cn(
+                                    "inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold tabular-nums border shrink-0",
+                                    isSpendingUp
+                                        ? "bg-rose-100/90 border-rose-200 text-rose-700 dark:bg-rose-500/18 dark:border-rose-400/35 dark:text-rose-300"
+                                        : "bg-emerald-100/90 border-emerald-200 text-emerald-700 dark:bg-emerald-500/18 dark:border-emerald-400/35 dark:text-emerald-300"
                                 )}
-                            </p>
-                        </div>
+                            >
+                                {isSpendingUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                                <span>{isSpendingUp ? `+${momAbs}%` : `-${momAbs}%`}</span>
+                            </span>
+                        ) : null}
+                    </div>
+                    <div className="relative z-10 pr-14 pt-0.5">
+                        <p className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950 dark:text-white font-mono tabular-nums truncate">
+                            {formatINR(analytics.totalSpent)}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 truncate">
+                            {hasPrevComparison
+                                ? `vs ${prevShortMonthLabel}`
+                                : `${analytics.monthExpenses.length} ${analytics.monthExpenses.length === 1 ? "transaction" : "transactions"}`}
+                        </p>
+                    </div>
+                    <div className="pointer-events-none absolute bottom-1 right-2 opacity-90">
                         <MiniSparkline id="monthly" color="#3B82F6" values={sparklines.total} />
                     </div>
                 </div>
 
                 {/* KPI 2: Daily Average */}
-                <div className={cn(GLASS_CARD, "rounded-[22px] p-5 flex flex-col justify-between gap-3")}>
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-violet-500/12 dark:bg-violet-500/18 border border-violet-500/20 dark:border-violet-400/25 flex items-center justify-center text-violet-600 dark:text-violet-400 shrink-0">
-                            <CalendarDays className="w-4 h-4" />
+                <div
+                    className={cn(
+                        GLASS_CARD,
+                        "relative overflow-hidden rounded-[22px] p-5 flex flex-col justify-between gap-2.5 bg-gradient-to-br from-violet-50/85 via-white/80 to-purple-50/40 dark:from-violet-500/[0.12] dark:via-[#0d1224]/85 dark:to-purple-500/[0.06]"
+                    )}
+                >
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -bottom-8 -right-8 w-32 h-24 rounded-full bg-violet-400/20 dark:bg-violet-500/16 blur-2xl"
+                    />
+                    <div className="flex items-center justify-between gap-2 relative z-10">
+                        <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-violet-500/15 dark:bg-violet-500/22 border border-violet-500/25 dark:border-violet-400/30 flex items-center justify-center text-violet-600 dark:text-violet-300 shrink-0">
+                                <CalendarDays className="w-4 h-4" />
+                            </div>
+                            <span className="text-xs sm:text-[13px] font-medium text-slate-600 dark:text-zinc-300">
+                                Daily Average
+                            </span>
                         </div>
-                        <span className="text-xs sm:text-[13px] font-medium text-slate-600 dark:text-zinc-300">
-                            Daily Average
-                        </span>
-                    </div>
-                    <div className="flex items-end justify-between gap-2">
-                        <div className="min-w-0">
-                            <p className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white font-mono tabular-nums truncate">
-                                {formatINR(analytics.avgPerActiveDay)}
-                            </p>
-                            <p className="text-xs mt-1.5 flex items-center gap-1 truncate tabular-nums">
-                                {avgAbs !== null ? (
-                                    <>
-                                        <span
-                                            className={cn(
-                                                "font-semibold inline-flex items-center gap-0.5",
-                                                isAvgUp
-                                                    ? "text-amber-600 dark:text-amber-400"
-                                                    : "text-emerald-600 dark:text-emerald-400"
-                                            )}
-                                        >
-                                            {isAvgUp ? "↑" : "↓"} {isAvgUp ? "+" : "-"}
-                                            {avgAbs}%
-                                        </span>
-                                        <span className="text-slate-500 dark:text-zinc-400 truncate">
-                                            vs last month
-                                        </span>
-                                    </>
-                                ) : (
-                                    <span className="text-slate-500 dark:text-zinc-400 truncate">
-                                        {formatINR(analytics.avgPerElapsedDay)} overall/day
-                                    </span>
+                        {avgAbs !== null ? (
+                            <span
+                                className={cn(
+                                    "inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[11px] font-semibold tabular-nums border shrink-0",
+                                    isAvgUp
+                                        ? "bg-amber-100/90 border-amber-200 text-amber-700 dark:bg-amber-500/18 dark:border-amber-400/35 dark:text-amber-300"
+                                        : "bg-emerald-100/90 border-emerald-200 text-emerald-700 dark:bg-emerald-500/18 dark:border-emerald-400/35 dark:text-emerald-300"
                                 )}
-                            </p>
-                        </div>
+                            >
+                                {isAvgUp ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                                <span>{isAvgUp ? `+${avgAbs}%` : `-${avgAbs}%`}</span>
+                            </span>
+                        ) : null}
+                    </div>
+                    <div className="relative z-10 pr-14 pt-0.5">
+                        <p className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950 dark:text-white font-mono tabular-nums truncate">
+                            {formatINR(analytics.avgPerActiveDay)}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 truncate">
+                            {avgAbs !== null
+                                ? "vs last month"
+                                : `${formatINR(analytics.avgPerElapsedDay)} overall/day`}
+                        </p>
+                    </div>
+                    <div className="pointer-events-none absolute bottom-1 right-2 opacity-90">
                         <MiniSparkline id="dailyavg" color="#8B5CF6" values={sparklines.avg} />
                     </div>
                 </div>
 
                 {/* KPI 3: Peak Spending Day */}
-                <div className={cn(GLASS_CARD, "rounded-[22px] p-5 flex flex-col justify-between gap-3")}>
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-amber-500/12 dark:bg-amber-500/18 border border-amber-500/20 dark:border-amber-400/25 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0">
+                <div
+                    className={cn(
+                        GLASS_CARD,
+                        "relative overflow-hidden rounded-[22px] p-5 flex flex-col justify-between gap-2.5 bg-gradient-to-br from-amber-50/85 via-white/80 to-orange-50/40 dark:from-amber-500/[0.12] dark:via-[#0d1224]/85 dark:to-orange-500/[0.06]"
+                    )}
+                >
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -bottom-8 -right-8 w-32 h-24 rounded-full bg-amber-400/20 dark:bg-amber-500/16 blur-2xl"
+                    />
+                    <div className="flex items-center gap-3 relative z-10">
+                        <div className="w-9 h-9 rounded-xl bg-amber-500/15 dark:bg-amber-500/22 border border-amber-500/25 dark:border-amber-400/30 flex items-center justify-center text-amber-600 dark:text-amber-300 shrink-0">
                             <Flame className="w-4 h-4" />
                         </div>
                         <span className="text-xs sm:text-[13px] font-medium text-slate-600 dark:text-zinc-300">
                             Peak Spending Day
                         </span>
                     </div>
-                    <div className="flex items-end justify-between gap-2">
-                        <div className="min-w-0">
-                            <p className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white font-mono tabular-nums truncate">
-                                {analytics.highestDay ? formatINR(analytics.highestDay.amount) : "₹0.00"}
-                            </p>
-                            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1.5 truncate">
-                                {analytics.highestDay
-                                    ? format(parseISO(analytics.highestDay.date), "EEE, MMM d, yyyy")
-                                    : "No activity recorded"}
-                            </p>
-                        </div>
+                    <div className="relative z-10 pr-14 pt-0.5">
+                        <p className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950 dark:text-white font-mono tabular-nums truncate">
+                            {analytics.highestDay ? formatINR(analytics.highestDay.amount) : "₹0.00"}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 truncate">
+                            {analytics.highestDay
+                                ? format(parseISO(analytics.highestDay.date), "EEE, MMM d, yyyy")
+                                : "No activity recorded"}
+                        </p>
+                    </div>
+                    <div className="pointer-events-none absolute bottom-1 right-2 opacity-90">
                         <MiniSparkline id="peak" color="#F59E0B" values={sparklines.peak} />
                     </div>
                 </div>
 
                 {/* KPI 4: Top Category */}
-                <div className={cn(GLASS_CARD, "rounded-[22px] p-5 flex flex-col justify-between gap-3")}>
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-emerald-500/12 dark:bg-emerald-500/18 border border-emerald-500/20 dark:border-emerald-400/25 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+                <div
+                    className={cn(
+                        GLASS_CARD,
+                        "relative overflow-hidden rounded-[22px] p-5 flex flex-col justify-between gap-2.5 bg-gradient-to-br from-emerald-50/85 via-white/80 to-teal-50/40 dark:from-emerald-500/[0.11] dark:via-[#0d1224]/85 dark:to-teal-500/[0.06]"
+                    )}
+                >
+                    <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -bottom-8 -right-8 w-32 h-24 rounded-full bg-emerald-400/20 dark:bg-emerald-500/16 blur-2xl"
+                    />
+                    <div className="flex items-center gap-3 relative z-10">
+                        <div className="w-9 h-9 rounded-xl bg-emerald-500/15 dark:bg-emerald-500/22 border border-emerald-500/25 dark:border-emerald-400/30 flex items-center justify-center text-emerald-600 dark:text-emerald-300 shrink-0">
                             <Layers className="w-4 h-4" />
                         </div>
                         <span className="text-xs sm:text-[13px] font-medium text-slate-600 dark:text-zinc-300">
                             Top Category
                         </span>
                     </div>
-                    <div className="flex items-end justify-between gap-2">
-                        <div className="min-w-0">
-                            <p className="text-2xl font-bold tracking-tight text-slate-950 dark:text-white truncate">
-                                {analytics.topCategory ? analytics.topCategory.name : "—"}
-                            </p>
-                            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1.5 tabular-nums truncate">
-                                {analytics.topCategory && topCategoryShare
-                                    ? `${topCategoryShare}% · ${formatINR(analytics.topCategory.value)}`
-                                    : "No categories active"}
-                            </p>
-                        </div>
+                    <div className="relative z-10 pr-14 pt-0.5">
+                        <p className="text-xl sm:text-2xl font-bold tracking-tight text-slate-950 dark:text-white truncate">
+                            {analytics.topCategory ? analytics.topCategory.name : "—"}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1 tabular-nums truncate">
+                            {analytics.topCategory && topCategoryShare
+                                ? `${topCategoryShare}% · ${formatINR(analytics.topCategory.value)}`
+                                : "No categories active"}
+                        </p>
+                    </div>
+                    <div className="pointer-events-none absolute bottom-1 right-2 opacity-90">
                         <MiniSparkline id="topcat" color="#10B981" values={sparklines.topCat} />
                     </div>
                 </div>
             </div>
 
-            {/* Sub-Navigation Tabs (Blue underline indicator + count badges) */}
+            {/* Frosted Pill Sub-Navigation Tabs */}
             <div
                 role="tablist"
                 aria-label="Analytics sections"
-                className="flex border-b border-slate-200/80 dark:border-white/[0.1] gap-6 sm:gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                className="flex items-center gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
                 {tabs.map((tab, idx) => {
                     const isActive = activeTab === tab.id;
@@ -897,32 +1303,25 @@ export default function AnalyticsClient({ initialData }) {
                             onClick={() => setActiveTab(tab.id)}
                             onKeyDown={(e) => handleTabKeyDown(e, idx)}
                             className={cn(
-                                "relative pb-3 text-xs sm:text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none",
+                                "px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold flex items-center gap-2 whitespace-nowrap border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
                                 isActive
-                                    ? "text-blue-600 dark:text-sky-400"
-                                    : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-zinc-100"
+                                    ? "analytics-glass-pill-active border-indigo-500/80 text-white shadow-[0_8px_20px_rgba(99,102,241,0.34)]"
+                                    : "bg-white/75 border-white/95 text-slate-700 hover:text-slate-950 hover:bg-white/90 dark:bg-white/[0.05] dark:border-white/[0.1] dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/[0.09] backdrop-blur-xl shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
                             )}
                         >
-                            <Icon className="w-4 h-4" />
+                            <Icon className="w-3.5 h-3.5" />
                             <span>{tab.label}</span>
                             {typeof tab.count === "number" && (
                                 <span
                                     className={cn(
-                                        "px-2 py-0.5 rounded-full text-[11px] font-semibold tabular-nums",
+                                        "px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums",
                                         isActive
-                                            ? "bg-blue-100 text-blue-700 dark:bg-sky-500/20 dark:text-sky-300"
-                                            : "bg-slate-200/75 text-slate-600 dark:bg-white/[0.08] dark:text-zinc-400"
+                                            ? "bg-white/20 text-white"
+                                            : "bg-slate-200/80 text-slate-700 dark:bg-white/[0.1] dark:text-zinc-300"
                                     )}
                                 >
                                     {tab.count}
                                 </span>
-                            )}
-                            {isActive && (
-                                <motion.div
-                                    layoutId="analyticsTabUnderline"
-                                    className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full bg-blue-600 dark:bg-sky-400"
-                                    transition={{ type: "spring", stiffness: 420, damping: 32 }}
-                                />
                             )}
                         </button>
                     );
@@ -995,14 +1394,14 @@ export default function AnalyticsClient({ initialData }) {
                                         </div>
                                     </div>
 
-                                    <button
-                                        type="button"
+                                    <AnalyticsGlassButton
+                                        variant="accent"
                                         onClick={handleOpenInsights}
-                                        className="self-start sm:self-auto px-3.5 py-2 rounded-full text-xs font-semibold text-indigo-700 hover:text-indigo-900 bg-indigo-50/90 hover:bg-indigo-100/90 border border-indigo-200/80 dark:text-indigo-200 dark:bg-indigo-500/15 dark:hover:bg-indigo-500/25 dark:border-indigo-400/25 transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-xs"
+                                        className="self-start sm:self-auto px-4 py-2 text-xs font-semibold shadow-[0_6px_18px_rgba(99,102,241,0.32)]"
                                     >
-                                        <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-300" />
+                                        <Sparkles className="w-3.5 h-3.5 text-indigo-200" />
                                         <span>AI Insights</span>
-                                    </button>
+                                    </AnalyticsGlassButton>
                                 </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
@@ -1165,14 +1564,14 @@ export default function AnalyticsClient({ initialData }) {
                                                 </p>
                                             </div>
 
-                                            <button
-                                                type="button"
+                                            <AnalyticsGlassButton
+                                                variant="accent"
                                                 onClick={handleOpenInsights}
-                                                className="mt-1 px-5 py-2.5 rounded-full text-xs sm:text-[13px] font-semibold text-white bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-[0_10px_24px_rgba(79,70,229,0.34)] hover:shadow-[0_12px_28px_rgba(79,70,229,0.45)] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-2"
+                                                className="mt-1 px-5 py-2.5 text-xs sm:text-[13px] shadow-[0_10px_26px_rgba(99,102,241,0.45)]"
                                             >
                                                 <span>View Recommendations</span>
                                                 <ArrowRight className="w-3.5 h-3.5" />
-                                            </button>
+                                            </AnalyticsGlassButton>
                                         </div>
                                     </div>
                                 </div>
@@ -1391,7 +1790,7 @@ export default function AnalyticsClient({ initialData }) {
                                             </p>
                                         </div>
 
-                                        <div className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1] self-start sm:self-auto">
+                                        <div className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1] backdrop-blur-xl shadow-xs self-start sm:self-auto">
                                             {[
                                                 { id: "amount", label: "Highest" },
                                                 { id: "recent", label: "Recent" },
@@ -1404,9 +1803,9 @@ export default function AnalyticsClient({ initialData }) {
                                                         onClick={() => setSortBy(opt.id)}
                                                         aria-pressed={active}
                                                         className={cn(
-                                                            "px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer",
+                                                            "px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none",
                                                             active
-                                                                ? "bg-blue-600 text-white shadow-xs dark:bg-blue-500"
+                                                                ? "analytics-glass-pill-active text-white shadow-xs"
                                                                 : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white"
                                                         )}
                                                     >
@@ -1427,7 +1826,7 @@ export default function AnalyticsClient({ initialData }) {
                                                 onChange={(e) => setSearchQuery(e.target.value)}
                                                 placeholder="Search title or category..."
                                                 aria-label="Search monthly transactions"
-                                                className="w-full h-9 pl-9 pr-3.5 rounded-full text-sm bg-slate-50/90 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.12] text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
+                                                className="analytics-glass-input w-full h-9 pl-9 pr-3.5 rounded-full text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-500 focus-visible:outline-none transition-all"
                                             />
                                         </div>
 
@@ -1436,10 +1835,10 @@ export default function AnalyticsClient({ initialData }) {
                                                 type="button"
                                                 onClick={() => setSelectedCategoryFilter("all")}
                                                 className={cn(
-                                                    "px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-all cursor-pointer",
+                                                    "px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition-all cursor-pointer focus-visible:outline-none",
                                                     selectedCategoryFilter === "all"
-                                                        ? "bg-blue-600 border-blue-600 text-white shadow-xs"
-                                                        : "bg-white/75 border-slate-200/80 text-slate-600 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white"
+                                                        ? "analytics-glass-pill-active border-indigo-500/80 text-white shadow-xs"
+                                                        : "bg-white/75 border-slate-200/80 text-slate-700 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white"
                                                 )}
                                             >
                                                 All
@@ -1458,10 +1857,10 @@ export default function AnalyticsClient({ initialData }) {
                                                             )
                                                         }
                                                         className={cn(
-                                                            "px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-all cursor-pointer",
+                                                            "px-3 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition-all cursor-pointer focus-visible:outline-none",
                                                             active
-                                                                ? "bg-blue-600 border-blue-600 text-white shadow-xs"
-                                                                : "bg-white/75 border-slate-200/80 text-slate-600 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white"
+                                                                ? "analytics-glass-pill-active border-indigo-500/80 text-white shadow-xs"
+                                                                : "bg-white/75 border-slate-200/80 text-slate-700 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white"
                                                         )}
                                                     >
                                                         {cat.name}
@@ -1552,10 +1951,10 @@ export default function AnalyticsClient({ initialData }) {
 
             {/* AI Insights & Recommendations Modal */}
             <Dialog open={isInsightsOpen} onOpenChange={setIsInsightsOpen}>
-                <DialogContent className="rounded-3xl bg-white/90 dark:bg-zinc-950/85 backdrop-blur-2xl border border-white/90 dark:border-white/15 shadow-2xl text-slate-900 dark:text-zinc-100 max-w-lg p-6">
+                <DialogContent className={cn(GLASS_MODAL, "max-w-lg p-6")}>
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2.5 text-base font-bold text-slate-950 dark:text-white">
-                            <span className="w-8 h-8 rounded-xl bg-indigo-500/12 border border-indigo-400/25 flex items-center justify-center text-indigo-600 dark:text-indigo-300">
+                            <span className="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-[0_4px_12px_rgba(99,102,241,0.35)] flex items-center justify-center shrink-0">
                                 <Sparkles className="w-4 h-4" />
                             </span>
                             <span>Spending Recommendations</span>
@@ -1581,7 +1980,7 @@ export default function AnalyticsClient({ initialData }) {
                                     insightsData.recommendations.map((rec, idx) => (
                                         <div
                                             key={`${rec.title}-${idx}`}
-                                            className="p-3.5 rounded-2xl bg-slate-50/90 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/10 flex items-start gap-3"
+                                            className="p-3.5 rounded-2xl bg-slate-50/90 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/10 flex items-start gap-3 shadow-2xs"
                                         >
                                             <span className="text-lg leading-none mt-0.5">{rec.icon || "💡"}</span>
                                             <div className="min-w-0">
@@ -1627,21 +2026,23 @@ export default function AnalyticsClient({ initialData }) {
                         )}
                     </div>
 
-                    <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/70 dark:border-white/10">
-                        <Link
+                    <div className="pt-3 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200/70 dark:border-white/10">
+                        <AnalyticsGlassButton
+                            as={Link}
                             href="/budgets"
-                            className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 dark:text-indigo-300 dark:hover:text-white inline-flex items-center gap-1"
+                            variant="accent"
+                            className="px-4 py-2 text-xs font-semibold shadow-[0_6px_18px_rgba(99,102,241,0.35)]"
                         >
                             <span>Manage Budgets</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
-                        <button
-                            type="button"
+                        </AnalyticsGlassButton>
+                        <AnalyticsGlassButton
+                            variant="neutral"
                             onClick={() => setIsInsightsOpen(false)}
-                            className="px-4 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-slate-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 transition-colors cursor-pointer"
+                            className="px-4 py-2 text-xs font-semibold"
                         >
-                            Close
-                        </button>
+                            <span>Close</span>
+                        </AnalyticsGlassButton>
                     </div>
                 </DialogContent>
             </Dialog>

@@ -69,6 +69,228 @@ import {
 import { getCategoryStyles } from "@/lib/categoryStyles";
 import { cn } from "@/lib/utils";
 
+const budgetsGlassStyles = `
+  @property --budgets-angle-1 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -75deg;
+  }
+  @property --budgets-angle-2 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -45deg;
+  }
+
+  .budgets-glass-btn {
+    --anim-time: 380ms;
+    --anim-ease: cubic-bezier(0.25, 1, 0.5, 1);
+    --rim-width: 1.25px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    transition: all var(--anim-time) var(--anim-ease);
+    transform-style: preserve-3d;
+  }
+
+  .budgets-glass-btn::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--rim-width);
+    box-sizing: border-box;
+    pointer-events: none;
+    background:
+      conic-gradient(
+        from var(--budgets-angle-1) at 50% 50%,
+        rgba(15, 23, 42, 0.28) 0%,
+        transparent 6% 40%,
+        rgba(15, 23, 42, 0.28) 50%,
+        transparent 60% 94%,
+        rgba(15, 23, 42, 0.28) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all var(--anim-time) var(--anim-ease), --budgets-angle-1 500ms ease;
+  }
+
+  .dark .budgets-glass-btn::after {
+    background:
+      conic-gradient(
+        from var(--budgets-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.58) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.58) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.58) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  }
+
+  .budgets-glass-btn:hover::after {
+    --budgets-angle-1: -125deg;
+  }
+
+  .budgets-glass-btn:active {
+    transform: scale(0.975);
+  }
+
+  .budgets-glass-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .budgets-glass-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      var(--budgets-angle-2),
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 42% 50%,
+      transparent 58%
+    );
+    background-size: 220% 220%;
+    background-position: 0% 50%;
+    mix-blend-mode: screen;
+    opacity: 0.65;
+    transition:
+      background-position 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      --budgets-angle-2 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      opacity 300ms ease;
+  }
+
+  .budgets-glass-btn:hover .budgets-glass-sheen::after {
+    background-position: 32% 50%;
+    opacity: 0.95;
+  }
+
+  .budgets-glass-btn:active .budgets-glass-sheen::after {
+    background-position: 55% 20%;
+    --budgets-angle-2: -15deg;
+  }
+
+  .budgets-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.55));
+    color: #0f172a;
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.08),
+      0 6px 16px -6px rgba(15, 23, 42, 0.12);
+  }
+  .budgets-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.72));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.1),
+      0 10px 24px -8px rgba(37, 99, 235, 0.18);
+  }
+  .dark .budgets-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.24),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.45),
+      0 8px 20px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  }
+  .dark .budgets-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+    color: #ffffff;
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.36),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.5),
+      0 12px 26px -6px rgba(0, 0, 0, 0.78);
+  }
+
+  .budgets-glass-btn-accent {
+    background: linear-gradient(-75deg, rgba(124, 58, 237, 0.9), rgba(99, 102, 241, 0.98), rgba(124, 58, 237, 0.9));
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.18),
+      0 10px 26px -6px rgba(124, 58, 237, 0.48);
+  }
+  .budgets-glass-btn-accent::after {
+    background:
+      conic-gradient(
+        from var(--budgets-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.9) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.9) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.9) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.2));
+  }
+  .budgets-glass-btn-accent:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(139, 92, 246, 0.96), rgba(167, 139, 250, 1), rgba(139, 92, 246, 0.96));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.75),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2),
+      0 14px 32px -6px rgba(124, 58, 237, 0.62);
+  }
+
+  .budgets-glass-pill-active {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.92) 0%, rgba(99, 102, 241, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.6),
+      0 6px 18px -4px rgba(124, 58, 237, 0.55) !important;
+  }
+`;
+
+function BudgetsGlassButton({
+    variant = "neutral",
+    size = "md",
+    className,
+    children,
+    ...props
+}) {
+    const base = "budgets-glass-btn inline-flex items-center justify-center font-semibold rounded-full select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 disabled:opacity-50 disabled:pointer-events-none";
+    const sizes = {
+        sm: "h-8 px-3 text-xs gap-1.5",
+        md: "h-9 sm:h-10 px-4 py-2 text-xs sm:text-[13px] gap-2",
+        lg: "h-11 px-5 text-sm gap-2.5",
+        icon: "w-8 h-8 rounded-full p-0 flex items-center justify-center",
+    };
+    const variants = {
+        accent: "budgets-glass-btn-accent text-white",
+        neutral: "budgets-glass-btn-neutral text-slate-800 dark:text-zinc-100",
+        "pill-active": "budgets-glass-pill-active text-white",
+    };
+
+    return (
+        <button
+            {...props}
+            className={cn(base, sizes[size] || sizes.md, variants[variant], className)}
+        >
+            <span aria-hidden="true" className="budgets-glass-sheen" />
+            <span className="relative z-10 inline-flex items-center gap-1.5 whitespace-nowrap">
+                {children}
+            </span>
+        </button>
+    );
+}
+
 const GLASS_CARD =
     "rounded-[24px] bg-white/80 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_18px_46px_-12px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.08)]";
 
@@ -682,6 +904,7 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
 
     return (
         <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+            <style dangerouslySetInnerHTML={{ __html: budgetsGlassStyles }} />
             {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
             <div
                 aria-hidden="true"
@@ -824,18 +1047,24 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                         <a
                             href={exportHref}
                             download
-                            className="px-3.5 py-2 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 bg-white/80 hover:bg-white border border-white/95 dark:text-zinc-200 dark:hover:text-white dark:bg-white/[0.06] dark:hover:bg-white/[0.11] dark:border-white/[0.12] backdrop-blur-xl transition-all cursor-pointer inline-flex items-center gap-1.5 shadow-[0_4px_14px_rgba(15,23,42,0.05)]"
+                            className="budgets-glass-btn budgets-glass-btn-neutral px-3.5 py-2 rounded-full text-xs font-semibold text-slate-700 dark:text-zinc-200 transition-all cursor-pointer inline-flex items-center gap-1.5"
                         >
-                            <Download className="w-3.5 h-3.5" />
-                            <span>Export CSV</span>
+                            <span aria-hidden="true" className="budgets-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-1.5">
+                                <Download className="w-3.5 h-3.5" />
+                                <span>Export CSV</span>
+                            </span>
                         </a>
 
                         <Link
                             href={newBudgetHref}
-                            className="px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold text-white bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 hover:from-violet-500 hover:via-indigo-500 hover:to-blue-500 shadow-[0_8px_22px_rgba(124,58,237,0.35)] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
+                            className="budgets-glass-btn budgets-glass-btn-accent px-4.5 py-2 rounded-full text-xs sm:text-[13px] font-semibold text-white shadow-[0_8px_24px_rgba(124,58,237,0.45)] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                         >
-                            <Plus className="w-4 h-4 shrink-0" />
-                            <span>New Budget</span>
+                            <span aria-hidden="true" className="budgets-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-1.5">
+                                <Plus className="w-4 h-4 shrink-0 stroke-[2.5]" />
+                                <span>New Budget</span>
+                            </span>
                         </Link>
                     </div>
                 </div>
@@ -1067,23 +1296,26 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                             onClick={() => setActiveTab(tab.id)}
                             onKeyDown={(e) => handleTabKeyDown(e, idx)}
                             className={cn(
-                                "px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold flex items-center gap-2 whitespace-nowrap border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500",
+                                "budgets-glass-btn px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold flex items-center gap-2 whitespace-nowrap border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500",
                                 isActive
-                                    ? "bg-gradient-to-r from-violet-600 via-indigo-600 to-blue-600 border-violet-500/80 text-white shadow-[0_8px_20px_rgba(124,58,237,0.34)]"
-                                    : "bg-white/75 border-white/95 text-slate-700 hover:text-slate-950 hover:bg-white/90 dark:bg-white/[0.05] dark:border-white/[0.1] dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/[0.09] backdrop-blur-xl shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
+                                    ? "budgets-glass-pill-active text-white border-transparent shadow-[0_8px_20px_rgba(124,58,237,0.4)]"
+                                    : "budgets-glass-btn-neutral text-slate-700 dark:text-zinc-200"
                             )}
                         >
-                            <Icon className="w-3.5 h-3.5" />
-                            <span>{tab.label}</span>
-                            <span
-                                className={cn(
-                                    "px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums",
-                                    isActive
-                                        ? "bg-white/20 text-white"
-                                        : "bg-slate-200/80 text-slate-700 dark:bg-white/[0.1] dark:text-zinc-300"
-                                )}
-                            >
-                                {tab.count}
+                            <span aria-hidden="true" className="budgets-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-2">
+                                <Icon className="w-3.5 h-3.5" />
+                                <span>{tab.label}</span>
+                                <span
+                                    className={cn(
+                                        "px-1.5 py-0.5 rounded-full text-[10px] font-mono tabular-nums",
+                                        isActive
+                                            ? "bg-white/20 text-white"
+                                            : "bg-slate-200/80 text-slate-700 dark:bg-white/[0.1] dark:text-zinc-300"
+                                    )}
+                                >
+                                    {tab.count}
+                                </span>
                             </span>
                         </button>
                     );
@@ -1307,13 +1539,14 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                                     type="button"
                                                     onClick={() => setStatusFilter(filter.id)}
                                                     className={cn(
-                                                        "px-3.5 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition-all cursor-pointer",
+                                                        "budgets-glass-btn px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
                                                         active
-                                                            ? "bg-gradient-to-r from-violet-600 to-indigo-600 border-violet-500 text-white shadow-[0_4px_12px_rgba(124,58,237,0.3)]"
-                                                            : "bg-white/75 border-white/95 text-slate-600 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white backdrop-blur-md"
+                                                            ? "budgets-glass-pill-active text-white border-transparent"
+                                                            : "budgets-glass-btn-neutral text-slate-600 dark:text-zinc-300"
                                                     )}
                                                 >
-                                                    {filter.label}
+                                                    <span aria-hidden="true" className="budgets-glass-sheen" />
+                                                    <span className="relative z-10">{filter.label}</span>
                                                 </button>
                                             );
                                         })}
@@ -1676,10 +1909,13 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                                         <button
                                             type="button"
                                             onClick={() => setActiveTab("insights")}
-                                            className="self-start sm:self-auto px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 bg-white/85 hover:bg-white border border-slate-200/80 dark:text-zinc-200 dark:hover:text-white dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:border-white/[0.12] transition-all inline-flex items-center gap-1.5 cursor-pointer"
+                                            className="budgets-glass-btn budgets-glass-btn-neutral self-start sm:self-auto px-4 py-2 rounded-full text-xs font-semibold text-slate-700 dark:text-zinc-200 transition-all inline-flex items-center gap-1.5 cursor-pointer"
                                         >
-                                            <span>View Detailed Insights</span>
-                                            <ArrowRight className="w-3.5 h-3.5" />
+                                            <span aria-hidden="true" className="budgets-glass-sheen" />
+                                            <span className="relative z-10 inline-flex items-center gap-1.5">
+                                                <span>View Detailed Insights</span>
+                                                <ArrowRight className="w-3.5 h-3.5" />
+                                            </span>
                                         </button>
                                     </div>
 
@@ -2351,22 +2587,26 @@ export default function BudgetsClient({ initialBudgets, initialInsights }) {
                     </DialogHeader>
 
                     <DialogFooter className="flex flex-col-reverse sm:flex-row sm:items-center gap-2 pt-3">
-                        <button
+                        <BudgetsGlassButton
+                            variant="neutral"
                             type="button"
                             onClick={() => setBudgetToDelete(null)}
                             disabled={isDeleting}
-                            className="px-4 py-2 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 dark:text-zinc-300 dark:hover:text-white dark:bg-white/[0.06] dark:hover:bg-white/[0.12] dark:border-white/[0.12] transition-colors cursor-pointer"
+                            className="px-4 py-2"
                         >
                             Cancel
-                        </button>
+                        </BudgetsGlassButton>
                         <button
                             type="button"
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
-                            className="px-4 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 disabled:opacity-50 shadow-[0_6px_18px_rgba(225,29,72,0.35)] transition-all cursor-pointer inline-flex items-center justify-center gap-1.5"
+                            className="budgets-glass-btn px-4.5 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 disabled:opacity-50 shadow-[0_8px_20px_rgba(225,29,72,0.35)] transition-all cursor-pointer inline-flex items-center justify-center gap-1.5"
                         >
-                            {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                            <span>{isDeleting ? "Deleting..." : "Delete Budget"}</span>
+                            <span aria-hidden="true" className="budgets-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-1.5">
+                                {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                                <span>{isDeleting ? "Deleting..." : "Delete Budget"}</span>
+                            </span>
                         </button>
                     </DialogFooter>
                 </DialogContent>

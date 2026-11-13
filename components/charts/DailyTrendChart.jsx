@@ -125,18 +125,18 @@ export default function DailyTrendChart({
     return (
         <div
             className={cn(
-                "rounded-[24px] bg-white/78 dark:bg-white/[0.04] backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_16px_42px_-12px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.08)] overflow-hidden flex flex-col transition-colors",
+                "rounded-[24px] bg-white/80 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_18px_46px_-12px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.08)] overflow-hidden flex flex-col transition-colors",
                 className
             )}
         >
             {/* Card Header */}
             <div className="p-5 sm:p-6 pb-4 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex items-start sm:items-center gap-3.5 min-w-0">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/12 dark:bg-blue-500/15 border border-blue-500/20 dark:border-blue-400/25 flex items-center justify-center text-blue-600 dark:text-sky-400 shrink-0 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-none">
-                        <TrendingUp className="w-4.5 h-4.5" />
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-[0_6px_18px_rgba(59,130,246,0.35)] flex items-center justify-center shrink-0">
+                        <TrendingUp className="w-[18px] h-[18px]" />
                     </div>
                     <div className="min-w-0">
-                        <h3 className="text-base font-semibold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+                        <h3 className="text-base font-semibold tracking-tight text-slate-950 dark:text-white flex items-center gap-2">
                             <span>Daily Spending Trend</span>
                             {isLoadingRange && (
                                 <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-600 dark:text-sky-400" />
@@ -156,7 +156,7 @@ export default function DailyTrendChart({
                         <div
                             role="group"
                             aria-label="Timeframe range"
-                            className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1]"
+                            className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1] backdrop-blur-xl shadow-xs"
                         >
                             {RANGE_OPTIONS.map((opt) => {
                                 const isSelected = range === opt.id;
@@ -167,9 +167,9 @@ export default function DailyTrendChart({
                                         onClick={() => onRangeChange(opt.id)}
                                         aria-pressed={isSelected}
                                         className={cn(
-                                            "px-2.5 sm:px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                                            "px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
                                             isSelected
-                                                ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.35)] dark:bg-blue-500"
+                                                ? "analytics-glass-pill-active text-white shadow-[0_4px_14px_rgba(99,102,241,0.45)]"
                                                 : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white"
                                         )}
                                     >
@@ -183,7 +183,7 @@ export default function DailyTrendChart({
                     <div
                         role="group"
                         aria-label="Chart view mode"
-                        className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1]"
+                        className="inline-flex items-center p-1 rounded-full bg-slate-100/85 dark:bg-white/[0.05] border border-slate-200/80 dark:border-white/[0.1] backdrop-blur-xl shadow-xs"
                     >
                         {[
                             { id: "daily", label: "Daily" },
@@ -197,9 +197,9 @@ export default function DailyTrendChart({
                                     onClick={() => setMode(option.id)}
                                     aria-pressed={isSelected}
                                     className={cn(
-                                        "px-3 py-1 rounded-full text-xs font-medium transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                                        "px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500",
                                         isSelected
-                                            ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.35)] dark:bg-blue-500"
+                                            ? "analytics-glass-pill-active text-white shadow-[0_4px_14px_rgba(99,102,241,0.45)]"
                                             : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white"
                                     )}
                                 >

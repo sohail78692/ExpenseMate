@@ -128,6 +128,208 @@ interface DashboardClientProps {
     };
 }
 
+const dashboardGlassStyles = `
+@property --dashboard-angle-1 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --dashboard-angle-2 {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes dashboard-spin {
+  to {
+    --dashboard-angle-1: 360deg;
+  }
+}
+
+@keyframes dashboard-sheen {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateX(160%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+.dashboard-glass-sheen {
+  position: absolute;
+  inset: -1px;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dashboard-glass-sheen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0) 10%,
+    rgba(255, 255, 255, 0.45) 50%,
+    rgba(255, 255, 255, 0) 90%,
+    transparent 100%
+  );
+  filter: blur(2px);
+  transform: translateX(-140%) skewX(-18deg);
+  opacity: 0;
+}
+
+.dashboard-glass-btn:hover .dashboard-glass-sheen::after {
+  animation: dashboard-sheen 1.35s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+.dashboard-glass-btn {
+  position: relative;
+  isolation: isolate;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.dashboard-glass-btn:active {
+  transform: scale(0.975);
+}
+
+.dashboard-glass-btn-accent {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.96) 0%, rgba(139, 92, 246, 0.94) 50%, rgba(217, 70, 239, 0.92) 100%);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow:
+    0 8px 24px -4px rgba(124, 58, 237, 0.5),
+    0 2px 6px -1px rgba(124, 58, 237, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.25);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.dashboard-glass-btn-accent:hover {
+  background: linear-gradient(135deg, rgba(109, 112, 255, 0.98) 0%, rgba(149, 102, 255, 0.96) 50%, rgba(227, 80, 249, 0.94) 100%);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 12px 30px -4px rgba(124, 58, 237, 0.65),
+    0 4px 10px -2px rgba(124, 58, 237, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateY(-1px);
+}
+
+.dashboard-glass-btn-neutral {
+  background: rgba(255, 255, 255, 0.72);
+  color: #1e293b;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 6px 18px -4px rgba(15, 23, 42, 0.08),
+    0 2px 6px -1px rgba(15, 23, 42, 0.04),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(15, 23, 42, 0.05);
+}
+
+.dark .dashboard-glass-btn-neutral {
+  background: rgba(19, 24, 49, 0.65);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 24px -4px rgba(0, 0, 0, 0.5),
+    0 2px 6px -1px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-glass-btn-neutral:hover {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0f172a;
+  border-color: rgba(255, 255, 255, 1);
+  box-shadow:
+    0 10px 24px -4px rgba(15, 23, 42, 0.12),
+    inset 0 1px 2px rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+}
+
+.dark .dashboard-glass-btn-neutral:hover {
+  background: rgba(27, 34, 68, 0.85);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 12px 28px -4px rgba(0, 0, 0, 0.65),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.dashboard-glass-pill-active {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.95) 0%, rgba(139, 92, 246, 0.92) 60%, rgba(217, 70, 239, 0.9) 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow:
+    0 6px 18px -3px rgba(124, 58, 237, 0.5),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+`;
+
+function DashboardGlassButton({
+    children,
+    className,
+    variant = "accent",
+    type = "button",
+    ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    variant?: "accent" | "neutral" | "pill-active";
+}) {
+    const variantClass =
+        variant === "accent"
+            ? "dashboard-glass-btn-accent"
+            : variant === "pill-active"
+            ? "dashboard-glass-pill-active"
+            : "dashboard-glass-btn-neutral";
+
+    return (
+        <button
+            type={type}
+            className={cn(
+                "dashboard-glass-btn",
+                variantClass,
+                "cursor-pointer select-none",
+                className
+            )}
+            {...props}
+        >
+            <span aria-hidden="true" className="dashboard-glass-sheen" />
+            <span className="relative z-10 inline-flex items-center gap-2">
+                {children}
+            </span>
+        </button>
+    );
+}
+
 const GLASS_CARD =
     "rounded-[24px] bg-white/82 dark:bg-[#0d1224]/78 backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_18px_46px_-12px_rgba(0,0,0,0.68),inset_0_1px_1px_rgba(255,255,255,0.08)]";
 
@@ -576,6 +778,9 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
 
     return (
         <div className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100">
+            {/* Liquid-Glass Keyframes & Specular Sheen Styles */}
+            <style dangerouslySetInnerHTML={{ __html: dashboardGlassStyles }} />
+
             {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
             <div
                 aria-hidden="true"
@@ -656,20 +861,23 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                     <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
                         <Link
                             href="/analytics"
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-[13px] font-medium bg-white/85 hover:bg-white text-slate-700 hover:text-slate-950 border border-white/95 dark:bg-[#131831]/80 dark:hover:bg-[#192040] dark:text-zinc-200 dark:hover:text-white dark:border-white/[0.12] backdrop-blur-xl shadow-[0_6px_18px_rgba(15,23,42,0.06)] dark:shadow-[0_10px_24px_rgba(0,0,0,0.4)] transition-all"
+                            className="dashboard-glass-btn dashboard-glass-btn-neutral px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold text-slate-700 dark:text-zinc-200 transition-all cursor-pointer inline-flex items-center gap-2"
                         >
-                            <PieChart className="w-3.5 h-3.5" />
-                            <span>Analytics</span>
+                            <span aria-hidden="true" className="dashboard-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-2">
+                                <PieChart className="w-3.5 h-3.5" />
+                                <span>Analytics</span>
+                            </span>
                         </Link>
 
-                        <button
-                            type="button"
+                        <DashboardGlassButton
+                            variant="accent"
                             onClick={() => setIsExpenseModalOpen(true)}
-                            className="inline-flex items-center gap-1.5 px-5 py-2 rounded-full text-xs sm:text-[13px] font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 hover:brightness-110 text-white shadow-[0_8px_24px_-4px_rgba(124,58,237,0.55)] hover:shadow-[0_12px_28px_-4px_rgba(124,58,237,0.7)] transition-all cursor-pointer"
+                            className="px-5 py-2 text-xs sm:text-[13px] shadow-[0_8px_24px_rgba(124,58,237,0.45)]"
                         >
                             <Plus className="w-4 h-4 stroke-[2.25]" />
                             <span>Add Expense</span>
-                        </button>
+                        </DashboardGlassButton>
                     </div>
                 </div>
 
@@ -838,15 +1046,11 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                         <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 text-white shadow-[0_6px_18px_rgba(99,102,241,0.38)] flex items-center justify-center shrink-0">
                             <Target className="w-[18px] h-[18px]" />
                         </div>
-                        {primaryGoal ? (
-                            <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100/90 border border-emerald-200 text-emerald-700 dark:bg-emerald-500/18 dark:border-emerald-400/35 dark:text-emerald-300 tabular-nums shrink-0">
-                                {Number(primaryGoal.progress || 0).toFixed(1).replace(/\.0$/, "")}%
-                            </span>
-                        ) : highestCategory ? (
+                        {!primaryGoal && highestCategory && (
                             <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-indigo-100/90 border border-indigo-200 text-indigo-700 dark:bg-indigo-500/18 dark:border-indigo-400/35 dark:text-indigo-300 shrink-0">
                                 Leading
                             </span>
-                        ) : null}
+                        )}
                     </div>
 
                     <div className="relative z-10 mt-3 min-w-0">
@@ -868,13 +1072,18 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 : "Log an expense"}
                         </p>
                         {primaryGoal && (
-                            <div className="mt-2 h-2 rounded-full bg-slate-200/80 dark:bg-white/[0.08] overflow-hidden">
-                                <div
-                                    className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-400 transition-all duration-500"
-                                    style={{
-                                        width: `${Math.min(100, Math.max(0, Number(primaryGoal.progress) || 0))}%`,
-                                    }}
-                                />
+                            <div className="flex items-center gap-2.5 mt-2">
+                                <div className="h-2 flex-1 rounded-full bg-slate-200/80 dark:bg-white/[0.08] overflow-hidden">
+                                    <div
+                                        className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-400 transition-all duration-500"
+                                        style={{
+                                            width: `${Math.min(100, Math.max(0, Number(primaryGoal.progress) || 0))}%`,
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-[11px] font-bold font-mono text-emerald-600 dark:text-emerald-400 tabular-nums shrink-0">
+                                    {Number(primaryGoal.progress || 0).toFixed(1)}%
+                                </span>
                             </div>
                         )}
                     </div>
@@ -969,12 +1178,12 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                 </div>
             )}
 
-            {/* Signature Workspace Section (Horizontal Underline Tabs) */}
+            {/* Signature Workspace Section (Segmented Liquid-Glass Tabs) */}
             <div className="space-y-4">
                 <div
                     role="tablist"
                     aria-label="Dashboard workspace views"
-                    className="flex border-b border-slate-200/80 dark:border-white/[0.1] gap-6 overflow-x-auto no-scrollbar"
+                    className="flex flex-wrap items-center gap-2.5 overflow-x-auto no-scrollbar py-0.5"
                 >
                     {tabs.map((tab, idx) => {
                         const isActive = activeWorkspaceTab === tab.id;
@@ -991,40 +1200,36 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 onClick={() => setActiveWorkspaceTab(tab.id)}
                                 onKeyDown={(e) => handleTabKeyDown(e, idx)}
                                 className={cn(
-                                    "relative pb-3 text-xs sm:text-sm font-semibold flex items-center gap-2 whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none",
+                                    "dashboard-glass-btn px-4 py-2 text-xs sm:text-[13px] font-semibold rounded-full inline-flex items-center gap-2 transition-all cursor-pointer",
                                     isActive
-                                        ? "text-slate-950 dark:text-white"
-                                        : "text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200"
+                                        ? "dashboard-glass-pill-active text-white border-transparent shadow-[0_8px_20px_rgba(124,58,237,0.4)]"
+                                        : "dashboard-glass-btn-neutral text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white"
                                 )}
                             >
-                                <Icon
-                                    className={cn(
-                                        "w-4 h-4",
-                                        isActive
-                                            ? "text-violet-600 dark:text-violet-400"
-                                            : "text-slate-400 dark:text-zinc-400"
-                                    )}
-                                />
-                                <span>{tab.label}</span>
-                                {typeof tab.count === "number" && (
-                                    <span
+                                <span aria-hidden="true" className="dashboard-glass-sheen" />
+                                <span className="relative z-10 inline-flex items-center gap-2">
+                                    <Icon
                                         className={cn(
-                                            "px-2 py-0.5 rounded-md text-[10px] font-bold tabular-nums",
+                                            "w-3.5 h-3.5",
                                             isActive
-                                                ? "bg-gradient-to-r from-indigo-500 to-violet-500 text-white shadow-xs"
-                                                : "bg-slate-200/80 text-slate-700 dark:bg-white/[0.08] dark:text-zinc-400"
+                                                ? "text-white stroke-[2.25]"
+                                                : "text-slate-500 dark:text-zinc-400"
                                         )}
-                                    >
-                                        {tab.count}
-                                    </span>
-                                )}
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="dashboardTabUnderline"
-                                        className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-full bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 shadow-[0_0_12px_rgba(139,92,246,0.75)]"
-                                        transition={{ type: "spring", stiffness: 420, damping: 32 }}
                                     />
-                                )}
+                                    <span>{tab.label}</span>
+                                    {typeof tab.count === "number" && (
+                                        <span
+                                            className={cn(
+                                                "px-2 py-0.5 rounded-full text-[10px] font-bold tabular-nums ml-0.5",
+                                                isActive
+                                                    ? "bg-white/20 text-white shadow-xs"
+                                                    : "bg-slate-200/80 text-slate-700 dark:bg-white/[0.08] dark:text-zinc-400"
+                                            )}
+                                        >
+                                            {tab.count}
+                                        </span>
+                                    )}
+                                </span>
                             </button>
                         );
                     })}
@@ -1066,10 +1271,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                                 <Link
                                     href="/expenses"
-                                    className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/85 hover:bg-white text-slate-700 hover:text-slate-950 border border-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.11] dark:text-zinc-200 dark:hover:text-white dark:border-white/[0.12] transition-all shrink-0 inline-flex items-center gap-1"
+                                    className="dashboard-glass-btn dashboard-glass-btn-neutral px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-700 dark:text-zinc-200 inline-flex items-center gap-1.5 transition-all shrink-0 cursor-pointer"
                                 >
-                                    <span>Full Ledger</span>
-                                    <span aria-hidden="true">→</span>
+                                    <span aria-hidden="true" className="dashboard-glass-sheen" />
+                                    <span className="relative z-10 inline-flex items-center gap-1.5">
+                                        <span>Full Ledger</span>
+                                        <span aria-hidden="true">→</span>
+                                    </span>
                                 </Link>
                             </div>
 
@@ -1138,14 +1346,14 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                             Add your first expense to populate your feed, budgets, and activity heatmap.
                                         </p>
                                     </div>
-                                    <button
-                                        type="button"
+                                    <DashboardGlassButton
+                                        variant="accent"
                                         onClick={() => setIsExpenseModalOpen(true)}
-                                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow-md hover:brightness-110 transition-all cursor-pointer"
+                                        className="px-4 py-2 text-xs font-semibold shadow-md"
                                     >
                                         <Plus className="w-3.5 h-3.5" />
                                         <span>Add Expense</span>
-                                    </button>
+                                    </DashboardGlassButton>
                                 </div>
                             )}
 
@@ -1197,10 +1405,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                 </div>
                                 <Link
                                     href="/budgets/new"
-                                    className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/85 hover:bg-white text-slate-700 hover:text-slate-950 border border-slate-200/80 dark:bg-white/[0.06] dark:hover:bg-white/[0.11] dark:text-zinc-200 dark:hover:text-white dark:border-white/[0.12] transition-all shrink-0 inline-flex items-center gap-1.5"
+                                    className="dashboard-glass-btn dashboard-glass-btn-neutral px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-700 dark:text-zinc-200 inline-flex items-center gap-1.5 transition-all shrink-0 cursor-pointer"
                                 >
-                                    <Plus className="w-3.5 h-3.5" />
-                                    <span>New Budget</span>
+                                    <span aria-hidden="true" className="dashboard-glass-sheen" />
+                                    <span className="relative z-10 inline-flex items-center gap-1.5">
+                                        <Plus className="w-3.5 h-3.5" />
+                                        <span>New Budget</span>
+                                    </span>
                                 </Link>
                             </div>
 
@@ -1489,10 +1700,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
                                     </div>
                                     <Link
                                         href="/budgets/new"
-                                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow-md hover:brightness-110 transition-all"
+                                        className="dashboard-glass-btn dashboard-glass-btn-accent px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer"
                                     >
-                                        <Plus className="w-3.5 h-3.5" />
-                                        <span>Configure Budget</span>
+                                        <span aria-hidden="true" className="dashboard-glass-sheen" />
+                                        <span className="relative z-10 inline-flex items-center gap-1.5">
+                                            <Plus className="w-3.5 h-3.5" />
+                                            <span>Configure Budget</span>
+                                        </span>
                                     </Link>
                                 </div>
                             )}
@@ -1764,10 +1978,13 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
 
                                 <Link
                                     href="/analytics"
-                                    className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500 text-white shadow-[0_6px_18px_-4px_rgba(124,58,237,0.5)] hover:brightness-110 transition-all shrink-0"
+                                    className="dashboard-glass-btn dashboard-glass-btn-accent px-4 py-2 rounded-full text-xs font-semibold inline-flex items-center justify-center gap-1.5 shrink-0 cursor-pointer"
                                 >
-                                    <span>View Detailed Analytics</span>
-                                    <span aria-hidden="true">→</span>
+                                    <span aria-hidden="true" className="dashboard-glass-sheen" />
+                                    <span className="relative z-10 inline-flex items-center gap-1.5">
+                                        <span>View Detailed Analytics</span>
+                                        <span aria-hidden="true">→</span>
+                                    </span>
                                 </Link>
                             </div>
                         </motion.div>

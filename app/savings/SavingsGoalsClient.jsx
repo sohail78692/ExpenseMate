@@ -340,6 +340,250 @@ function FundingPaceGauge({
     );
 }
 
+const savingsGlassStyles = `
+  @property --savings-angle-1 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -75deg;
+  }
+  @property --savings-angle-2 {
+    syntax: "<angle>";
+    inherits: false;
+    initial-value: -45deg;
+  }
+
+  .savings-glass-btn {
+    --anim-time: 380ms;
+    --anim-ease: cubic-bezier(0.25, 1, 0.5, 1);
+    --rim-width: 1.25px;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    transition: all var(--anim-time) var(--anim-ease);
+    transform-style: preserve-3d;
+  }
+
+  .savings-glass-btn::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    border-radius: inherit;
+    padding: var(--rim-width);
+    box-sizing: border-box;
+    pointer-events: none;
+    background:
+      conic-gradient(
+        from var(--savings-angle-1) at 50% 50%,
+        rgba(15, 23, 42, 0.28) 0%,
+        transparent 6% 40%,
+        rgba(15, 23, 42, 0.28) 50%,
+        transparent 60% 94%,
+        rgba(15, 23, 42, 0.28) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    transition: all var(--anim-time) var(--anim-ease), --savings-angle-1 500ms ease;
+  }
+
+  .dark .savings-glass-btn::after {
+    background:
+      conic-gradient(
+        from var(--savings-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.58) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.58) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.58) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.08));
+  }
+
+  .savings-glass-btn:hover::after {
+    --savings-angle-1: -125deg;
+  }
+
+  .savings-glass-btn:active {
+    transform: scale(0.975);
+  }
+
+  .savings-glass-sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+  }
+
+  .savings-glass-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      var(--savings-angle-2),
+      transparent 0%,
+      rgba(255, 255, 255, 0.55) 42% 50%,
+      transparent 58%
+    );
+    background-size: 220% 220%;
+    background-position: 0% 50%;
+    mix-blend-mode: screen;
+    opacity: 0.65;
+    transition:
+      background-position 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      --savings-angle-2 480ms cubic-bezier(0.25, 1, 0.5, 1),
+      opacity 300ms ease;
+  }
+
+  .savings-glass-btn:hover .savings-glass-sheen::after {
+    background-position: 32% 50%;
+    opacity: 0.95;
+  }
+
+  .savings-glass-btn:active .savings-glass-sheen::after {
+    background-position: 55% 20%;
+    --savings-angle-2: -15deg;
+  }
+
+  .savings-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.55));
+    color: #0f172a;
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.95),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.08),
+      0 6px 16px -6px rgba(15, 23, 42, 0.12);
+  }
+  .savings-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.72));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -1.5px 1.5px rgba(15, 23, 42, 0.1),
+      0 10px 24px -8px rgba(37, 99, 235, 0.18);
+  }
+  .dark .savings-glass-btn-neutral {
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.04));
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    box-shadow:
+      inset 0 1.5px 1.5px rgba(255, 255, 255, 0.24),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.45),
+      0 8px 20px -6px rgba(0, 0, 0, 0.65),
+      0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  }
+  .dark .savings-glass-btn-neutral:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.08));
+    color: #ffffff;
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.36),
+      inset 0 -1.5px 1.5px rgba(0, 0, 0, 0.5),
+      0 12px 26px -6px rgba(0, 0, 0, 0.78);
+  }
+
+  .savings-glass-btn-accent {
+    background: linear-gradient(-75deg, rgba(99, 102, 241, 0.9), rgba(139, 92, 246, 0.98), rgba(99, 102, 241, 0.9));
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.55),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.18),
+      0 10px 26px -6px rgba(99, 102, 241, 0.48);
+  }
+  .savings-glass-btn-accent::after {
+    background:
+      conic-gradient(
+        from var(--savings-angle-1) at 50% 50%,
+        rgba(255, 255, 255, 0.9) 0%,
+        transparent 6% 40%,
+        rgba(255, 255, 255, 0.9) 50%,
+        transparent 60% 94%,
+        rgba(255, 255, 255, 0.9) 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.2));
+  }
+  .savings-glass-btn-accent:hover {
+    transform: translateY(-1px) scale(0.99);
+    background: linear-gradient(-75deg, rgba(129, 140, 248, 0.96), rgba(167, 139, 250, 1), rgba(129, 140, 248, 0.96));
+    box-shadow:
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.75),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2),
+      0 14px 32px -6px rgba(124, 58, 237, 0.62);
+  }
+
+  .savings-glass-pill-active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.92) 0%, rgba(139, 92, 246, 0.95) 100%) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow:
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.6),
+      0 6px 18px -4px rgba(99, 102, 241, 0.55) !important;
+  }
+
+  .savings-glass-input {
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: inset 0 1.5px 3px rgba(15, 23, 42, 0.04);
+    transition: all 250ms ease;
+  }
+  .dark .savings-glass-input {
+    background: rgba(13, 18, 36, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1.5px 3px rgba(0, 0, 0, 0.45);
+  }
+  .savings-glass-input:focus {
+    background: rgba(255, 255, 255, 0.96);
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.25), inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+  .dark .savings-glass-input:focus {
+    background: rgba(18, 24, 48, 0.88);
+    border-color: rgba(167, 139, 250, 0.55);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.35), inset 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+`;
+
+function SavingsGlassButton({
+    variant = "neutral",
+    size = "md",
+    className,
+    children,
+    ...props
+}) {
+    const base = "savings-glass-btn inline-flex items-center justify-center font-semibold rounded-full select-none cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/50 disabled:opacity-50 disabled:pointer-events-none";
+    const sizes = {
+        sm: "h-8 px-3 text-xs gap-1.5",
+        md: "h-9 sm:h-10 px-4 py-2 text-xs sm:text-[13px] gap-2",
+        lg: "h-11 px-5 text-sm gap-2.5",
+        icon: "w-8 h-8 rounded-full p-0 flex items-center justify-center",
+    };
+    const variants = {
+        accent: "savings-glass-btn-accent text-white",
+        neutral: "savings-glass-btn-neutral text-slate-800 dark:text-zinc-100",
+        "pill-active": "savings-glass-pill-active text-white",
+    };
+
+    return (
+        <button
+            {...props}
+            className={cn(base, sizes[size] || sizes.md, variants[variant], className)}
+        >
+            <span aria-hidden="true" className="savings-glass-sheen" />
+            <span className="relative z-10 inline-flex items-center gap-1.5 whitespace-nowrap">
+                {children}
+            </span>
+        </button>
+    );
+}
+
 const GLASS_CARD =
     "rounded-[24px] bg-white/78 dark:bg-white/[0.04] backdrop-blur-2xl border border-white/95 dark:border-white/[0.11] shadow-[0_10px_32px_-12px_rgba(30,41,59,0.08),0_2px_8px_-2px_rgba(30,41,59,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] dark:shadow-[0_16px_42px_-12px_rgba(0,0,0,0.6),inset_0_1px_1px_rgba(255,255,255,0.08)]";
 
@@ -795,6 +1039,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
             ref={containerRef}
             className="relative w-full space-y-6 pb-28 lg:pb-10 text-slate-900 dark:text-zinc-100"
         >
+            <style dangerouslySetInnerHTML={{ __html: savingsGlassStyles }} />
             {/* Soft Atmospheric Liquid-Glass Canvas Aura */}
             <div
                 aria-hidden="true"
@@ -894,10 +1139,13 @@ export default function SavingsGoalsClient({ initialGoals }) {
 
                     <Link
                         href="/savings/new"
-                        className="relative z-10 px-4 py-2.5 rounded-full text-xs sm:text-[13px] font-semibold text-white bg-slate-900 hover:bg-slate-800 dark:bg-gradient-to-r dark:from-blue-600 dark:to-indigo-600 dark:hover:from-blue-500 dark:hover:to-indigo-500 shadow-[0_8px_20px_rgba(15,23,42,0.22)] dark:shadow-[0_8px_22px_rgba(37,99,235,0.35)] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                        className="savings-glass-btn savings-glass-btn-accent relative z-10 px-4.5 py-2.5 rounded-full text-xs sm:text-[13px] font-semibold text-white shadow-[0_8px_24px_rgba(99,102,241,0.45)] active:scale-[0.98] transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                     >
-                        <Plus className="w-4 h-4 shrink-0" />
-                        <span>New Goal</span>
+                        <span aria-hidden="true" className="savings-glass-sheen" />
+                        <span className="relative z-10 inline-flex items-center gap-1.5">
+                            <Plus className="w-4 h-4 shrink-0 stroke-[2.5]" />
+                            <span>New Goal</span>
+                        </span>
                     </Link>
                 </div>
             </div>
@@ -1355,23 +1603,26 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             onClick={() => setActiveTab(tab.id)}
                             onKeyDown={(e) => handleTabKeyDown(e, idx)}
                             className={cn(
-                                "px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold flex items-center gap-2 whitespace-nowrap border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500",
+                                "savings-glass-btn px-4 py-2 rounded-full text-xs sm:text-[13px] font-semibold flex items-center gap-2 whitespace-nowrap border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500",
                                 isActive
-                                    ? "bg-gradient-to-r from-blue-600 to-blue-500 border-blue-500 text-white shadow-[0_8px_20px_rgba(37,99,235,0.34)]"
-                                    : "bg-white/75 border-white/95 text-slate-700 hover:text-slate-950 hover:bg-white/90 dark:bg-white/[0.05] dark:border-white/[0.1] dark:text-zinc-300 dark:hover:text-white dark:hover:bg-white/[0.09] backdrop-blur-xl shadow-[0_2px_10px_rgba(15,23,42,0.04)]"
+                                    ? "savings-glass-pill-active text-white border-transparent shadow-[0_8px_20px_rgba(99,102,241,0.4)]"
+                                    : "savings-glass-btn-neutral text-slate-700 dark:text-zinc-200"
                             )}
                         >
-                            <Icon className="w-3.5 h-3.5 shrink-0" />
-                            <span>{tab.label}</span>
-                            <span
-                                className={cn(
-                                    "px-2 py-0.5 rounded-full text-[11px] font-semibold tabular-nums",
-                                    isActive
-                                        ? "bg-white/20 text-white"
-                                        : "bg-slate-200/80 text-slate-600 dark:bg-white/[0.08] dark:text-zinc-400"
-                                )}
-                            >
-                                {tab.count}
+                            <span aria-hidden="true" className="savings-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-2">
+                                <Icon className="w-3.5 h-3.5 shrink-0" />
+                                <span>{tab.label}</span>
+                                <span
+                                    className={cn(
+                                        "px-2 py-0.5 rounded-full text-[11px] font-semibold tabular-nums",
+                                        isActive
+                                            ? "bg-white/20 text-white"
+                                            : "bg-slate-200/80 text-slate-600 dark:bg-white/[0.08] dark:text-zinc-400"
+                                    )}
+                                >
+                                    {tab.count}
+                                </span>
                             </span>
                         </button>
                     );
@@ -1401,13 +1652,14 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                         type="button"
                                         onClick={() => setCategoryFilter("all")}
                                         className={cn(
-                                            "px-3.5 py-1.5 rounded-full text-xs font-semibold border whitespace-nowrap transition-all cursor-pointer",
+                                            "savings-glass-btn px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer",
                                             categoryFilter === "all"
-                                                ? "bg-slate-900 border-slate-900 text-white shadow-[0_4px_12px_rgba(15,23,42,0.2)] dark:bg-white dark:border-white dark:text-slate-950"
-                                                : "bg-white/75 border-white/95 text-slate-600 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white backdrop-blur-md"
+                                                ? "savings-glass-pill-active text-white border-transparent"
+                                                : "savings-glass-btn-neutral text-slate-600 dark:text-zinc-300"
                                         )}
                                     >
-                                        All
+                                        <span aria-hidden="true" className="savings-glass-sheen" />
+                                        <span className="relative z-10">All</span>
                                     </button>
                                     {categories.map((cat) => {
                                         const active = categoryFilter.toLowerCase() === cat.toLowerCase();
@@ -1417,13 +1669,14 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 type="button"
                                                 onClick={() => setCategoryFilter(active ? "all" : cat)}
                                                 className={cn(
-                                                    "px-3.5 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-all cursor-pointer",
+                                                    "savings-glass-btn px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer",
                                                     active
-                                                        ? "bg-slate-900 border-slate-900 text-white shadow-[0_4px_12px_rgba(15,23,42,0.2)] dark:bg-white dark:border-white dark:text-slate-950"
-                                                        : "bg-white/75 border-white/95 text-slate-600 hover:text-slate-950 dark:bg-white/[0.05] dark:border-white/10 dark:text-zinc-300 dark:hover:text-white backdrop-blur-md"
+                                                        ? "savings-glass-pill-active text-white border-transparent"
+                                                        : "savings-glass-btn-neutral text-slate-600 dark:text-zinc-300"
                                                 )}
                                             >
-                                                {cat}
+                                                <span aria-hidden="true" className="savings-glass-sheen" />
+                                                <span className="relative z-10">{cat}</span>
                                             </button>
                                         );
                                     })}
@@ -1652,9 +1905,13 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 <button
                                                     type="button"
                                                     onClick={() => openUpdateDialog(goal)}
-                                                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-800 hover:text-white bg-slate-100/90 hover:bg-blue-600 border border-slate-200/85 hover:border-blue-600 dark:text-zinc-100 dark:bg-white/[0.08] dark:hover:bg-blue-500 dark:border-white/15 dark:hover:border-blue-500 transition-all cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                                                    className="savings-glass-btn savings-glass-btn-neutral px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-800 dark:text-zinc-100 transition-all cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500"
                                                 >
-                                                    Update Progress
+                                                    <span aria-hidden="true" className="savings-glass-sheen" />
+                                                    <span className="relative z-10 inline-flex items-center gap-1.5">
+                                                        <TrendingUp className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+                                                        <span>Update Progress</span>
+                                                    </span>
                                                 </button>
                                             </div>
                                         </div>
@@ -1722,9 +1979,13 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 <button
                                                     type="button"
                                                     onClick={() => openUpdateDialog(goal)}
-                                                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-800 hover:text-white bg-white/95 hover:bg-blue-600 border border-slate-200/85 dark:text-zinc-100 dark:bg-white/[0.08] dark:hover:bg-blue-500 dark:border-white/15 transition-all cursor-pointer whitespace-nowrap"
+                                                    className="savings-glass-btn savings-glass-btn-neutral px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-800 dark:text-zinc-100 transition-all cursor-pointer whitespace-nowrap"
                                                 >
-                                                    Update Progress
+                                                    <span aria-hidden="true" className="savings-glass-sheen" />
+                                                    <span className="relative z-10 inline-flex items-center gap-1.5">
+                                                        <TrendingUp className="w-3.5 h-3.5 text-blue-600 dark:text-sky-400" />
+                                                        <span>Update Progress</span>
+                                                    </span>
                                                 </button>
                                                 <button
                                                     type="button"
@@ -2655,13 +2916,14 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                             );
                                         }}
                                         className={cn(
-                                            "py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer",
+                                            "savings-glass-btn py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer",
                                             active
-                                                ? "bg-blue-600 text-white shadow-[0_4px_12px_rgba(37,99,235,0.3)] dark:bg-blue-500"
+                                                ? "savings-glass-pill-active text-white border-transparent"
                                                 : "text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white"
                                         )}
                                     >
-                                        {mode.label}
+                                        <span aria-hidden="true" className="savings-glass-sheen" />
+                                        <span className="relative z-10">{mode.label}</span>
                                     </button>
                                 );
                             })}
@@ -2684,7 +2946,7 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                     setDialogError("");
                                 }}
                                 placeholder={updateMode === "deposit" ? "e.g. 2500" : "0.00"}
-                                className="w-full h-11 px-3.5 rounded-2xl text-sm font-mono bg-slate-50/90 dark:bg-white/[0.06] border border-slate-200/90 dark:border-white/[0.14] text-slate-950 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 transition-colors"
+                                className="savings-glass-input w-full h-11 px-3.5 rounded-2xl text-sm font-mono text-slate-950 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus-visible:outline-none transition-colors"
                             />
 
                             {/* Quick Preset Pills in Deposit Mode */}
@@ -2699,9 +2961,10 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 setAmountInput((currentVal + preset).toString());
                                                 setDialogError("");
                                             }}
-                                            className="px-3 py-1 rounded-full text-[11px] font-mono font-medium bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 dark:bg-white/[0.07] dark:hover:bg-white/[0.12] dark:border-white/12 dark:text-zinc-200 transition-colors cursor-pointer"
+                                            className="savings-glass-btn savings-glass-btn-neutral px-3 py-1 rounded-full text-[11px] font-mono font-medium text-slate-700 dark:text-zinc-200 transition-colors cursor-pointer"
                                         >
-                                            +₹{preset.toLocaleString("en-IN")}
+                                            <span aria-hidden="true" className="savings-glass-sheen" />
+                                            <span className="relative z-10">+₹{preset.toLocaleString("en-IN")}</span>
                                         </button>
                                     ))}
                                     {selectedGoal.remaining > 0 && (
@@ -2711,9 +2974,10 @@ export default function SavingsGoalsClient({ initialGoals }) {
                                                 setAmountInput(selectedGoal.remaining.toString());
                                                 setDialogError("");
                                             }}
-                                            className="px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-500/20 dark:hover:bg-emerald-500/30 dark:border-emerald-400/35 dark:text-emerald-300 transition-colors cursor-pointer"
+                                            className="savings-glass-btn px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-700 dark:text-emerald-300 transition-colors cursor-pointer"
                                         >
-                                            Fill remaining ({formatINR(selectedGoal.remaining)})
+                                            <span aria-hidden="true" className="savings-glass-sheen" />
+                                            <span className="relative z-10">Fill remaining ({formatINR(selectedGoal.remaining)})</span>
                                         </button>
                                     )}
                                 </div>
@@ -2762,21 +3026,23 @@ export default function SavingsGoalsClient({ initialGoals }) {
                         )}
 
                         <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-2">
-                            <button
+                            <SavingsGlassButton
+                                variant="neutral"
                                 type="button"
                                 onClick={() => setIsUpdateDialogOpen(false)}
-                                className="px-4 py-2 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 dark:text-zinc-300 dark:hover:text-white dark:bg-white/[0.07] dark:hover:bg-white/[0.12] dark:border-white/12 transition-colors cursor-pointer whitespace-nowrap"
+                                className="px-4 py-2"
                             >
                                 Cancel
-                            </button>
-                            <button
+                            </SavingsGlassButton>
+                            <SavingsGlassButton
+                                variant="accent"
                                 type="submit"
                                 disabled={isSavingProgress}
-                                className="px-4 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-[0_8px_20px_rgba(37,99,235,0.3)] disabled:opacity-50 transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+                                className="px-4.5 py-2 shadow-[0_8px_20px_rgba(99,102,241,0.4)]"
                             >
                                 {isSavingProgress && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                                 <span>{isSavingProgress ? "Saving..." : "Save Progress"}</span>
-                            </button>
+                            </SavingsGlassButton>
                         </DialogFooter>
                     </form>
                 </DialogContent>
@@ -2812,18 +3078,22 @@ export default function SavingsGoalsClient({ initialGoals }) {
                             type="button"
                             onClick={() => setGoalToDelete(null)}
                             disabled={isDeleting}
-                            className="px-4 py-2 rounded-full text-xs font-semibold text-slate-700 hover:text-slate-950 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 dark:text-zinc-300 dark:hover:text-white dark:bg-white/[0.07] dark:hover:bg-white/[0.12] dark:border-white/12 transition-colors cursor-pointer whitespace-nowrap"
+                            className="savings-glass-btn savings-glass-btn-neutral px-4 py-2 rounded-full text-xs font-semibold text-slate-700 dark:text-zinc-300 transition-colors cursor-pointer whitespace-nowrap"
                         >
-                            Cancel
+                            <span aria-hidden="true" className="savings-glass-sheen" />
+                            <span className="relative z-10">Cancel</span>
                         </button>
                         <button
                             type="button"
                             onClick={handleConfirmDelete}
                             disabled={isDeleting}
-                            className="px-4 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 shadow-[0_8px_20px_rgba(225,29,72,0.3)] disabled:opacity-50 transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
+                            className="savings-glass-btn px-4.5 py-2 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-500 hover:to-red-500 shadow-[0_8px_20px_rgba(225,29,72,0.35)] disabled:opacity-50 transition-all cursor-pointer inline-flex items-center gap-1.5 whitespace-nowrap"
                         >
-                            {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                            <span>{isDeleting ? "Deleting..." : "Delete Goal"}</span>
+                            <span aria-hidden="true" className="savings-glass-sheen" />
+                            <span className="relative z-10 inline-flex items-center gap-1.5">
+                                {isDeleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                                <span>{isDeleting ? "Deleting..." : "Delete Goal"}</span>
+                            </span>
                         </button>
                     </DialogFooter>
                 </DialogContent>
